@@ -1,0 +1,20 @@
+{
+  "name": "basic-plugin",
+  "description": "Minimal GitHub Copilot plugin for creating agent skills and custom agents with GitHub MCP access.",
+  "version": "0.1.0",
+  "author": {
+    "name": "jnicholas000",
+    "url": "https://github.com/jnicholas000"
+  },
+  "homepage": "https://github.com/jnicholas000/basic-plugin",
+  "repository": "https://github.com/jnicholas000/basic-plugin",
+  "keywords": [
+    "github-copilot",
+    "github-mcp",
+    "agent-skills",
+    "custom-agents"
+  ],
+  "agents": "agents/",
+  "skills": "skills/",
+  "mcpServers": ".mcp.json"
+}
