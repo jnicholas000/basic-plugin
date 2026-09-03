@@ -12,6 +12,8 @@ Usage:
 No dependencies beyond the Python stdlib are required.
 """
 
+from __future__ import annotations
+
 import argparse
 import base64
 import json
@@ -276,7 +278,15 @@ def generate_html(
     if benchmark:
         embedded["benchmark"] = benchmark
 
-    data_json = json.dumps(embedded)
+    # This JSON is inserted inside a script element. Escape HTML-significant
+    # characters so generated outputs containing </script> cannot terminate
+    # the element and inject markup into the standalone review page.
+    data_json = (
+        json.dumps(embedded)
+        .replace("&", "\\u0026")
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+    )
 
     return template.replace("/*__EMBEDDED_DATA__*/", f"const EMBEDDED_DATA = {data_json};")
 

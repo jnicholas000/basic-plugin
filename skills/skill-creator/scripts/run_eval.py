@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 """Run trigger evaluation for a skill description.
 
-Tests whether a skill's description causes Claude to trigger (read the skill)
-for a set of queries. Outputs results as JSON.
+Tests whether a skill's description causes GitHub Copilot CLI or Claude Code
+to trigger (read) the skill for a set of queries. Outputs results as JSON.
 """
+
+from __future__ import annotations
 
 import argparse
 import json
 import os
 import select
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -20,16 +24,116 @@ from scripts.utils import parse_skill_md
 
 
 def find_project_root() -> Path:
-    """Find the project root by walking up from cwd looking for .claude/.
-
-    Mimics how Claude Code discovers its project root, so the command file
-    we create ends up where claude -p will look for it.
-    """
+    """Find the project root used as the CLI subprocess working directory."""
     current = Path.cwd()
     for parent in [current, *current.parents]:
-        if (parent / ".claude").is_dir():
+        if any((parent / marker).exists() for marker in (".git", ".github", ".claude")):
             return parent
     return current
+
+
+def find_model_cli() -> tuple[str, str]:
+    """Return the preferred available model CLI and its executable path."""
+    for name in ("copilot", "claude"):
+        executable = shutil.which(name)
+        if executable:
+            return name, executable
+    raise RuntimeError(
+        "Trigger evaluation requires GitHub Copilot CLI (`copilot`) or "
+        "Claude Code CLI (`claude`) on PATH."
+    )
+
+
+def _otel_has_skill_event(otel_path: Path, skill_name: str) -> bool:
+    """Return whether Copilot's JSONL telemetry recorded this skill invocation."""
+    if not otel_path.exists():
+        raise RuntimeError(
+            "Copilot CLI did not create the requested OpenTelemetry file; "
+            "upgrade Copilot CLI or check whether telemetry export is disabled by policy."
+        )
+
+    for line in otel_path.read_text(errors="replace").splitlines():
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        serialized = json.dumps(record, sort_keys=True)
+        if "github.copilot.skill.invoked" in serialized and skill_name in serialized:
+            return True
+    return False
+
+
+def _run_copilot_query(
+    query: str,
+    skill_name: str,
+    skill_description: str,
+    timeout: int,
+    project_root: str,
+    model: str | None,
+    executable: str,
+) -> bool:
+    """Evaluate one trigger using a temporary Copilot plugin and OTel event."""
+    unique_id = uuid.uuid4().hex[:8]
+    name_prefix = skill_name[:40].rstrip("-") or "skill"
+    clean_name = f"{name_prefix}-eval-{unique_id}"
+
+    with tempfile.TemporaryDirectory(prefix="copilot-skill-eval-") as temp_dir:
+        plugin_dir = Path(temp_dir) / "plugin"
+        skill_dir = plugin_dir / "skills" / clean_name
+        skill_dir.mkdir(parents=True)
+
+        manifest = {
+            "name": f"skill-eval-{unique_id}",
+            "description": "Temporary plugin used for skill trigger evaluation.",
+            "version": "0.0.0",
+            "skills": "skills/",
+        }
+        (plugin_dir / "plugin.json").write_text(json.dumps(manifest, indent=2) + "\n")
+        (skill_dir / "SKILL.md").write_text(
+            "---\n"
+            f"name: {clean_name}\n"
+            f"description: {json.dumps(skill_description)}\n"
+            "---\n\n"
+            f"# {skill_name}\n\n"
+            f"This skill handles: {skill_description}\n"
+        )
+
+        otel_path = Path(temp_dir) / "copilot-otel.jsonl"
+        cmd = [
+            executable,
+            "-p", query,
+            "--output-format", "json",
+            "--plugin-dir", str(plugin_dir),
+            "--no-custom-instructions",
+            "--no-ask-user",
+            "--no-auto-update",
+            "--no-remote",
+            "--no-remote-export",
+            "--stream", "off",
+        ]
+        if model:
+            cmd.extend(["--model", model])
+
+        env = os.environ.copy()
+        env["COPILOT_OTEL_FILE_EXPORTER_PATH"] = str(otel_path)
+        env["COPILOT_OTEL_EXPORTER_TYPE"] = "file"
+        env.pop("OTEL_EXPORTER_OTLP_ENDPOINT", None)
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            cwd=project_root,
+            env=env,
+            timeout=timeout,
+        )
+        if result.returncode != 0:
+            detail = result.stderr.strip() or result.stdout.strip()
+            raise RuntimeError(
+                f"copilot -p exited {result.returncode}: {detail[-1000:]}"
+            )
+
+        return _otel_has_skill_event(otel_path, clean_name)
 
 
 def run_single_query(
@@ -42,12 +146,22 @@ def run_single_query(
 ) -> bool:
     """Run a single query and return whether the skill was triggered.
 
-    Creates a command file in .claude/commands/ so it appears in Claude's
-    available_skills list, then runs `claude -p` with the raw query.
-    Uses --include-partial-messages to detect triggering early from
-    stream events (content_block_start) rather than waiting for the
-    full assistant message, which only arrives after tool execution.
+    GitHub Copilot CLI is preferred and records the documented
+    ``github.copilot.skill.invoked`` OpenTelemetry event. Claude Code remains
+    as a compatibility fallback for the original upstream workflow.
     """
+    cli_name, executable = find_model_cli()
+    if cli_name == "copilot":
+        return _run_copilot_query(
+            query,
+            skill_name,
+            skill_description,
+            timeout,
+            project_root,
+            model,
+            executable,
+        )
+
     unique_id = uuid.uuid4().hex[:8]
     clean_name = f"{skill_name}-skill-{unique_id}"
     project_commands_dir = Path(project_root) / ".claude" / "commands"
@@ -68,7 +182,7 @@ def run_single_query(
         command_file.write_text(command_content)
 
         cmd = [
-            "claude",
+            executable,
             "-p", query,
             "--output-format", "stream-json",
             "--verbose",
@@ -195,6 +309,8 @@ def run_eval(
     """Run the full eval set and return results."""
     results = []
 
+    failures: list[str] = []
+
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
         future_to_info = {}
         for item in eval_set:
@@ -221,8 +337,14 @@ def run_eval(
             try:
                 query_triggers[query].append(future.result())
             except Exception as e:
-                print(f"Warning: query failed: {e}", file=sys.stderr)
-                query_triggers[query].append(False)
+                failures.append(f"{query}: {e}")
+
+    if failures:
+        details = "\n".join(f"- {failure}" for failure in failures)
+        raise RuntimeError(
+            "Trigger evaluation could not complete. Infrastructure failures "
+            "are not counted as negative trigger results:\n" + details
+        )
 
     for query, triggers in query_triggers.items():
         item = query_items[query]
@@ -265,7 +387,7 @@ def main():
     parser.add_argument("--timeout", type=int, default=30, help="Timeout per query in seconds")
     parser.add_argument("--runs-per-query", type=int, default=3, help="Number of runs per query")
     parser.add_argument("--trigger-threshold", type=float, default=0.5, help="Trigger rate threshold")
-    parser.add_argument("--model", default=None, help="Model to use for claude -p (default: user's configured model)")
+    parser.add_argument("--model", default=None, help="Model to use for the selected CLI (default: user's configured model)")
     parser.add_argument("--verbose", action="store_true", help="Print progress to stderr")
     args = parser.parse_args()
 

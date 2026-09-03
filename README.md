@@ -8,7 +8,7 @@ It contains exactly one top-level skill, one custom agent, and one MCP server co
 - `Custom Agent Foundry`: an Awesome Copilot helper for designing custom agents.
 - `github`: GitHub's hosted MCP server, authenticated by OAuth at use time.
 
-The imported components are pinned, unmodified upstream copies. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for source commits and licenses.
+The imported components are pinned to exact upstream commits. The custom agent remains unmodified; the skill contains small documented compatibility and security patches for GitHub Copilot. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for source commits, local changes, and licenses.
 
 ## Install
 
