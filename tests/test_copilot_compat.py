@@ -10,6 +10,11 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "skill-creator"
+PLUGIN_MANIFEST = ROOT / "plugin.json"
+MCP_CONFIG = ROOT / "mcp.json"
+COPILOT_AGENT = (
+    ROOT / "com.github.copilot" / "agents" / "custom-agent-foundry.agent.md"
+)
 sys.path.insert(0, str(SKILL))
 
 
@@ -33,6 +38,34 @@ class CopilotCompatibilityTests(unittest.TestCase):
         )
         cls.improve = load_module(
             "improve_description", SKILL / "scripts" / "improve_description.py"
+        )
+
+    def test_agent_plugins_1_layout_and_mcp_contract(self):
+        manifest = json.loads(PLUGIN_MANIFEST.read_text())
+        self.assertEqual(
+            manifest["$schema"],
+            "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+        )
+        self.assertNotIn("agents", manifest)
+        self.assertNotIn("skills", manifest)
+        self.assertNotIn("mcpServers", manifest)
+
+        self.assertTrue(COPILOT_AGENT.is_file())
+        self.assertFalse((ROOT / "agents").exists())
+        self.assertFalse((ROOT / ".mcp.json").exists())
+
+        mcp_config = json.loads(MCP_CONFIG.read_text())
+        self.assertEqual(
+            mcp_config["$schema"],
+            "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+        )
+        self.assertEqual(set(mcp_config), {"$schema", "mcpServers"})
+        self.assertEqual(
+            mcp_config["mcpServers"]["github"],
+            {
+                "type": "streamable-http",
+                "url": "https://api.githubcopilot.com/mcp/",
+            },
         )
 
     def test_documented_layout_is_consumed_by_aggregator(self):
