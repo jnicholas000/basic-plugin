@@ -49,7 +49,7 @@ copilot plugin install jnicholas000/basic-plugin
 For testing an unmerged branch, clone that branch and install the local directory:
 
 ```shell
-git clone --branch chore/agent-plugins-1-standard https://github.com/jnicholas000/basic-plugin.git
+git clone --branch <branch-name> https://github.com/jnicholas000/basic-plugin.git
 cd basic-plugin
 copilot plugin install .
 ```
