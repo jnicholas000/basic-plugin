@@ -19,10 +19,10 @@ The following components are vendored from commit-pinned upstream sources. Local
 
 - Source: <https://github.com/github/awesome-copilot/blob/2ba72cd14253500bbb747b5f01e72dd03fbafcb0/agents/custom-agent-foundry.agent.md>
 - Upstream commit: `2ba72cd14253500bbb747b5f01e72dd03fbafcb0`
-- Local path: `agents/custom-agent-foundry.agent.md`
+- Local path: `com.github.copilot/agents/custom-agent-foundry.agent.md`
 - License: MIT, included at `licenses/awesome-copilot-MIT.txt`
 - Copyright GitHub, Inc.
-- Local changes: none.
+- Local changes: none. The file was relocated into the Agent Plugins 1.0 GitHub Copilot extension namespace without content changes.
 
 ## GitHub MCP server
 

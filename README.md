@@ -1,18 +1,46 @@
 # basic-plugin
 
-A deliberately small GitHub Copilot plugin for testing plugin and MCP behavior outside an enterprise-managed environment.
+A deliberately small **Agent Plugins 1.0** package for testing GitHub Copilot plugin and MCP behavior outside an enterprise-managed environment.
 
-It contains exactly one top-level skill, one custom agent, and one MCP server configuration:
+It contains exactly one portable skill, one Copilot-specific custom agent, and one portable MCP server configuration:
 
 - `skill-creator`: Anthropic's skill authoring and evaluation workflow.
 - `Custom Agent Foundry`: an Awesome Copilot helper for designing custom agents.
-- `github`: GitHub's hosted MCP server, authenticated by OAuth at use time.
+- `github`: GitHub's hosted MCP server, authenticated by the client at use time.
 
 The imported components are pinned to exact upstream commits. The custom agent remains unmodified; the skill contains small documented compatibility and security patches for GitHub Copilot. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for source commits, local changes, and licenses.
 
+## Agent Plugins 1.0 layout
+
+```text
+basic-plugin/
+├── plugin.json
+├── mcp.json
+├── skills/
+│   └── skill-creator/
+└── com.github.copilot/
+    └── agents/
+        └── custom-agent-foundry.agent.md
+```
+
+- `plugin.json` declares the Agent Plugins 1.0 schema.
+- `skills/` and `mcp.json` are portable Agent Plugins components.
+- `com.github.copilot/` contains GitHub Copilot-specific components such as custom agents.
+- The legacy Copilot-format `agents/` and `.mcp.json` paths are intentionally not used.
+
 ## Install
 
-Install directly from GitHub with Copilot CLI:
+### VS Code
+
+Open the **Plugins** view, choose **Install Plugin from Source**, and enter:
+
+```text
+https://github.com/jnicholas000/basic-plugin
+```
+
+### Copilot CLI
+
+Install directly from GitHub:
 
 ```shell
 copilot plugin install jnicholas000/basic-plugin
@@ -21,21 +49,21 @@ copilot plugin install jnicholas000/basic-plugin
 For testing an unmerged branch, clone that branch and install the local directory:
 
 ```shell
-git clone --branch feat/github-copilot-plugin https://github.com/jnicholas000/basic-plugin.git
+git clone --branch <branch-name> https://github.com/jnicholas000/basic-plugin.git
 cd basic-plugin
 copilot plugin install .
 ```
 
 ## Smoke test
 
-1. Run `copilot plugin list` and confirm `basic-plugin` is enabled.
-2. Start Copilot CLI, run `/agent`, and select **Custom Agent Foundry**.
-3. Ask it to draft a minimal read-only repository-review agent and confirm it produces a complete `.agent.md` file.
+1. Confirm `basic-plugin` is installed and enabled.
+2. Confirm **Custom Agent Foundry** appears in the custom-agent picker.
+3. Ask the agent to draft a minimal read-only repository-review agent and confirm it produces a complete `.agent.md` file.
 4. Start a fresh session and ask Copilot to create a tiny reusable skill; confirm the `skill-creator` workflow is selected.
-5. Open `/mcp`, enable `github`, complete the OAuth prompt, and ask Copilot to inspect a repository you can access.
+5. Open the MCP server list, confirm `github` is present, complete authentication if prompted, and ask Copilot to inspect a repository you can access.
 
 No personal access token or secret belongs in this repository.
 
 ## Expected diagnostic value
 
-If the plugin, agent, skill, and GitHub MCP all work in a personal environment but not in a managed work environment, compare the work environment's Copilot CLI policy, MCP policy, OAuth restrictions, and allowed plugin marketplaces. That isolates policy or authentication as the likely difference without dragging a full production plugin into the experiment.
+If this Agent Plugins 1.0 package, its custom agent, skill, and GitHub MCP all work in a personal environment but not in a managed work environment, compare the managed environment's Copilot policy, MCP policy, authentication restrictions, allowed MCP servers, and plugin marketplace/source policy. That isolates environment policy or authentication as the likely difference without dragging a full production plugin into the experiment.
