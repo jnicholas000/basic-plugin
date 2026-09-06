@@ -1,0 +1,17 @@
+name: Sync Awesome Copilot structure
+on:
+  schedule: [{ cron: '17 3 * * 1' }]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Read upstream reference
+        id: ref
+        run: echo "ref=$(grep '^UPSTREAM_AWESOME_COPILOT_REF=' .env.example 2>/dev/null | cut -d= -f2 || echo main)" >> "$GITHUB_OUTPUT"
+      - name: Open sync issue when upstream changes
+        run: echo "Pinned upstream structure is reviewed manually; ref=${{ steps.ref.outputs.ref }}"
