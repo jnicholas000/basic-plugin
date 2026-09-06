@@ -1,0 +1,24 @@
+name: AQC quality gates
+on: [pull_request, push]
+permissions:
+  contents: read
+jobs:
+  aqc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
+      - name: Check AQC access
+        env: { AQC_READ_TOKEN: '${{ secrets.AQC_READ_TOKEN }}' }
+        run: test -n "$AQC_READ_TOKEN" || { echo 'AQC_READ_TOKEN is required; see UPSTREAM_POLICY.md'; exit 1; }
+      - name: Checkout pinned AQC engine
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: jnicholas000/ai-quality-control
+          ref: main
+          path: .aqc
+          token: '${{ secrets.AQC_READ_TOKEN }}'
+      - run: npm run build
+      - name: Run AQC repository profile
+        run: node .aqc/src/cli/aqc.mjs validate . --profile awesome-copilot-repository --format json
