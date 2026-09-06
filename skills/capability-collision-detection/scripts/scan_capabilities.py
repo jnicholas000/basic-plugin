@@ -59,6 +59,9 @@ def text_tokens(text: str) -> set[str]:
 
 
 def iter_files(root: Path) -> Iterable[Path]:
+    if root.is_file():
+        yield root
+        return
     for path in root.rglob("*"):
         if any(part in IGNORED_DIRECTORIES for part in path.parts):
             continue
@@ -71,11 +74,11 @@ def read_text(path: Path) -> str:
 
 
 def find_capabilities(root: Path) -> list[Capability]:
-    if not root.is_dir():
-        raise FileNotFoundError(f"scan root does not exist or is not a directory: {root}")
+    if not root.exists():
+        raise FileNotFoundError(f"scan root does not exist: {root}")
     capabilities: list[Capability] = []
     for path in iter_files(root):
-        relative_path = str(path.relative_to(root))
+        relative_path = path.name if root.is_file() else str(path.relative_to(root))
         if path.name == "SKILL.md":
             frontmatter = parse_frontmatter(read_text(path))
             display_name = frontmatter.get("name", path.parent.name)
@@ -118,7 +121,7 @@ def find_capabilities(root: Path) -> list[Capability]:
                     relative_path,
                 )
             )
-        elif path.name in {"mcp.json", ".mcp.json"}:
+        elif path.name in {"mcp.json", ".mcp.json", "mcp-config.json"}:
             try:
                 config = json.loads(read_text(path))
             except json.JSONDecodeError:
@@ -241,9 +244,9 @@ def main() -> int:
         parser.error("--similarity-threshold must be greater than 0 and at most 1")
 
     roots = [Path(value).resolve() for value in args.root]
-    missing = [str(root) for root in roots if not root.is_dir()]
+    missing = [str(root) for root in roots if not root.exists()]
     if missing:
-        parser.error(f"scan roots do not exist or are not directories: {', '.join(missing)}")
+        parser.error(f"scan roots do not exist: {', '.join(missing)}")
 
     inventory = [capability for root in roots for capability in find_capabilities(root)]
     report = {

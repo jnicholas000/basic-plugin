@@ -9,6 +9,8 @@ It contains two portable skills, one Copilot-specific custom agent, and one port
 - `Custom Agent Foundry`: an Awesome Copilot helper for designing custom agents.
 - GitHub's hosted MCP server, authenticated by the client at use time.
 
+It also includes a passive **Capability Sentinel** hook for GitHub Copilot CLI and cloud-agent sessions. At session start it checks the current project plus Copilot's standard capability locations. It supplies a concise warning to the agent only when it finds a collision. When an agent uses a capability-related search or read and receives multiple matching definitions, a narrow follow-up hook rechecks the inventory and supplies the same warning when warranted. It never installs, removes, disables, renames, or blocks anything.
+
 The imported components are pinned to exact upstream commits. The custom agent remains unmodified; the skill contains small documented compatibility and security patches for GitHub Copilot. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for source commits, local changes, and licenses.
 
 ## Agent Plugins 1.0 layout
@@ -17,6 +19,9 @@ The imported components are pinned to exact upstream commits. The custom agent r
 basic-plugin/
 ├── plugin.json
 ├── mcp.json
+├── hooks.json
+├── hooks/
+│   └── capability_sentinel.py
 ├── skills/
 │   ├── capability-collision-detection/
 │   └── skill-creator/
@@ -63,7 +68,10 @@ copilot plugin install .
 3. Ask the agent to draft a minimal read-only repository-review agent and confirm it produces a complete `.agent.md` file.
 4. Start a fresh session and ask Copilot to create a tiny reusable skill; confirm the `skill-creator` workflow is selected.
 5. Ask Copilot to check this plugin for duplicate capabilities; confirm the `capability-collision-detection` workflow is selected and returns a report without changing files.
-6. Open the MCP server list, confirm GitHub's hosted server is present, complete authentication if prompted, and ask Copilot to inspect a repository you can access.
+6. Start a new Copilot CLI session with intentionally colliding test capabilities installed. Confirm the **Capability Sentinel** adds a concise collision warning to the agent context without blocking the session.
+7. Open the MCP server list, confirm GitHub's hosted server is present, complete authentication if prompted, and ask Copilot to inspect a repository you can access.
+
+The sentinel runs in Copilot CLI and cloud-agent hook environments. It does not have a post-install lifecycle event, and VS Code does not currently expose this hook surface for plugins. A newly installed plugin is therefore checked at the next supported agent session, not at the instant of installation.
 
 No personal access token or secret belongs in this repository.
 

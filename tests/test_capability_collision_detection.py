@@ -47,6 +47,16 @@ class CapabilityCollisionDetectionTests(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             scanner.find_capabilities(Path("/does-not-exist"))
 
+    def test_scans_an_explicit_mcp_configuration_file(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config = Path(temp_dir) / "mcp-config.json"
+            config.write_text(json.dumps({"mcpServers": {"github": {"url": "https://example.test/mcp"}}}))
+
+            inventory = scanner.find_capabilities(config)
+
+        self.assertEqual(inventory[0].capability_type, "mcp-server")
+        self.assertEqual(inventory[0].identity, "github")
+
 
 if __name__ == "__main__":
     unittest.main()
