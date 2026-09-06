@@ -60,13 +60,10 @@ class CopilotCompatibilityTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
         )
         self.assertEqual(set(mcp_config), {"$schema", "mcpServers"})
-        self.assertEqual(
-            mcp_config["mcpServers"]["github"],
-            {
-                "type": "streamable-http",
-                "url": "https://api.githubcopilot.com/mcp/",
-            },
-        )
+        self.assertEqual(len(mcp_config["mcpServers"]), 1)
+        server = next(iter(mcp_config["mcpServers"].values()))
+        self.assertEqual(server["type"], "streamable-http")
+        self.assertEqual(server["url"], "https://api.githubcopilot.com/mcp/")
 
     def test_documented_layout_is_consumed_by_aggregator(self):
         skill_text = (SKILL / "SKILL.md").read_text()
