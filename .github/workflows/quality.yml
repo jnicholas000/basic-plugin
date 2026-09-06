@@ -20,6 +20,8 @@ jobs:
           path: .aqc
           token: '${{ secrets.AQC_READ_TOKEN }}'
       - run: npm run build
+      - name: Execute generated-output inventory contract
+        run: npm run validate
       - name: Validate source repository with AQC
         run: node .aqc/src/cli/aqc.mjs validate . --profile awesome-copilot-repository --format json
       - name: Validate generated catalog
