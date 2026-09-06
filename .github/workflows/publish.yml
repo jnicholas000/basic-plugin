@@ -24,6 +24,8 @@ jobs:
           path: .aqc
           token: '${{ secrets.AQC_READ_TOKEN }}'
       - run: npm run build
+      - name: Execute generated-output inventory contract
+        run: npm run validate
       - name: Validate generated artifacts before publication
         run: |
           node .aqc/src/cli/aqc.mjs validate marketplace --profile generic --format json
@@ -41,6 +43,8 @@ jobs:
           cp -R "$snapshot_dir"/. .
           mkdir -p plugins/basic-plugin
           cp -R "$snapshot_dir"/plugin.json "$snapshot_dir"/mcp.json "$snapshot_dir"/skills "$snapshot_dir"/com.github.copilot plugins/basic-plugin/
+          echo "Execute materialized-distribution inventory contract"
+          node eng/validate-marketplace.mjs --distribution-root plugins/basic-plugin
           echo "Validating materialized distribution with AQC"
           node "$GITHUB_WORKSPACE/.aqc/src/cli/aqc.mjs" validate plugins/basic-plugin --profile copilot --format json
           rm -rf "$snapshot_dir"
