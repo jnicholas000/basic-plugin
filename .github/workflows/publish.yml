@@ -1,0 +1,32 @@
+name: Publish marketplace branch
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
+      - run: npm run build
+      - name: Publish generated distribution
+        run: |
+          set -euo pipefail
+          snapshot_dir="$(mktemp -d)"
+          rsync -a --exclude .git --exclude node_modules ./ "$snapshot_dir/"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin marketplace || true
+          git checkout -B marketplace origin/marketplace 2>/dev/null || git checkout --orphan marketplace
+          git rm -rf . 2>/dev/null || true
+          cp -R "$snapshot_dir"/. .
+          mkdir -p plugins/basic-plugin
+          cp -R "$snapshot_dir"/plugin.json "$snapshot_dir"/mcp.json "$snapshot_dir"/skills "$snapshot_dir"/com.github.copilot plugins/basic-plugin/
+          rm -rf "$snapshot_dir"
+          git add -A && git commit -m "chore: publish marketplace from ${GITHUB_SHA}" --allow-empty
+          git push origin marketplace --force
