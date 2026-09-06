@@ -61,7 +61,7 @@ class CopilotCompatibilityTests(unittest.TestCase):
         )
         self.assertEqual(set(mcp_config), {"$schema", "mcpServers"})
         self.assertEqual(
-            mcp_config["mcpServers"]["github"],
+            mcp_config["mcpServers"]["io.github.github/github-mcp-server"],
             {
                 "type": "streamable-http",
                 "url": "https://api.githubcopilot.com/mcp/",

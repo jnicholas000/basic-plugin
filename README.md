@@ -2,11 +2,12 @@
 
 A deliberately small **Agent Plugins 1.0** package for testing GitHub Copilot plugin and MCP behavior outside an enterprise-managed environment.
 
-It contains exactly one portable skill, one Copilot-specific custom agent, and one portable MCP server configuration:
+It contains two portable skills, one Copilot-specific custom agent, and one portable MCP server configuration:
 
 - `skill-creator`: Anthropic's skill authoring and evaluation workflow.
+- `capability-collision-detection`: a read-only inventory and duplicate-capability report for plugin, skill, agent, and MCP definitions.
 - `Custom Agent Foundry`: an Awesome Copilot helper for designing custom agents.
-- `github`: GitHub's hosted MCP server, authenticated by the client at use time.
+- GitHub's hosted MCP server, authenticated by the client at use time.
 
 The imported components are pinned to exact upstream commits. The custom agent remains unmodified; the skill contains small documented compatibility and security patches for GitHub Copilot. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for source commits, local changes, and licenses.
 
@@ -17,6 +18,7 @@ basic-plugin/
 ├── plugin.json
 ├── mcp.json
 ├── skills/
+│   ├── capability-collision-detection/
 │   └── skill-creator/
 └── com.github.copilot/
     └── agents/
@@ -60,7 +62,8 @@ copilot plugin install .
 2. Confirm **Custom Agent Foundry** appears in the custom-agent picker.
 3. Ask the agent to draft a minimal read-only repository-review agent and confirm it produces a complete `.agent.md` file.
 4. Start a fresh session and ask Copilot to create a tiny reusable skill; confirm the `skill-creator` workflow is selected.
-5. Open the MCP server list, confirm `github` is present, complete authentication if prompted, and ask Copilot to inspect a repository you can access.
+5. Ask Copilot to check this plugin for duplicate capabilities; confirm the `capability-collision-detection` workflow is selected and returns a report without changing files.
+6. Open the MCP server list, confirm GitHub's hosted server is present, complete authentication if prompted, and ask Copilot to inspect a repository you can access.
 
 No personal access token or secret belongs in this repository.
 
