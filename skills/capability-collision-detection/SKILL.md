@@ -56,6 +56,10 @@ Use this skill to create evidence before changing a plugin, marketplace, agent, 
 | Identity | Types | Sources | User impact | Recommended resolution |
 | --- | --- | --- | --- | --- |
 
+## MCP aliases
+| Server identities | Target/configuration evidence | Confidence | Review decision needed |
+| --- | --- | --- | --- |
+
 ## Possible responsibility overlaps
 | Capabilities | Evidence | Confidence | Review decision needed |
 | --- | --- | --- | --- |
@@ -70,4 +74,5 @@ One bounded, read-only or reversible action. If there are no confirmed collision
 - Rename only the weaker or local definition after confirming client precedence and references.
 - Do not remove an installed capability merely because names match. First establish source, owner, current use, and precedence.
 - For duplicate MCP servers, compare endpoint and authentication configuration before declaring them duplicates.
+- Treat differently named MCP servers with the same endpoint or stdio command as aliases requiring review, even when their configuration differs.
 - Escalate uncertain client precedence as a verification task rather than guessing which definition wins.

@@ -55,11 +55,14 @@ def standard_roots(cwd: str) -> list[Path]:
 
 
 def inventory(roots: Iterable[Path]) -> dict[str, Any]:
-    capabilities = [item for root in roots for item in scanner.find_capabilities(root)]
+    capabilities = scanner.deduplicate_capabilities(
+        item for root in roots for item in scanner.find_capabilities(root)
+    )
     return {
         "inventory": [scanner.asdict(item) for item in capabilities],
         "exact_collisions": scanner.exact_collisions(capabilities),
         "cross_type_collisions": scanner.cross_type_collisions(capabilities),
+        "mcp_aliases": scanner.mcp_aliases(capabilities),
     }
 
 
@@ -94,10 +97,12 @@ def save_fingerprint(path: Path | None, value: str) -> None:
 def collision_context(report: dict[str, Any], changed: bool) -> str | None:
     exact = report["exact_collisions"]
     cross_type = report["cross_type_collisions"]
-    if not exact and not cross_type:
+    aliases = report["mcp_aliases"]
+    if not exact and not cross_type and not aliases:
         return None
     exact_names = ", ".join(f"{item['type']}:{item['identity']}" for item in exact[:3])
     cross_names = ", ".join(item["identity"] for item in cross_type[:3])
+    alias_names = ", ".join("/".join(item["identities"]) for item in aliases[:3])
     parts = ["Capability Sentinel detected active collisions."]
     if changed:
         parts.append("The capability inventory changed since its last recorded scan.")
@@ -105,6 +110,8 @@ def collision_context(report: dict[str, Any], changed: bool) -> str | None:
         parts.append(f"Exact collisions: {exact_names}.")
     if cross_names:
         parts.append(f"Cross-type name collisions: {cross_names}.")
+    if alias_names:
+        parts.append(f"MCP aliases sharing a target: {alias_names}.")
     parts.append(
         "Do not assume precedence. Before selecting, renaming, disabling, or removing a capability, use the capability-collision-detection skill for the detailed report."
     )
@@ -133,7 +140,7 @@ def run(payload: dict[str, Any], after_discovery: bool = False) -> dict[str, str
     previous = load_previous_fingerprint(path)
     current = fingerprint(report)
     save_fingerprint(path, current)
-    context = collision_context(report, changed=previous != current)
+    context = collision_context(report, changed=previous is not None and previous != current)
     return {"additionalContext": context} if context else {}
 
 

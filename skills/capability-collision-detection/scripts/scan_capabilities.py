@@ -4,13 +4,14 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
 
 IGNORED_DIRECTORIES = {
@@ -36,6 +37,8 @@ class Capability:
     description: str
     source_root: str
     path: str
+    mcp_target: str = ""
+    mcp_configuration_hash: str = ""
 
 
 def normalize(value: str) -> str:
@@ -47,10 +50,42 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     if not match:
         return {}
     values: dict[str, str] = {}
-    for line in match.group(1).splitlines():
+    lines = match.group(1).splitlines()
+    index = 0
+    while index < len(lines):
+        line = lines[index]
         key, separator, value = line.partition(":")
-        if separator:
-            values[key.strip()] = value.strip().strip("'\"")
+        if not separator or line.startswith((" ", "\t")):
+            index += 1
+            continue
+        value = value.strip()
+        if value not in {"|", ">", "|-", ">-", "|+", ">+"}:
+            values[key.strip()] = value.strip("'\"")
+            index += 1
+            continue
+
+        block_lines: list[str] = []
+        block_indent: int | None = None
+        index += 1
+        while index < len(lines):
+            continuation = lines[index]
+            if continuation.strip() == "":
+                block_lines.append("")
+                index += 1
+                continue
+            indent = len(continuation) - len(continuation.lstrip())
+            if indent == 0:
+                break
+            if block_indent is None:
+                block_indent = indent
+            if indent < block_indent:
+                break
+            block_lines.append(continuation[block_indent:])
+            index += 1
+        if value.startswith(">"):
+            values[key.strip()] = " ".join(part.strip() for part in block_lines if part.strip())
+        else:
+            values[key.strip()] = "\n".join(block_lines).strip()
     return values
 
 
@@ -63,7 +98,8 @@ def iter_files(root: Path) -> Iterable[Path]:
         yield root
         return
     for path in root.rglob("*"):
-        if any(part in IGNORED_DIRECTORIES for part in path.parts):
+        relative_path = path.relative_to(root)
+        if any(part in IGNORED_DIRECTORIES for part in relative_path.parts):
             continue
         if path.is_file():
             yield path
@@ -71,6 +107,33 @@ def iter_files(root: Path) -> Iterable[Path]:
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
+
+
+def stable_value(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): stable_value(item) for key, item in sorted(value.items())}
+    if isinstance(value, list):
+        return [stable_value(item) for item in value]
+    return value
+
+
+def mcp_target(server: dict[str, Any]) -> str:
+    if isinstance(server.get("url"), str):
+        return f"url:{server['url']}"
+    if isinstance(server.get("command"), str):
+        arguments = json.dumps(stable_value(server.get("args", [])), separators=(",", ":"))
+        return f"stdio:{server['command']}:{arguments}"
+    return ""
+
+
+def mcp_configuration_hash(server: dict[str, Any]) -> str:
+    serialized = json.dumps(stable_value(server), sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
+def mcp_servers(config: dict[str, Any]) -> dict[str, Any]:
+    servers = config.get("mcpServers", config.get("servers", {}))
+    return servers if isinstance(servers, dict) else {}
 
 
 def find_capabilities(root: Path) -> list[Capability]:
@@ -126,7 +189,7 @@ def find_capabilities(root: Path) -> list[Capability]:
                 config = json.loads(read_text(path))
             except json.JSONDecodeError:
                 continue
-            for name, server in config.get("mcpServers", {}).items():
+            for name, server in mcp_servers(config).items():
                 description = ""
                 if isinstance(server, dict):
                     description = str(server.get("description", server.get("url", "")))
@@ -138,9 +201,26 @@ def find_capabilities(root: Path) -> list[Capability]:
                         description,
                         str(root),
                         f"{relative_path}#{name}",
+                        mcp_target(server) if isinstance(server, dict) else "",
+                        mcp_configuration_hash(server) if isinstance(server, dict) else "",
                     )
                 )
     return capabilities
+
+
+def resolved_capability_path(capability: Capability) -> str:
+    relative_path = capability.path.partition("#")[0]
+    root = Path(capability.source_root)
+    path = root if root.is_file() else root / relative_path
+    return str(path.resolve())
+
+
+def deduplicate_capabilities(capabilities: Iterable[Capability]) -> list[Capability]:
+    unique: dict[tuple[str, str, str], Capability] = {}
+    for capability in capabilities:
+        key = (capability.capability_type, capability.identity, resolved_capability_path(capability))
+        unique.setdefault(key, capability)
+    return list(unique.values())
 
 
 def exact_collisions(capabilities: list[Capability]) -> list[dict]:
@@ -170,6 +250,22 @@ def cross_type_collisions(capabilities: list[Capability]) -> list[dict]:
         }
         for identity, items in sorted(groups.items())
         if len({item.capability_type for item in items}) > 1
+    ]
+
+
+def mcp_aliases(capabilities: list[Capability]) -> list[dict]:
+    groups: dict[str, list[Capability]] = defaultdict(list)
+    for capability in capabilities:
+        if capability.capability_type == "mcp-server" and capability.mcp_target:
+            groups[capability.mcp_target].append(capability)
+    return [
+        {
+            "identities": sorted({item.identity for item in items}),
+            "configuration_match": len({item.mcp_configuration_hash for item in items}) == 1,
+            "capabilities": [asdict(item) for item in items],
+        }
+        for items in groups.values()
+        if len({item.identity for item in items}) > 1
     ]
 
 
@@ -219,6 +315,13 @@ def render_markdown(report: dict) -> str:
     for finding in report["cross_type_collisions"]:
         lines.append(f"- **`{finding['identity']}`**: {', '.join(finding['types'])}")
 
+    lines.extend(["", "## MCP aliases"])
+    if not report["mcp_aliases"]:
+        lines.append("No differently named MCP servers sharing a target found.")
+    for finding in report["mcp_aliases"]:
+        match = "matching configurations" if finding["configuration_match"] else "different configurations"
+        lines.append(f"- **{', '.join(finding['identities'])}**: same target, {match}.")
+
     lines.extend(["", "## Possible responsibility overlaps"])
     if not report["possible_overlaps"]:
         lines.append("No high-similarity description overlaps found.")
@@ -248,12 +351,13 @@ def main() -> int:
     if missing:
         parser.error(f"scan roots do not exist: {', '.join(missing)}")
 
-    inventory = [capability for root in roots for capability in find_capabilities(root)]
+    inventory = deduplicate_capabilities(capability for root in roots for capability in find_capabilities(root))
     report = {
         "roots": [str(root) for root in roots],
         "inventory": [asdict(item) for item in inventory],
         "exact_collisions": exact_collisions(inventory),
         "cross_type_collisions": cross_type_collisions(inventory),
+        "mcp_aliases": mcp_aliases(inventory),
         "possible_overlaps": possible_overlaps(inventory, args.similarity_threshold),
     }
     print(json.dumps(report, indent=2, sort_keys=True) if args.format == "json" else render_markdown(report), end="")

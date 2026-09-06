@@ -37,6 +37,7 @@ class CapabilitySentinelTests(unittest.TestCase):
                 result = sentinel.run({"cwd": str(root)})
 
             self.assertIn("Exact collisions: skill:review", result["additionalContext"])
+            self.assertNotIn("changed since its last recorded scan", result["additionalContext"])
             self.assertTrue((state / "capability-sentinel-state.json").is_file())
 
     def test_discovery_runs_only_after_multiple_capability_results(self):
