@@ -1,0 +1,13 @@
+{
+  "name": "basic-plugin-marketplace",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AQC-first plugin marketplace shell with an Awesome Copilot-inspired catalog.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "marketplace:generate": "node eng/generate-marketplace.mjs",
+    "site:build": "node eng/build-site.mjs",
+    "validate": "node eng/validate-marketplace.mjs",
+    "build": "npm run marketplace:generate && npm run validate && npm run site:build"
+  }
+}
