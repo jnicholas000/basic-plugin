@@ -1,0 +1,7 @@
+{
+  "profile": "awesome-copilot-repository",
+  "source": "https://github.com/jnicholas000/ai-quality-control.git",
+  "ref": "main",
+  "requiredChecks": ["structure", "references", "collisions", "security"],
+  "blocking": true
+}
