@@ -6,10 +6,11 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: marketplace-publication-${{ github.ref }}
+  group: marketplace-publication
   cancel-in-progress: true
 jobs:
   publish:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
@@ -23,7 +24,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           repository: jnicholas000/ai-quality-control
-          ref: main
+          ref: a8a345b385d844e4857f97d86d43eac41b513732
           path: .aqc
           token: '${{ secrets.AQC_READ_TOKEN }}'
       - run: npm run build
