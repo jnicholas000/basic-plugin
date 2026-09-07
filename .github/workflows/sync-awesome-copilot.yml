@@ -10,20 +10,53 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
       - name: Resolve upstream head
         id: upstream
         run: echo "sha=$(git ls-remote https://github.com/github/awesome-copilot.git refs/heads/main | cut -f1)" >> "$GITHUB_OUTPUT"
       - name: Update the reviewed pin
         env: { UPSTREAM_LATEST: '${{ steps.upstream.outputs.sha }}' }
         run: node eng/sync-upstream-ref.mjs
+      - name: Detect upstream change
+        id: change
+        run: |
+          if git diff --quiet -- .env.example; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Check AQC access
+        if: steps.change.outputs.changed == 'true'
+        env: { AQC_READ_TOKEN: '${{ secrets.AQC_READ_TOKEN }}' }
+        run: test -n "$AQC_READ_TOKEN" || { echo 'AQC_READ_TOKEN is required to validate automated sync PRs'; exit 1; }
+      - name: Checkout pinned AQC engine
+        if: steps.change.outputs.changed == 'true'
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: jnicholas000/ai-quality-control
+          ref: a8a345b385d844e4857f97d86d43eac41b513732
+          path: .aqc
+          token: '${{ secrets.AQC_READ_TOKEN }}'
+      - name: Run local quality gates for sync change
+        if: steps.change.outputs.changed == 'true'
+        run: |
+          npm run build
+          npm run validate
+      - name: Run AQC gates for sync change
+        if: steps.change.outputs.changed == 'true'
+        run: |
+          node .aqc/src/cli/aqc.mjs validate . --profile awesome-copilot-repository --format json
+          node .aqc/src/cli/aqc.mjs validate marketplace --profile generic --format json
+          node .aqc/src/cli/aqc.mjs validate site --profile generic --format json
       - name: Open verified sync PR
+        if: steps.change.outputs.changed == 'true'
         env: { GH_TOKEN: '${{ github.token }}' }
         run: |
-          if git diff --quiet; then exit 0; fi
           branch="automation/awesome-copilot-${{ steps.upstream.outputs.sha }}"
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git switch -c "$branch"
+          git switch -C "$branch"
           git add .env.example && git commit -m "chore: pin Awesome Copilot structure"
           git push --force origin "$branch"
-          gh pr create --base main --head "$branch" --title "chore: review Awesome Copilot structure update" --body "Automated pin update. AQC and human review are required before merge."
+          gh pr create --base main --head "$branch" --title "chore: review Awesome Copilot structure update" --body "Automated pin update. Local inventory validation and pinned AQC checks passed in the sync workflow. Human review is still required before merge."
