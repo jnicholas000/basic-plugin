@@ -9,6 +9,8 @@
   "expectedDistribution": [
     "plugin.json",
     "mcp.json",
+    "hooks.json",
+    "hooks",
     "com.github.copilot/agents",
     "skills"
   ]
