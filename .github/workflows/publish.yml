@@ -46,7 +46,7 @@ jobs:
           git rm -rf . 2>/dev/null || true
           cp -R "$snapshot_dir"/. .
           mkdir -p plugins/basic-plugin
-          cp -R "$snapshot_dir"/plugin.json "$snapshot_dir"/mcp.json "$snapshot_dir"/skills "$snapshot_dir"/com.github.copilot plugins/basic-plugin/
+          cp -R "$snapshot_dir"/plugin.json "$snapshot_dir"/mcp.json "$snapshot_dir"/hooks.json "$snapshot_dir"/hooks "$snapshot_dir"/skills "$snapshot_dir"/com.github.copilot plugins/basic-plugin/
           echo "Execute materialized-distribution inventory contract"
           node eng/validate-marketplace.mjs --distribution-root plugins/basic-plugin
           echo "Validating materialized distribution with AQC"
