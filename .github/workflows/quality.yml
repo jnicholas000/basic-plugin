@@ -1,0 +1,52 @@
+name: AQC quality gates
+on: [pull_request, push]
+permissions:
+  contents: read
+jobs:
+  local:
+    name: Local quality checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
+      - run: npm run build
+      - name: Verify generated outputs are committed
+        run: |
+          generated_status="$(git status --porcelain --untracked-files=all -- marketplace site)"
+          if [ -n "$generated_status" ]; then
+            printf '%s\n' "$generated_status"
+            echo 'Generated marketplace/site outputs must be committed.'
+            exit 1
+          fi
+      - name: Execute generated-output inventory contract
+        run: npm run validate
+
+  aqc:
+    name: Private AQC checks
+    needs: local
+    if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
+      - name: Check AQC access
+        env: { AQC_READ_TOKEN: '${{ secrets.AQC_READ_TOKEN }}' }
+        run: test -n "$AQC_READ_TOKEN" || { echo 'AQC_READ_TOKEN is required for trusted branches; see UPSTREAM_POLICY.md'; exit 1; }
+      - name: Checkout pinned AQC engine
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: jnicholas000/ai-quality-control
+          ref: a8a345b385d844e4857f97d86d43eac41b513732
+          path: .aqc
+          token: '${{ secrets.AQC_READ_TOKEN }}'
+      - run: npm run build
+      - name: Execute generated-output inventory contract
+        run: npm run validate
+      - name: Validate source repository with AQC
+        run: node .aqc/src/cli/aqc.mjs validate . --profile awesome-copilot-repository --format json
+      - name: Validate generated catalog
+        run: node .aqc/src/cli/aqc.mjs validate marketplace --profile generic --format json
+      - name: Validate generated website
+        run: node .aqc/src/cli/aqc.mjs validate site --profile generic --format json
