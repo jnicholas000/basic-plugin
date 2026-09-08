@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-06T19:53:35.235Z",
+  "generatedAt": "2026-09-08T02:42:00.000Z",
   "plugins": [
     {
       "name": "basic-plugin",
-      "version": "0.2.0",
-      "description": "Minimal Agent Plugins 1.0 package for testing GitHub Copilot custom agents, skills, and GitHub MCP access outside an enterprise-managed environment.",
+      "version": "0.4.0",
+      "description": "Minimal Agent Plugins 1.0 package for testing GitHub Copilot custom agents, skills, passive capability-collision detection, and GitHub MCP access outside an enterprise-managed environment.",
       "repository": "https://github.com/jnicholas000/basic-plugin",
       "homepage": "https://github.com/jnicholas000/basic-plugin",
       "source": "local",
       "capabilities": {
         "agents": 1,
-        "skills": 1,
+        "skills": 2,
         "prompts": 0,
         "instructions": 0
       }
