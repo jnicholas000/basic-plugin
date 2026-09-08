@@ -12,14 +12,20 @@ jobs:
         with: { node-version: 22 }
       - run: npm run build
       - name: Verify generated outputs are committed
-        run: git diff --exit-code -- marketplace site
+        run: |
+          generated_status="$(git status --porcelain --untracked-files=all -- marketplace site)"
+          if [ -n "$generated_status" ]; then
+            printf '%s\n' "$generated_status"
+            echo 'Generated marketplace/site outputs must be committed.'
+            exit 1
+          fi
       - name: Execute generated-output inventory contract
         run: npm run validate
 
   aqc:
     name: Private AQC checks
     needs: local
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
