@@ -38,6 +38,9 @@ jobs:
           ref: a8a345b385d844e4857f97d86d43eac41b513732
           path: .aqc
           token: '${{ secrets.AQC_READ_TOKEN }}'
+      - name: Install pinned AQC dependencies
+        if: steps.change.outputs.changed == 'true'
+        run: npm ci --prefix .aqc --ignore-scripts
       - name: Run local quality gates for sync change
         if: steps.change.outputs.changed == 'true'
         run: |
