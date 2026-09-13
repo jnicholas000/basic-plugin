@@ -44,8 +44,9 @@ Awesome Copilot agent, skill, prompt, or instruction catalog.
 
 The branch has been reconciled with the merged Capability Sentinel work so the materialized
 marketplace package includes `hooks.json` and `hooks/` rather than silently dropping that capability.
-Secret-free local build and inventory checks pass in GitHub Actions. Private AQC validation is
-currently blocked because `AQC_READ_TOKEN` is not configured for this repository.
+Secret-free local build and inventory checks pass in GitHub Actions. `AQC_READ_TOKEN` is now
+reported as configured for this repository. A current-head hosted run remains the authority for
+whether private AQC access and validation succeed.
 
 ## Current Objective
 
@@ -69,8 +70,8 @@ runtime smoke protocol against the combined plugin and marketplace baseline.
 
 ### Now
 
-- Configure the repository `AQC_READ_TOKEN` with read-only access to
-  `jnicholas000/ai-quality-control` and rerun PR #4's private AQC checks.
+- Rerun PR #4's private AQC checks on the repaired current head and treat only the hosted result as
+  proof that the read-only credential and pinned checkout work.
 - Merge PR #4 only after review remains clean and trusted AQC validation passes.
 
 ### Next
@@ -89,8 +90,8 @@ runtime smoke protocol against the combined plugin and marketplace baseline.
 
 ## Blockers and Risks
 
-- `AQC_READ_TOKEN` is not currently available to PR #4's trusted AQC job, so private AQC validation
-  and publication cannot yet be claimed as passing.
+- `AQC_READ_TOKEN` configuration is external to the repository; private AQC validation and
+  publication cannot be claimed as passing until the applicable hosted workflow succeeds.
 - Personal-environment installation, custom-agent/skill discovery, sentinel behavior, and hosted
   GitHub MCP authentication still need recorded runtime evidence on the combined baseline.
 - Marketplace publication and Pages deployment have not yet been exercised from merged `main`.
@@ -102,14 +103,14 @@ runtime smoke protocol against the combined plugin and marketplace baseline.
   `main`.
 - The materialized marketplace contract now requires `plugin.json`, `mcp.json`, `hooks.json`,
   `hooks/`, Copilot agents, and skills.
-- Private AQC checks are blocked by missing repository credential configuration, not reported as
-  passed.
+- The repository secret is reported configured, but only current-head hosted workflow evidence can
+  establish that private AQC access and validation pass.
 - Runtime and post-merge publication success remain intentionally unknown until exercised.
 - No personal access token or secret belongs in the repository.
 
 ## One Next Action
 
-Configure `AQC_READ_TOKEN` for read-only AQC checkout and rerun PR #4's private quality gate.
+Rerun PR #4's private quality gate on the repaired head and require a current-head hosted pass.
 
 ## Evidence and Detailed Plans
 
