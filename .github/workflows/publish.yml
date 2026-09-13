@@ -27,6 +27,8 @@ jobs:
           ref: a8a345b385d844e4857f97d86d43eac41b513732
           path: .aqc
           token: '${{ secrets.AQC_READ_TOKEN }}'
+      - name: Install pinned AQC dependencies
+        run: npm ci --prefix .aqc --ignore-scripts
       - run: npm run build
       - name: Execute generated-output inventory contract
         run: npm run validate
