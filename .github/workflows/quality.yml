@@ -25,7 +25,10 @@ jobs:
   aqc:
     name: Private AQC checks
     needs: local
-    if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+    # Dependabot-triggered pull_request and push workflows cannot read Actions
+    # secrets. Keep its commits on the secret-free local gate while allowing
+    # trusted pushes and same-repository pull requests to run private AQC.
+    if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
