@@ -5,7 +5,7 @@ project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: prototype
 current_phase: Agent Plugins 1.0 personal-environment validation
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-15
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -15,6 +15,14 @@ project_ops_file: projects/basic-plugin.md
 
 Maintain a deliberately small personal Agent Plugins 1.0 testbed that isolates GitHub Copilot plugin,
 skill, agent, hook, and hosted-MCP behavior outside an enterprise-managed environment.
+
+## Work-Oriented Development Intent
+
+Use this testbed to develop and test original, reusable capabilities for Jonathan's work needs,
+then transfer those purpose-built capabilities for adaptation and validation in the work
+environment. Supplied work examples inform requirements; exact copies are not the implementation
+goal. The [work reference needs](docs/work-reference-needs.md) capture this direction and its
+candidate capability map. This reference capture does not establish additional runtime support.
 
 ## Stable V1
 
@@ -59,6 +67,7 @@ credentials.
 
 - Reconcile demonstrated runtime evidence into the package documentation.
 - Evaluate marketplace or catalog work only through a separately reviewed proposal.
+- Use the work reference needs to select bounded capability work as concrete needs arise.
 
 ### Later / Out of Scope
 
@@ -90,6 +99,7 @@ sentinel, and hosted GitHub MCP behavior. Do not infer any unobserved result.
 - THIRD_PARTY_NOTICES.md for source pins and local compatibility/security patches.
 - Project Ops detail: projects/basic-plugin.md.
 - PR #3 for the merged advisory collision-detection baseline.
+- [Work reference needs](docs/work-reference-needs.md) for the supplied examples and build-to-work intent.
 
 ## Update Policy
 
