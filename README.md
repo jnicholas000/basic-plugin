@@ -12,7 +12,7 @@ It contains two portable skills, one Copilot-specific custom agent, one portable
 
 The imported components are pinned to exact upstream commits. The custom agent remains unmodified; the skill contains small documented compatibility and security patches for GitHub Copilot. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for source commits, local changes, and licenses.
 
-AQC is authoritative for trusted marketplace quality validation. Same-repository pull requests run its `awesome-copilot-repository` profile. Fork pull requests run public local build and inventory checks without receiving private AQC credentials. The Awesome Copilot resource catalog is not copied here.
+AQC is authoritative for trusted marketplace quality validation. Same-repository pull requests run its `awesome-copilot-repository` profile. Fork and Dependabot pull requests run public local build and inventory checks without receiving private AQC credentials. A maintainer can apply the `aqc-trusted-validation` label to an exact untrusted head to run the pinned private engine from the trusted base workflow. That job treats the contribution as data, executes no contribution scripts, persists no checkout credentials, and publishes a `Trusted AQC checks` status on the exact head. The Awesome Copilot resource catalog is not copied here.
 
 ## Layout
 
@@ -53,7 +53,7 @@ It never installs, removes, disables, renames, or blocks anything. It does not h
 Set the `AQC_READ_TOKEN` repository secret to a read-only token that can checkout `jnicholas000/ai-quality-control`.
 
 - Trusted pull requests run `npm run build`, inventory validation, and the immutable-pinned AQC engine.
-- Fork pull requests run secret-free local checks and require trusted AQC validation before merge.
+- Fork and Dependabot pull requests run secret-free local checks. For each exact head, a maintainer must remove and reapply `aqc-trusted-validation` to authorize the separate `Trusted AQC checks` path before merge.
 - A push to `main` publishes the generated `marketplace` branch. Publication is serialized, and manual dispatches are restricted to `main`.
 - GitHub Pages deploys the generated `site/` artifact.
 - A weekly/manual sync job records the pinned Awesome Copilot structure for review, runs local and AQC gates before opening an automated sync PR, and never imports upstream resources automatically.
