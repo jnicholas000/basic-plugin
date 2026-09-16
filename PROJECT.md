@@ -5,7 +5,7 @@ project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: prototype
 current_phase: AQC-first marketplace shell integration
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -45,8 +45,10 @@ Awesome Copilot agent, skill, prompt, or instruction catalog.
 The branch has been reconciled with the merged Capability Sentinel work so the materialized
 marketplace package includes `hooks.json` and `hooks/` rather than silently dropping that capability.
 Secret-free local build and inventory checks pass in GitHub Actions. `AQC_READ_TOKEN` is now
-reported as configured for this repository. A current-head hosted run remains the authority for
-whether private AQC access and validation succeed.
+reported as configured for this repository. Trusted same-repository heads use the private AQC job.
+Fork and Dependabot heads require an exact-head, maintainer-authorized `Trusted AQC checks` run that
+executes no contribution scripts and does not persist checkout credentials. Hosted results on the
+current exact head remain authoritative for whether private AQC access and validation succeed.
 
 ## Current Objective
 
@@ -61,7 +63,7 @@ runtime smoke protocol against the combined plugin and marketplace baseline.
 - Generated marketplace index and Holo-branded static catalog shell.
 - Secret-free local build and generated-output inventory validation.
 - Immutable reviewed pins for Awesome Copilot structural tracking and the private AQC engine.
-- Fork-safe local quality checks and same-repository private AQC validation boundary.
+- Fork-safe local quality checks, same-repository private AQC validation, and a maintainer-authorized exact-head AQC path for fork and Dependabot contributions.
 - Serialized marketplace publication with a materialized plugin-distribution contract.
 - Documented VS Code, Copilot CLI, and hosted GitHub MCP smoke paths.
 - Regression coverage for the portable plugin layout and Copilot compatibility.
@@ -104,7 +106,8 @@ runtime smoke protocol against the combined plugin and marketplace baseline.
 - The materialized marketplace contract now requires `plugin.json`, `mcp.json`, `hooks.json`,
   `hooks/`, Copilot agents, and skills.
 - The repository secret is reported configured, but only current-head hosted workflow evidence can
-  establish that private AQC access and validation pass.
+  establish that private AQC access and validation pass. Fork and Dependabot heads require the
+  separately recorded `Trusted AQC checks` status.
 - Runtime and post-merge publication success remain intentionally unknown until exercised.
 - No personal access token or secret belongs in the repository.
 
@@ -117,7 +120,8 @@ Rerun PR #4's private quality gate on the repaired head and require a current-he
 - README.md for package contents, marketplace automation, install steps, and smoke protocol.
 - UPSTREAM_POLICY.md for immutable upstream/AQC pinning and trust-boundary rules.
 - marketplace.contract.json for generated-output and materialized-distribution requirements.
-- .github/workflows/quality.yml for local and trusted AQC gates.
+- .github/workflows/quality.yml for local and same-repository AQC gates.
+- .github/workflows/trusted-aqc.yml for maintainer-authorized fork and Dependabot AQC validation.
 - .github/workflows/publish.yml for serialized marketplace publication.
 - THIRD_PARTY_NOTICES.md for source pins and local compatibility/security patches.
 - Project Ops detail: projects/basic-plugin.md.
