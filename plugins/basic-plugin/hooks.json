@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "python3 \"${PLUGIN_ROOT}/hooks/capability_sentinel.py\"",
+        "powershell": "python \"${PLUGIN_ROOT}/hooks/capability_sentinel.py\"",
+        "timeoutSec": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "matcher": "glob|grep|view",
+        "bash": "python3 \"${PLUGIN_ROOT}/hooks/capability_sentinel.py\" --after-discovery",
+        "powershell": "python \"${PLUGIN_ROOT}/hooks/capability_sentinel.py\" --after-discovery",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}
