@@ -1,0 +1,25 @@
+name: Deploy marketplace website
+on:
+  workflow_run:
+    workflows: [Publish marketplace branch]
+    types: [completed]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages-deployment
+  cancel-in-progress: true
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with: { ref: marketplace }
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with: { path: ./site }
+      - uses: actions/deploy-pages@d6db90174a92c2f12c4a0f2f88f0f4c6e3a0f3a # v4.0.5
