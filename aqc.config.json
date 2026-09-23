@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    "awesome-copilot-repository"
+  ],
+  "exclude": [
+    ".aqc"
+  ]
+}

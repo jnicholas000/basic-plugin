@@ -4,8 +4,8 @@ project_id: basic-plugin
 project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: prototype
-current_phase: Agent Plugins 1.0 personal-environment validation
-last_reviewed: 2026-09-15
+current_phase: Marketplace baseline personal-environment validation
+last_reviewed: 2026-09-23
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -14,7 +14,8 @@ project_ops_file: projects/basic-plugin.md
 ## Mission
 
 Maintain a deliberately small personal Agent Plugins 1.0 testbed that isolates GitHub Copilot plugin,
-skill, agent, hook, and hosted-MCP behavior outside an enterprise-managed environment.
+skill, agent, hook, hosted-MCP, and marketplace-distribution behavior outside an enterprise-managed
+environment.
 
 ## Work-Oriented Development Intent
 
@@ -26,34 +27,53 @@ candidate capability map. This reference capture does not establish additional r
 
 ## Stable V1
 
-Stable V1 is reached when the plugin can be installed and exercised in a personal environment with:
+Stable V1 is reached when the plugin can be installed and exercised in a personal environment and its
+bounded marketplace shell can be built and published with:
 
 - the portable skills and Copilot custom agent discoverable;
 - the hosted GitHub MCP present and authenticated by the client at use time;
 - the advisory-only Capability Sentinel producing warnings only for demonstrated collisions;
+- a generated marketplace package that preserves every local plugin capability, including hooks;
+- secret-free local quality checks plus pinned AQC validation for trusted publication paths;
+- a generated GitHub Pages catalog without copying the Awesome Copilot resource catalog;
 - documented smoke evidence for the supported session surfaces; and
 - no stored secrets or implied enterprise-production support.
 
 ## Current State
 
-The merged package is a small Agent Plugins 1.0 fixture. It includes pinned upstream components, a
-portable GitHub MCP configuration, a Copilot-specific custom agent, read-only collision detection,
-and an advisory session-start/recheck hook. It has static layout and compatibility coverage.
+The repository is a small Agent Plugins 1.0 fixture with pinned upstream components, a portable
+GitHub MCP configuration, a Copilot-specific custom agent, read-only collision detection, and an
+advisory session-start/recheck hook.
 
-The marketplace-shell work in PR #4 is unmerged evidence only. It does not define this repository's
-mission, Stable V1, roadmap, or verification posture.
+PR #4 merged as `28f1971e43ee7f217734747f2fde38d436e6a7e9`, adding the approved marketplace-shell experiment: generated marketplace/site artifacts, an
+Awesome Copilot-inspired structural sync workflow, serialized marketplace publication, GitHub Pages
+deployment, and AQC-first trusted validation. The shell is structural only and does not vendor the
+Awesome Copilot agent, skill, prompt, or instruction catalog.
+
+The merged baseline includes the Capability Sentinel work so the materialized
+marketplace package includes `hooks.json` and `hooks/` rather than silently dropping that capability.
+Secret-free local build and inventory checks pass in GitHub Actions. `AQC_READ_TOKEN` is now
+reported as configured for this repository. Trusted same-repository heads use the private AQC job.
+Fork and Dependabot heads require an exact-head, maintainer-authorized `Trusted AQC checks` run that
+executes no contribution scripts and does not persist checkout credentials. Hosted results on the
+current exact head remain authoritative for whether private AQC access and validation succeed.
 
 ## Current Objective
 
 Establish personal-environment runtime evidence for installation, capability discovery, advisory
-collision reporting, and hosted GitHub MCP authentication without importing enterprise policy or
-credentials.
+collision reporting, and hosted GitHub MCP authentication against the merged plugin and marketplace
+baseline. Keep the separate Pages deployment failure visible without treating it as runtime evidence.
 
 ## Completed Capabilities
 
 - Agent Plugins 1.0 manifest and portable MCP configuration.
 - Pinned skill-creator and Custom Agent Foundry components with third-party notices.
 - Read-only capability-collision inventory and passive Capability Sentinel hooks.
+- Generated marketplace index and Holo-branded static catalog shell.
+- Secret-free local build and generated-output inventory validation.
+- Immutable reviewed pins for Awesome Copilot structural tracking and the private AQC engine.
+- Fork-safe local quality checks, same-repository private AQC validation, and a maintainer-authorized exact-head AQC path for fork and Dependabot contributions.
+- Serialized marketplace publication with a materialized plugin-distribution contract.
 - Documented VS Code, Copilot CLI, and hosted GitHub MCP smoke paths.
 - Regression coverage for the portable plugin layout and Copilot compatibility.
 
@@ -61,44 +81,67 @@ credentials.
 
 ### Now
 
-- Run the documented personal-environment smoke protocol and record only observed results.
+- Run the documented personal-environment smoke protocol against the merged marketplace baseline
+  and record only observed installation, discovery, sentinel, and hosted GitHub MCP results.
 
 ### Next
 
 - Reconcile demonstrated runtime evidence into the package documentation.
-- Evaluate marketplace or catalog work only through a separately reviewed proposal.
-- Use the work reference needs to select bounded capability work as concrete needs arise.
+- Investigate the recorded Pages setup failure and verify deployment separately; a published
+  marketplace branch does not prove the site deployed.
+- Use the work reference needs to select bounded capability work as concrete needs arise;
+  candidate requirements do not activate implementation by themselves.
 
 ### Later / Out of Scope
 
 - Enterprise deployment, policy inference, credential storage, automatic installation, capability
   mutation, or production marketplace claims.
+- Vendoring or automatically importing Awesome Copilot agents, skills, prompts, or instructions.
 - Any behavior that installs, removes, disables, renames, or blocks capabilities.
 
 ## Blockers and Risks
 
 - Personal-environment installation, custom-agent/skill discovery, sentinel behavior, and hosted
-  GitHub MCP authentication have not yet been recorded as runtime evidence.
+  GitHub MCP authentication still need recorded runtime evidence on the combined baseline.
+- Recorded Pages deployment run #35241623140 failed during job setup before deployment steps;
+  no successful Pages deployment is established by that run.
+- The successful AQC and publication runs prove their recorded baseline only, not future credential
+  availability or validation of later revisions.
 - Managed-environment behavior cannot be inferred from this testbed.
-- PR #4 has unresolved review and AQC validation findings; it is not current authority.
 
 ## Verification
 
-- Merged repository history documents portable-layout regression coverage and compatibility checks.
-- Runtime success is intentionally unknown until the documented smoke protocol is performed.
+- PR #4 merged the marketplace baseline as `28f1971e43ee7f217734747f2fde38d436e6a7e9`.
+- Recorded [AQC quality gates](https://github.com/jnicholas000/basic-plugin/actions/runs/35241586289)
+  passed both local quality and private AQC checks.
+- Recorded [marketplace publication](https://github.com/jnicholas000/basic-plugin/actions/runs/35241586224)
+  passed, including materialized-distribution validation and publication.
+- Recorded [Pages deployment](https://github.com/jnicholas000/basic-plugin/actions/runs/35241623140)
+  failed at job setup before deployment steps. This is not a deployed-site claim.
+- The materialized marketplace contract requires `plugin.json`, `mcp.json`, `hooks.json`,
+  `hooks/`, Copilot agents, and skills.
+- Fork and Dependabot contributions retain the exact-head, maintainer-authorized trusted AQC path.
+- Personal runtime success remains unknown until the smoke protocol is performed.
 - No personal access token or secret belongs in the repository.
 
 ## One Next Action
 
-Run the documented personal-environment smoke protocol and record observed installation, discovery,
-sentinel, and hosted GitHub MCP behavior. Do not infer any unobserved result.
+Run the documented personal-environment smoke protocol against the merged marketplace baseline and
+record observed installation, discovery, sentinel, and hosted GitHub MCP behavior. Do not infer
+unobserved results or make Pages deployment a substitute for runtime evidence.
 
 ## Evidence and Detailed Plans
 
-- README.md for the package contents, install steps, smoke protocol, and expected diagnostic value.
+- README.md for package contents, marketplace automation, install steps, and smoke protocol.
+- UPSTREAM_POLICY.md for immutable upstream/AQC pinning and trust-boundary rules.
+- marketplace.contract.json for generated-output and materialized-distribution requirements.
+- .github/workflows/quality.yml for local and same-repository AQC gates.
+- .github/workflows/trusted-aqc.yml for maintainer-authorized fork and Dependabot AQC validation.
+- .github/workflows/publish.yml for serialized marketplace publication.
 - THIRD_PARTY_NOTICES.md for source pins and local compatibility/security patches.
 - Project Ops detail: projects/basic-plugin.md.
 - PR #3 for the merged advisory collision-detection baseline.
+- PR #4 for the merged marketplace-shell integration.
 - [Work reference needs](docs/work-reference-needs.md) for the supplied examples and build-to-work intent.
 
 ## Update Policy

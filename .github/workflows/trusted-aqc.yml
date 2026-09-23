@@ -1,0 +1,83 @@
+name: Trusted AQC validation
+
+on:
+  pull_request_target:
+    types: [labeled]
+
+permissions:
+  contents: read
+  statuses: write
+
+concurrency:
+  group: trusted-aqc-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  aqc:
+    name: Trusted AQC checks
+    if: >-
+      github.event.label.name == 'aqc-trusted-validation' &&
+      (github.event.pull_request.head.repo.full_name != github.repository ||
+       github.event.pull_request.user.login == 'dependabot[bot]')
+    runs-on: ubuntu-latest
+    env:
+      CONTRIBUTION_SHA: '${{ github.event.pull_request.head.sha }}'
+    steps:
+      - name: Mark exact head pending
+        env:
+          GH_TOKEN: '${{ github.token }}'
+        run: >-
+          gh api --method POST
+          "repos/${GITHUB_REPOSITORY}/statuses/${CONTRIBUTION_SHA}"
+          -f state=pending
+          -f context='Trusted AQC checks'
+          -f description='Maintainer-authorized private AQC validation is running'
+
+      - name: Checkout pinned trusted AQC engine
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: jnicholas000/ai-quality-control
+          ref: a8a345b385d844e4857f97d86d43eac41b513732
+          path: trusted-aqc-engine
+          token: '${{ secrets.AQC_READ_TOKEN }}'
+          persist-credentials: false
+
+      - name: Check out the exact contribution without credentials
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: '${{ github.event.pull_request.head.repo.full_name }}'
+          ref: '${{ env.CONTRIBUTION_SHA }}'
+          path: contribution
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      - name: Install only the pinned AQC engine
+        run: npm ci --prefix trusted-aqc-engine --ignore-scripts
+
+      - name: Validate contribution as data
+        working-directory: contribution
+        run: |
+          node ../trusted-aqc-engine/src/cli/aqc.mjs validate . --profile awesome-copilot-repository --format json
+          node ../trusted-aqc-engine/src/cli/aqc.mjs validate marketplace --profile generic --format json
+          node ../trusted-aqc-engine/src/cli/aqc.mjs validate site --profile generic --format json
+
+      - name: Record exact-head result
+        if: always()
+        env:
+          GH_TOKEN: '${{ github.token }}'
+          JOB_STATUS: '${{ job.status }}'
+        run: |
+          state=failure
+          description='Trusted AQC validation failed'
+          if [ "$JOB_STATUS" = success ]; then
+            state=success
+            description='Trusted AQC validation passed'
+          fi
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/statuses/${CONTRIBUTION_SHA}" \
+            -f state="$state" \
+            -f context='Trusted AQC checks' \
+            -f description="$description"

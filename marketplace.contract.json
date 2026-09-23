@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "expectedOutputs": [
+    "marketplace/index.json",
+    "site/index.html",
+    "site/styles.css",
+    "site/app.js"
+  ],
+  "expectedDistribution": [
+    "plugin.json",
+    "mcp.json",
+    "hooks.json",
+    "hooks",
+    "com.github.copilot/agents",
+    "skills"
+  ]
+}
