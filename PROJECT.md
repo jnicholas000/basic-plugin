@@ -5,7 +5,7 @@ project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: prototype
 current_phase: AQC-first marketplace shell integration
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-22
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -52,8 +52,10 @@ current exact head remain authoritative for whether private AQC access and valid
 
 ## Current Objective
 
-Finish PR #4 with a clean review and trusted AQC evidence, then resume the personal-environment
-runtime smoke protocol against the combined plugin and marketplace baseline.
+Prove a low-maintenance Awesome Copilot website synchronization boundary before replacing the current
+prototype shell: routine upstream website changes should be eligible for validated auto-merge, broader
+changes should require review, and architecture migrations should stop automatically at the last
+reviewed pin with a durable manual-migration report.
 
 ## Completed Capabilities
 
@@ -63,6 +65,7 @@ runtime smoke protocol against the combined plugin and marketplace baseline.
 - Generated marketplace index and Holo-branded static catalog shell.
 - Secret-free local build and generated-output inventory validation.
 - Immutable reviewed pins for Awesome Copilot structural tracking and the private AQC engine.
+- Deterministic upstream website change classification with routine, review, and architecture paths.
 - Fork-safe local quality checks, same-repository private AQC validation, and a maintainer-authorized exact-head AQC path for fork and Dependabot contributions.
 - Serialized marketplace publication with a materialized plugin-distribution contract.
 - Documented VS Code, Copilot CLI, and hosted GitHub MCP smoke paths.
@@ -72,12 +75,14 @@ runtime smoke protocol against the combined plugin and marketplace baseline.
 
 ### Now
 
-- Rerun PR #4's private AQC checks on the repaired current head and treat only the hosted result as
-  proof that the read-only credential and pinned checkout work.
-- Merge PR #4 only after review remains clean and trusted AQC validation passes.
+- Land and exercise the tiered Awesome Copilot website sync guardrail against the current reviewed pin.
+- Confirm the known September 2026 Primer Brand rewrite is classified as an architecture migration and
+  does not advance the pin automatically.
 
 ### Next
 
+- Replace the current Holo prototype shell with an upstream-derived website plus a deliberately thin
+  local branding/adaptation layer.
 - Run the documented personal-environment smoke protocol against the merged marketplace baseline and
   record only observed results.
 - Exercise marketplace publication and GitHub Pages from `main`, recording actual evidence rather
@@ -113,7 +118,8 @@ runtime smoke protocol against the combined plugin and marketplace baseline.
 
 ## One Next Action
 
-Rerun PR #4's private quality gate on the repaired head and require a current-head hosted pass.
+Merge the tiered upstream-sync guardrail, then manually dispatch it once so the pinned pre-redesign
+baseline is proven to stop on Awesome Copilot's September 2026 architecture rewrite.
 
 ## Evidence and Detailed Plans
 
