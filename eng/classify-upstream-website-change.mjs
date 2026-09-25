@@ -1,6 +1,5 @@
 import { execFileSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import { classifyWebsiteChange } from './upstream-website-classifier.mjs';
 
 const repositoryDirectory = process.env.UPSTREAM_REPO_DIR;
@@ -25,23 +24,28 @@ function readPackage(ref) {
 }
 
 function changedFiles() {
-  const output = git('diff', '--name-status', base, head, '--', 'website/').trim();
+  // Count both sides of a rename so critical removals and structural replacements
+  // cannot disappear behind Git's rename/copy detection. NUL delimiters preserve
+  // paths containing whitespace, tabs, newlines, or non-ASCII characters.
+  const output = git('diff', '--no-renames', '--name-status', '-z', base, head, '--', 'website/');
   if (!output) return [];
 
-  return output.split('\n').map((line) => {
-    const parts = line.split('\t');
-    const rawStatus = parts[0];
-    const status = rawStatus[0];
-    const filePath = status === 'R' || status === 'C' ? parts[2] : parts[1];
-    return { status, path: filePath };
-  });
+  const fields = output.split('\0');
+  fields.pop(); // Git terminates the final path with NUL.
+  if (fields.length % 2 !== 0) throw new Error('Unexpected Git name-status output');
+
+  const files = [];
+  for (let index = 0; index < fields.length; index += 2) {
+    files.push({ status: fields[index][0], path: fields[index + 1] });
+  }
+  return files;
 }
 
 function lineStats() {
-  const output = git('diff', '--numstat', base, head, '--', 'website/').trim();
+  const output = git('diff', '--no-renames', '--numstat', '-z', base, head, '--', 'website/');
   if (!output) return { additions: 0, deletions: 0 };
 
-  return output.split('\n').reduce(
+  return output.split('\0').filter(Boolean).reduce(
     (stats, line) => {
       const [added, removed] = line.split('\t');
       stats.additions += /^\d+$/.test(added) ? Number(added) : 0;
