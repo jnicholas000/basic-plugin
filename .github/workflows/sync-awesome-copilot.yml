@@ -104,7 +104,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git switch -C "$branch"
-          git add .env.example website/upstream-baseline.json && git commit -m "chore: pin Awesome Copilot structure"
+          git add .env.example website/upstream-baseline.json site/ && git commit -m "chore: pin Awesome Copilot structure"
           git push --force origin "$branch"
           existing_pr="$(gh pr list --base main --head "$branch" --state open --json number --jq '.[0].number // empty')"
           if [ -n "$existing_pr" ]; then
