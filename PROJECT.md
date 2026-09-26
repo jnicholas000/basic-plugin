@@ -3,9 +3,9 @@ schema_version: 1
 project_id: basic-plugin
 project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
-status: prototype
-current_phase: Marketplace baseline personal-environment validation
-last_reviewed: 2026-09-24
+status: active
+current_phase: Adaptive marketplace clone and customization incubation
+last_reviewed: 2026-09-26
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -13,9 +13,14 @@ project_ops_file: projects/basic-plugin.md
 
 ## Mission
 
-Maintain a deliberately small personal Agent Plugins 1.0 testbed that isolates GitHub Copilot plugin,
-skill, agent, hook, hosted-MCP, and marketplace-distribution behavior outside an enterprise-managed
-environment.
+Maintain a personal Copilot customization incubation and marketplace lab for:
+
+- adaptive Awesome Copilot-derived website and marketplace experiments;
+- skills, agents, prompts, hooks, MCP configurations, and plugin capabilities that do not belong in Starfleet;
+- portable runtime, trust, lifecycle, and distribution experiments that can later inform work implementations; and
+- integration with AI Quality Control (AQC) as the reusable CI, evaluation, security, and governance engine.
+
+Basic Plugin owns clone-specific synchronization and publication behavior. Reusable CI and quality checks belong in AQC.
 
 ## Work-Oriented Development Intent
 
@@ -64,11 +69,14 @@ reviewed pin and create a manual migration issue. This does not replace the Holo
 
 ## Current Objective
 
-Establish personal-environment runtime evidence for installation, capability discovery, advisory
-collision reporting, and hosted GitHub MCP authentication against the merged plugin and marketplace
-baseline. Keep the separate Pages deployment failure visible without treating it as runtime evidence.
-Before replacing the prototype shell, prove the tiered upstream synchronization boundary against the
-reviewed pin and candidate website architecture.
+Use the repository as the active proving ground for the Awesome Copilot-derived site clone, marketplace
+publication, Official/Experimental lifecycle, artifact trust, runtime collision diagnostics, and
+non-Starfleet skill/agent incubation.
+
+PR #7 has landed the adaptive upstream synchronization guardrail. Prove that boundary against the live
+reviewed pin before replacing the Holo prototype, while continuing personal-environment runtime evidence.
+Keep reusable CI/evaluation/security checks in AQC and clone-specific synchronization/migration checks
+local to Basic Plugin.
 
 ## Completed Capabilities
 
@@ -86,30 +94,29 @@ reviewed pin and candidate website architecture.
 
 ## Roadmap
 
+The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
+
 ### Now
 
-- Run the documented personal-environment smoke protocol against the merged marketplace baseline
-  and record only observed installation, discovery, sentinel, and hosted GitHub MCP results.
-- Land the tiered upstream-sync guardrail after current-head quality gates and review pass.
+- Dispatch the merged tiered upstream-sync workflow once and record whether the reviewed pre-redesign
+  pin correctly stops on the September 2026 website architecture rewrite.
+- Preserve AQC as the reusable quality engine while keeping clone-specific synchronization checks local.
+- Continue personal-environment runtime validation for the merged plugin baseline.
 
 ### Next
 
-- Dispatch the merged sync workflow once and record whether the reviewed pre-redesign pin correctly
-  stops on the September 2026 website architecture rewrite; do not infer this from synthetic tests.
-- Replace the Holo prototype shell with an upstream-derived website and a thin branding/adaptation
-  layer only after the synchronization boundary is proven.
-- Reconcile demonstrated runtime evidence into the package documentation.
-- Investigate the recorded Pages setup failure and verify deployment separately; a published
-  marketplace branch does not prove the site deployed.
-- Use the work reference needs to select bounded capability work as concrete needs arise;
-  candidate requirements do not activate implementation by themselves.
+- Replace the Holo prototype with the selected Awesome Copilot-derived site structure and thin local wrapper.
+- Fix and verify GitHub Pages deployment separately from marketplace publication.
+- Add Official/Experimental lifecycle metadata and site presentation.
+- Wire missing reusable governance/evaluation capabilities through AQC.
+- Expand runtime trust/collision experiments.
 
 ### Later / Out of Scope
 
-- Enterprise deployment, policy inference, credential storage, automatic installation, capability
-  mutation, or production marketplace claims.
-- Vendoring or automatically importing Awesome Copilot agents, skills, prompts, or instructions.
-- Any behavior that installs, removes, disables, renames, or blocks capabilities.
+- Enterprise production deployment or claims of enterprise compatibility without work-environment evidence.
+- Credential storage or private work data in this repository.
+- Silent capability mutation, installation, removal, disabling, or renaming.
+- Blind vendoring of the Awesome Copilot resource catalog.
 
 ## Blockers and Risks
 
@@ -142,9 +149,9 @@ reviewed pin and candidate website architecture.
 
 ## One Next Action
 
-Run the documented personal-environment smoke protocol against the merged marketplace baseline and
-record observed installation, discovery, sentinel, and hosted GitHub MCP behavior. Do not infer
-unobserved results or make Pages deployment a substitute for runtime evidence.
+Dispatch the merged tiered upstream-sync workflow once and record whether the reviewed pre-redesign
+pin correctly stops on the current Awesome Copilot website architecture. Preserve the personal-runtime
+smoke as a parallel evidence need, not a substitute for clone-sync validation.
 
 ## Evidence and Detailed Plans
 
