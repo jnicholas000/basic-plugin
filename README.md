@@ -1,6 +1,6 @@
 # basic-plugin
 
-A deliberately small **Agent Plugins 1.0** package and marketplace pilot for testing GitHub Copilot plugin and MCP behavior outside an enterprise-managed environment. The repository keeps one curated test plugin while the website, generated marketplace branch, and CI automation follow useful structural patterns from [Awesome Copilot](https://github.com/github/awesome-copilot).
+A **Copilot customization incubation and marketplace lab** built on Agent Plugins 1.0. It is the personal proving ground for an Awesome Copilot-derived site/marketplace clone, runtime customization experiments, and useful skills or agents that do not belong in Starfleet. Reusable CI, evaluation, security, and governance checks belong in **AI Quality Control (AQC)**; clone-specific synchronization and publication logic stays here.
 
 It contains two portable skills, one Copilot-specific custom agent, one portable MCP server configuration, and a passive capability-collision hook:
 
@@ -13,6 +13,8 @@ It contains two portable skills, one Copilot-specific custom agent, one portable
 The imported components are pinned to exact upstream commits. The custom agent remains unmodified; the skill contains small documented compatibility and security patches for GitHub Copilot. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for source commits, local changes, and licenses.
 
 AQC is authoritative for trusted marketplace quality validation. Same-repository pull requests run its `awesome-copilot-repository` profile. Fork and Dependabot pull requests run public local build and inventory checks without receiving private AQC credentials. A maintainer can apply the `aqc-trusted-validation` label to an exact untrusted head to run the pinned private engine from the trusted base workflow. That job treats the contribution as data, executes no contribution scripts, persists no checkout credentials, and publishes a `Trusted AQC checks` status on the exact head. The Awesome Copilot resource catalog is not copied here.
+
+See [ROADMAP.md](ROADMAP.md) for the project ownership boundary, Official/Experimental lifecycle plan, trust model, health/evaluation work, adaptive website-clone roadmap, and artifact-incubation backlog.
 
 ## Layout
 
