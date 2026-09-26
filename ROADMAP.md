@@ -76,21 +76,25 @@ If a clone check later proves generally useful beyond this repository, promote t
 
 **Outcome:** Basic Plugin hosts a recognizable local marketplace experience while absorbing routine upstream website changes with minimal maintenance.
 
+### Completed foundation
+
+- PR #7 classifies upstream website changes as `routine`, `review`, or `architecture`.
+- Routine changes remain eligible for automated validation and merge.
+- Broader non-architectural changes require human review.
+- Architecture migrations preserve the reviewed pin and create a durable manual path.
+- The first live architecture comparison identified the September 2026 Astro 7 + React 19 + Primer Brand rewrite as an architecture migration, recorded in issue #9.
+
 ### In progress
 
-- Finish PR #7, which classifies upstream website changes as `routine`, `review`, or `architecture`.
-- Keep routine changes eligible for automated validation and merge.
-- Require human review for broader changes.
-- Stop automated pin updates when upstream makes an architectural migration.
+- Replace the Holo prototype with a thin local adapter for the reviewed current Awesome Copilot page structure.
+- Preserve local marketplace data as the only displayed artifact source.
+- Record the reviewed architecture identity and source mapping in `website/upstream-baseline.json` and `website/UPSTREAM.md`.
+- Validate generated-site drift and the no-upstream-catalog boundary locally.
 
 ### Next
 
-- Replace the current Holo prototype with the selected Awesome Copilot-derived site structure.
-- Add a thin local wrapper for identity/branding instead of deeply forking upstream UI code.
-- Preserve local marketplace data as the source of displayed artifacts.
-- Verify the sync automation against representative historical upstream changes.
-- Record which upstream files are mirrored, wrapped, ignored, or locally owned.
-- Make generated-site drift detectable.
+- Run the sync automation against the new reviewed architecture baseline.
+- Record the first post-migration routine/review sync evidence.
 - Keep framework-migration logic local to Basic Plugin.
 
 ### Acceptance

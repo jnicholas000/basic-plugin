@@ -63,9 +63,12 @@ Fork and Dependabot heads require an exact-head, maintainer-authorized `Trusted 
 executes no contribution scripts and does not persist checkout credentials. Hosted results on the
 current exact head remain authoritative for whether private AQC access and validation succeed.
 
-PR #7 adds a tiered upstream website synchronization guardrail. Routine changes are eligible for
-validated auto-merge, broader changes require human review, and architecture migrations preserve the
-reviewed pin and create a manual migration issue. This does not replace the Holo prototype shell.
+PR #7 added the tiered upstream website synchronization guardrail. The first real comparison then
+found the expected architecture migration: the prior reviewed baseline was 63 commits behind the
+current Astro 7 + React 19 + Primer Brand website. Issue #9 records that manual migration.
+
+This branch replaces the Holo prototype with a local structural adapter for the current Awesome
+Copilot page model while preserving Basic Plugin's local catalog as the only published resource data.
 
 ## Current Objective
 
@@ -73,10 +76,12 @@ Use the repository as the active proving ground for the Awesome Copilot-derived 
 publication, Official/Experimental lifecycle, artifact trust, runtime collision diagnostics, and
 non-Starfleet skill/agent incubation.
 
-PR #7 has landed the adaptive upstream synchronization guardrail. Prove that boundary against the live
-reviewed pin before replacing the Holo prototype, while continuing personal-environment runtime evidence.
+Complete the first manual website architecture migration against reviewed Awesome Copilot commit
+`6c4d33b9cfca967a28bb2962ef4d55e4a384c88c`, validate the generated local adapter through the
+existing AQC pipeline, and establish that commit as the new synchronization baseline.
+
 Keep reusable CI/evaluation/security checks in AQC and clone-specific synchronization/migration checks
-local to Basic Plugin.
+local to Basic Plugin. Continue personal-environment runtime evidence as a parallel track.
 
 ## Completed Capabilities
 
@@ -98,14 +103,13 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ### Now
 
-- Dispatch the merged tiered upstream-sync workflow once and record whether the reviewed pre-redesign
-  pin correctly stops on the September 2026 website architecture rewrite.
+- Land the manual site migration recorded by issue #9 and establish the current architecture baseline.
 - Preserve AQC as the reusable quality engine while keeping clone-specific synchronization checks local.
 - Continue personal-environment runtime validation for the merged plugin baseline.
 
 ### Next
 
-- Replace the Holo prototype with the selected Awesome Copilot-derived site structure and thin local wrapper.
+- Run the sync workflow against the new baseline and record the first post-migration routine/review classification.
 - Fix and verify GitHub Pages deployment separately from marketplace publication.
 - Add Official/Experimental lifecycle metadata and site presentation.
 - Wire missing reusable governance/evaluation capabilities through AQC.
@@ -149,13 +153,14 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Dispatch the merged tiered upstream-sync workflow once and record whether the reviewed pre-redesign
-pin correctly stops on the current Awesome Copilot website architecture. Preserve the personal-runtime
-smoke as a parallel evidence need, not a substitute for clone-sync validation.
+Validate and merge the issue #9 manual architecture migration, then run the upstream-sync workflow
+against the new reviewed baseline. Preserve the personal-runtime smoke as a parallel evidence need,
+not a substitute for clone-sync validation.
 
 ## Evidence and Detailed Plans
 
-- README.md for package contents, marketplace automation, install steps, and smoke protocol.
+- README.md for package contents, website architecture, marketplace automation, install steps, and smoke protocol.
+- website/UPSTREAM.md and website/upstream-baseline.json for the reviewed clone architecture and source mapping.
 - UPSTREAM_POLICY.md for immutable upstream/AQC pinning and trust-boundary rules.
 - marketplace.contract.json for generated-output and materialized-distribution requirements.
 - .github/workflows/quality.yml for local and same-repository AQC gates.
