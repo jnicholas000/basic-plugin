@@ -7,7 +7,7 @@ const ARCHITECTURE_DEPENDENCIES = [
   'react-dom',
 ];
 
-const CRITICAL_PATHS = new Set([
+const DEFAULT_CRITICAL_PATHS = new Set([
   'website/package.json',
   'website/astro.config.mjs',
 ]);
@@ -62,15 +62,16 @@ function frameworkSignals(basePackage, headPackage) {
   return signals;
 }
 
-export function classifyWebsiteChange({ files, basePackage, headPackage }) {
+export function classifyWebsiteChange({ files, basePackage, headPackage, criticalPaths = [] }) {
   const websiteFiles = files.filter((file) => file.path.startsWith('website/'));
   const added = websiteFiles.filter((file) => file.status === 'A').length;
   const removed = websiteFiles.filter((file) => file.status === 'D').length;
   const modified = websiteFiles.length - added - removed;
   const architectureSignals = frameworkSignals(basePackage, headPackage);
+  const criticalPathSet = new Set([...DEFAULT_CRITICAL_PATHS, ...criticalPaths]);
 
   for (const file of websiteFiles) {
-    if (file.status === 'D' && CRITICAL_PATHS.has(file.path)) {
+    if (file.status === 'D' && criticalPathSet.has(file.path)) {
       architectureSignals.push(`critical website path removed: ${file.path}`);
     }
   }
