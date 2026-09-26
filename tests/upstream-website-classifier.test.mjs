@@ -92,6 +92,20 @@ test('removing a critical website root file stops automatic synchronization', ()
   assert.equal(result.classification, 'architecture');
 });
 
+
+test('removing a mapped structural source stops automatic synchronization', () => {
+  const source = 'website/src/components/brand/HomePage.tsx';
+  const result = classifyWebsiteChange({
+    files: [{ status: 'D', path: source }],
+    basePackage: packageWith({ astro: '^7.3.0' }),
+    headPackage: packageWith({ astro: '^7.3.0' }),
+    criticalPaths: [source],
+  });
+
+  assert.equal(result.classification, 'architecture');
+  assert.match(result.architectureSignals.join('\n'), /HomePage\.tsx/);
+});
+
 // Exercise the actual Git-to-classifier boundary, not only pre-normalized file lists.
 
 
@@ -178,6 +192,21 @@ test('CLI treats moving critical config outside website as architecture', (t) =>
   assert.equal(values.removed_files, '1');
   assert.equal(values.added_files, '0');
   assert.match(markdown, /critical website path removed: website\/astro.config.mjs/);
+});
+
+
+test('CLI treats renaming a baseline-mapped structural source as architecture', (t) => {
+  const source = 'website/src/components/brand/HomePage.tsx';
+  const f = fixture(t, { [source]: 'export function HomePage() {}\n' });
+  f.move(source, 'website/src/components/brand/MarketplaceHome.tsx');
+  f.git('add', '--all');
+  assert.match(f.git('diff', '--cached', '--name-status', '-M'), /^R100\t/m);
+
+  const { values, markdown } = f.run();
+  assert.equal(values.classification, 'architecture');
+  assert.equal(values.added_files, '1');
+  assert.equal(values.removed_files, '1');
+  assert.match(markdown, /critical website path removed: website\/src\/components\/brand\/HomePage\.tsx/);
 });
 
 test('CLI counts ordinary renames as an addition and deletion without escalating a small move', (t) => {
