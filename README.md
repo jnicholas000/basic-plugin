@@ -56,7 +56,7 @@ Set the `AQC_READ_TOKEN` repository secret to a read-only token that can checkou
 - Fork and Dependabot pull requests run secret-free local checks. For each exact head, a maintainer must remove and reapply `aqc-trusted-validation` to authorize the separate `Trusted AQC checks` path before merge.
 - A push to `main` publishes the generated `marketplace` branch. Publication is serialized, and manual dispatches are restricted to `main`.
 - GitHub Pages deploys the generated `site/` artifact.
-- A weekly/manual sync job records the pinned Awesome Copilot structure for review, runs local and AQC gates before opening an automated sync PR, and never imports upstream resources automatically.
+- A weekly/manual sync job compares the reviewed Awesome Copilot pin with current upstream website structure before advancing it. Routine changes can auto-merge after local and AQC validation, broader changes require a reviewed PR, and architecture rewrites stop the sync and open/refresh a manual migration issue. Upstream resources are never imported automatically.
 
 See [UPSTREAM_POLICY.md](UPSTREAM_POLICY.md) for the immutable upstream and AQC pinning contract.
 

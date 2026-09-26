@@ -5,7 +5,7 @@ project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: prototype
 current_phase: Marketplace baseline personal-environment validation
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-24
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -58,11 +58,17 @@ Fork and Dependabot heads require an exact-head, maintainer-authorized `Trusted 
 executes no contribution scripts and does not persist checkout credentials. Hosted results on the
 current exact head remain authoritative for whether private AQC access and validation succeed.
 
+PR #7 adds a tiered upstream website synchronization guardrail. Routine changes are eligible for
+validated auto-merge, broader changes require human review, and architecture migrations preserve the
+reviewed pin and create a manual migration issue. This does not replace the Holo prototype shell.
+
 ## Current Objective
 
 Establish personal-environment runtime evidence for installation, capability discovery, advisory
 collision reporting, and hosted GitHub MCP authentication against the merged plugin and marketplace
 baseline. Keep the separate Pages deployment failure visible without treating it as runtime evidence.
+Before replacing the prototype shell, prove the tiered upstream synchronization boundary against the
+reviewed pin and candidate website architecture.
 
 ## Completed Capabilities
 
@@ -72,6 +78,7 @@ baseline. Keep the separate Pages deployment failure visible without treating it
 - Generated marketplace index and Holo-branded static catalog shell.
 - Secret-free local build and generated-output inventory validation.
 - Immutable reviewed pins for Awesome Copilot structural tracking and the private AQC engine.
+- Deterministic upstream website classification with routine, review, and architecture paths.
 - Fork-safe local quality checks, same-repository private AQC validation, and a maintainer-authorized exact-head AQC path for fork and Dependabot contributions.
 - Serialized marketplace publication with a materialized plugin-distribution contract.
 - Documented VS Code, Copilot CLI, and hosted GitHub MCP smoke paths.
@@ -83,9 +90,14 @@ baseline. Keep the separate Pages deployment failure visible without treating it
 
 - Run the documented personal-environment smoke protocol against the merged marketplace baseline
   and record only observed installation, discovery, sentinel, and hosted GitHub MCP results.
+- Land the tiered upstream-sync guardrail after current-head quality gates and review pass.
 
 ### Next
 
+- Dispatch the merged sync workflow once and record whether the reviewed pre-redesign pin correctly
+  stops on the September 2026 website architecture rewrite; do not infer this from synthetic tests.
+- Replace the Holo prototype shell with an upstream-derived website and a thin branding/adaptation
+  layer only after the synchronization boundary is proven.
 - Reconcile demonstrated runtime evidence into the package documentation.
 - Investigate the recorded Pages setup failure and verify deployment separately; a published
   marketplace branch does not prove the site deployed.
@@ -107,6 +119,7 @@ baseline. Keep the separate Pages deployment failure visible without treating it
   no successful Pages deployment is established by that run.
 - The successful AQC and publication runs prove their recorded baseline only, not future credential
   availability or validation of later revisions.
+- Local classifier regression tests do not prove the live upstream sync, issue creation, or auto-merge path.
 - Managed-environment behavior cannot be inferred from this testbed.
 
 ## Verification
@@ -118,6 +131,9 @@ baseline. Keep the separate Pages deployment failure visible without treating it
   passed, including materialized-distribution validation and publication.
 - Recorded [Pages deployment](https://github.com/jnicholas000/basic-plugin/actions/runs/35241623140)
   failed at job setup before deployment steps. This is not a deployed-site claim.
+- PR #7's classifier suite passes 15 local tests, including real Git renames, critical-path moves,
+  copies, structural replacement, unusual filenames, unchanged refs, and configuration edits.
+  Five regression cases failed against the original parser before the repair.
 - The materialized marketplace contract requires `plugin.json`, `mcp.json`, `hooks.json`,
   `hooks/`, Copilot agents, and skills.
 - Fork and Dependabot contributions retain the exact-head, maintainer-authorized trusted AQC path.
@@ -142,6 +158,7 @@ unobserved results or make Pages deployment a substitute for runtime evidence.
 - Project Ops detail: projects/basic-plugin.md.
 - PR #3 for the merged advisory collision-detection baseline.
 - PR #4 for the merged marketplace-shell integration.
+- PR #7 for the tiered upstream website sync guardrail.
 - [Work reference needs](docs/work-reference-needs.md) for the supplied examples and build-to-work intent.
 
 ## Update Policy
