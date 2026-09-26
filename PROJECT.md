@@ -63,14 +63,20 @@ Fork and Dependabot heads require an exact-head, maintainer-authorized `Trusted 
 executes no contribution scripts and does not persist checkout credentials. Hosted results on the
 current exact head remain authoritative for whether private AQC access and validation succeed.
 
+PR #7 adds a tiered upstream website synchronization guardrail. Routine changes are eligible for
+validated auto-merge, broader changes require human review, and architecture migrations preserve the
+reviewed pin and create a manual migration issue. This does not replace the Holo prototype shell.
+
 ## Current Objective
 
-Finish the adaptive Awesome Copilot website synchronization guardrails, then use the repository as the
-active proving ground for the site clone, marketplace publication, Official/Experimental lifecycle,
-artifact trust, runtime collision diagnostics, and non-Starfleet skill/agent incubation.
+Use the repository as the active proving ground for the Awesome Copilot-derived site clone, marketplace
+publication, Official/Experimental lifecycle, artifact trust, runtime collision diagnostics, and
+non-Starfleet skill/agent incubation.
 
-Continue to collect personal-environment runtime evidence. Keep reusable CI/evaluation/security checks
-in AQC and keep clone-specific synchronization/migration checks local to Basic Plugin.
+PR #7 has landed the adaptive upstream synchronization guardrail. Prove that boundary against the live
+reviewed pin before replacing the Holo prototype, while continuing personal-environment runtime evidence.
+Keep reusable CI/evaluation/security checks in AQC and clone-specific synchronization/migration checks
+local to Basic Plugin.
 
 ## Completed Capabilities
 
@@ -80,6 +86,7 @@ in AQC and keep clone-specific synchronization/migration checks local to Basic P
 - Generated marketplace index and Holo-branded static catalog shell.
 - Secret-free local build and generated-output inventory validation.
 - Immutable reviewed pins for Awesome Copilot structural tracking and the private AQC engine.
+- Deterministic upstream website classification with routine, review, and architecture paths.
 - Fork-safe local quality checks, same-repository private AQC validation, and a maintainer-authorized exact-head AQC path for fork and Dependabot contributions.
 - Serialized marketplace publication with a materialized plugin-distribution contract.
 - Documented VS Code, Copilot CLI, and hosted GitHub MCP smoke paths.
@@ -91,13 +98,14 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ### Now
 
-- Finish PR #7 and the adaptive upstream website change classifier.
+- Dispatch the merged tiered upstream-sync workflow once and record whether the reviewed pre-redesign
+  pin correctly stops on the September 2026 website architecture rewrite.
 - Preserve AQC as the reusable quality engine while keeping clone-specific synchronization checks local.
 - Continue personal-environment runtime validation for the merged plugin baseline.
 
 ### Next
 
-- Replace the Holo prototype with the selected Awesome Copilot-derived site structure.
+- Replace the Holo prototype with the selected Awesome Copilot-derived site structure and thin local wrapper.
 - Fix and verify GitHub Pages deployment separately from marketplace publication.
 - Add Official/Experimental lifecycle metadata and site presentation.
 - Wire missing reusable governance/evaluation capabilities through AQC.
@@ -118,6 +126,7 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
   no successful Pages deployment is established by that run.
 - The successful AQC and publication runs prove their recorded baseline only, not future credential
   availability or validation of later revisions.
+- Local classifier regression tests do not prove the live upstream sync, issue creation, or auto-merge path.
 - Managed-environment behavior cannot be inferred from this testbed.
 
 ## Verification
@@ -129,6 +138,9 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
   passed, including materialized-distribution validation and publication.
 - Recorded [Pages deployment](https://github.com/jnicholas000/basic-plugin/actions/runs/35241623140)
   failed at job setup before deployment steps. This is not a deployed-site claim.
+- PR #7's classifier suite passes 15 local tests, including real Git renames, critical-path moves,
+  copies, structural replacement, unusual filenames, unchanged refs, and configuration edits.
+  Five regression cases failed against the original parser before the repair.
 - The materialized marketplace contract requires `plugin.json`, `mcp.json`, `hooks.json`,
   `hooks/`, Copilot agents, and skills.
 - Fork and Dependabot contributions retain the exact-head, maintainer-authorized trusted AQC path.
@@ -137,9 +149,9 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Finish and merge PR #7's adaptive website-sync guardrails, then begin the upstream-derived site-clone
-implementation using the ownership boundary in [ROADMAP.md](ROADMAP.md): reusable quality checks in
-AQC, clone-specific synchronization checks in Basic Plugin.
+Dispatch the merged tiered upstream-sync workflow once and record whether the reviewed pre-redesign
+pin correctly stops on the current Awesome Copilot website architecture. Preserve the personal-runtime
+smoke as a parallel evidence need, not a substitute for clone-sync validation.
 
 ## Evidence and Detailed Plans
 
@@ -153,6 +165,7 @@ AQC, clone-specific synchronization checks in Basic Plugin.
 - Project Ops detail: projects/basic-plugin.md.
 - PR #3 for the merged advisory collision-detection baseline.
 - PR #4 for the merged marketplace-shell integration.
+- PR #7 for the tiered upstream website sync guardrail.
 - [Work reference needs](docs/work-reference-needs.md) for the supplied examples and build-to-work intent.
 
 ## Update Policy
