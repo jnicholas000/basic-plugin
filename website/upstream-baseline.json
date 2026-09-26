@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "repository": "github/awesome-copilot",
   "ref": "6c4d33b9cfca967a28bb2962ef4d55e4a384c88c",
-  "reviewedOn": "2026-09-26",
   "architecture": {
     "framework": "Astro 7",
     "islands": "React 19",
@@ -20,5 +19,6 @@
     "website/src/components/brand/TopNav.tsx",
     "website/src/components/brand/styles/styles.module.css"
   ],
-  "localStrategy": "structural-static-adapter"
+  "localStrategy": "structural-static-adapter",
+  "capturedOn": "2026-09-26"
 }

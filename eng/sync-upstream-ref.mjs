@@ -9,6 +9,12 @@ if (!latest || !/^[0-9a-f]{40}$/.test(latest)) {
 }
 
 const env = await readFile(envFile, 'utf8');
+const baseline = JSON.parse(await readFile(baselineFile, 'utf8'));
+
+if (baseline.ref === latest) {
+  process.exit(0);
+}
+
 await writeFile(
   envFile,
   env.replace(
@@ -17,7 +23,6 @@ await writeFile(
   ),
 );
 
-const baseline = JSON.parse(await readFile(baselineFile, 'utf8'));
 baseline.ref = latest;
-baseline.reviewedOn = new Date().toISOString().slice(0, 10);
+baseline.capturedOn = new Date().toISOString().slice(0, 10);
 await writeFile(baselineFile, `${JSON.stringify(baseline, null, 2)}\n`);

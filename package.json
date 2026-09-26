@@ -11,7 +11,7 @@
     "site:build": "node eng/build-site.mjs",
     "validate": "node eng/validate-marketplace.mjs && npm run site:clone:validate",
     "build": "npm run test:upstream-sync && npm run site:baseline:validate && npm run marketplace:generate && npm run site:build && npm run validate",
-    "test:upstream-sync": "node --test tests/upstream-website-classifier.test.mjs",
+    "test:upstream-sync": "node --test tests/upstream-website-classifier.test.mjs tests/sync-upstream-ref.test.mjs",
     "site:baseline:validate": "node eng/validate-upstream-baseline.mjs",
     "site:clone:validate": "node eng/validate-site-clone.mjs"
   }
