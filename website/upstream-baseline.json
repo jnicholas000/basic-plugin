@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "repository": "github/awesome-copilot",
+  "ref": "6c4d33b9cfca967a28bb2962ef4d55e4a384c88c",
+  "reviewedOn": "2026-09-26",
+  "architecture": {
+    "framework": "Astro 7",
+    "islands": "React 19",
+    "designSystem": "Primer Brand",
+    "layout": "BaseLayout + React PageShell",
+    "homepage": "framed hero + responsive resource card grid + closing CTA"
+  },
+  "sourceFiles": [
+    "website/package.json",
+    "website/astro.config.mjs",
+    "website/src/layouts/BaseLayout.astro",
+    "website/src/pages/index.astro",
+    "website/src/components/brand/HomePage.tsx",
+    "website/src/components/brand/PageShell.tsx",
+    "website/src/components/brand/TopNav.tsx",
+    "website/src/components/brand/styles/styles.module.css"
+  ],
+  "localStrategy": "structural-static-adapter"
+}
