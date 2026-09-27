@@ -74,7 +74,7 @@ If a clone check later proves generally useful beyond this repository, promote t
 
 ## Mission 1: Adaptive Awesome Copilot Site Clone
 
-**Outcome:** Basic Plugin hosts a recognizable local marketplace experience while absorbing routine upstream website changes with minimal maintenance.
+**Outcome:** Basic Plugin hosts a recognizable local marketplace experience from a reproducible vendored Awesome Copilot website while absorbing safe upstream changes with minimal maintenance.
 
 ### Completed foundation
 
@@ -84,18 +84,49 @@ If a clone check later proves generally useful beyond this repository, promote t
 - Architecture migrations preserve the reviewed pin and create a durable manual path.
 - The first live architecture comparison identified the September 2026 Astro 7 + React 19 + Primer Brand rewrite as an architecture migration, recorded in issue #9.
 
+### Completed baseline
+
+- PR #10 established the thin structural adapter as the proven baseline for the current Awesome Copilot architecture.
+- Basic Plugin's local marketplace data is the only displayed artifact source.
+- The reviewed architecture identity and source mapping are recorded in `website/upstream-baseline.json` and `website/UPSTREAM.md`.
+- Clone-specific validation detects generated-site drift and protects the no-upstream-catalog boundary.
+
 ### In progress
 
-- Replace the Holo prototype with a thin local adapter for the reviewed current Awesome Copilot page structure.
-- Preserve local marketplace data as the only displayed artifact source.
-- Record the reviewed architecture identity and source mapping in `website/upstream-baseline.json` and `website/UPSTREAM.md`.
-- Validate generated-site drift and the no-upstream-catalog boundary locally.
+- Define and implement the vendored-upstream trust boundary, beginning with read-only static candidate preflight and neutral vendor configuration.
+
+### Target architecture
+
+The next implementation should replace hand-authored upstream-like UI with:
+
+```text
+resolve candidate Awesome Copilot SHA
+  → read-only static preflight
+  → routine/review only: credential-free vendoring + overlay + build
+  → browser smoke + clone checks
+  → trusted artifact-only AQC validation
+  → final classification + write-capable orchestration
+```
+
+See [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
 
 ### Next
 
-- Run the sync automation against the new reviewed architecture baseline.
-- Record the first post-migration routine/review sync evidence.
-- Keep framework-migration logic local to Basic Plugin.
+- Add neutral vendor configuration with a full accepted SHA plus copy/prune/keep rules.
+- Add a read-only static candidate preflight before any upstream candidate code can execute.
+- Run candidate vendoring/build/smoke validation only in a credential-free sandbox.
+- Run private AQC in a separate trusted job against sandbox-produced artifacts as data; do not execute candidate scripts there.
+- Redesign post-merge quality/publication so credential-bearing jobs promote validated artifacts instead of rebuilding vendored code.
+- Keep write-capable orchestration separate and make it consume evidence/validated artifacts only.
+- Keep automatic merge limited to an explicit non-executable allowlist, and disabled entirely until the post-merge boundary is proven.
+- Treat the vendored tree as generated state and record provenance plus a deterministic tree digest.
+- Move local site customization into fail-closed overlay rules rather than a long-lived fork.
+- Derive classifier integration points from named overlay rules.
+- Upgrade change classification to `routine`, `review`, `architecture`, and `indeterminate`.
+- Make `routine` an explicit non-executable allowlist; implementation/config/dependency/build-tooling changes require human review regardless of size.
+- Keep classification policy and architecture thresholds in reviewed configuration.
+- Add production-build browser smoke coverage before enabling routine baseline advancement.
+- Keep framework-migration and clone-specific validation logic local to Basic Plugin.
 
 ### Acceptance
 
@@ -153,7 +184,8 @@ Official
 
 ### Work
 
-- Define artifact lifecycle metadata shared across skills, agents, prompts, hooks, and plugins.
+- Use a central repository-path registry for Experimental lifecycle metadata rather than inventing format-specific frontmatter.
+- Candidate metadata includes owner, lifecycle status, added date, optional review date, and notes.
 - Present **Official** and **Experimental** distinctly on the site.
 - Require an owner for contributed artifacts.
 - Treat the contributor as owner only when that is explicitly represented by repository policy/metadata.
@@ -161,6 +193,7 @@ Official
 - Define promotion criteria from Experimental to Official.
 - Define deprecation/retirement behavior.
 - Ensure artifacts can remain Experimental without becoming invisible or implicitly Official.
+- Treat `reviewBy` as metadata only until an explicit policy defines what happens when the date arrives; do not silently remove, block, promote, or deprecate an artifact.
 
 ### AQC dependency
 
@@ -232,9 +265,10 @@ The reusable health/evaluation engine belongs in AQC. Basic Plugin owns schedule
 
 - Preserve portable evaluation scenarios and expected behavior.
 - Keep manual smoke testing as a separate activity from automated behavioral evaluation.
-- Use AQC as the evaluation entry point.
-- Evaluate Waza as an adapter/runtime, not as the canonical storage format for our scenarios.
-- Pin/checksum pre-1.0 evaluation dependencies.
+- Use AQC as the intended reusable evaluation entry point.
+- Keep scenarios runner-neutral so the repository can adopt Waza without rewriting the evaluation contract.
+- Treat Waza as the likely long-term runtime once its maturity is sufficient; pin/checksum pre-1.0 versions used experimentally.
+- Do not build a permanent custom Copilot CLI evaluation framework merely to work around temporary Waza maturity limits.
 - Run deeper behavioral evaluations primarily for Experimental → Official promotion and periodic health review rather than making every early contribution expensive.
 - Keep evaluation evidence attached to the artifact/version tested.
 
@@ -310,8 +344,8 @@ Basic Plugin proves portable patterns. Enterprise identity, credentials, interna
 
 # Priority Order
 
-1. **Finish PR #7 and adaptive clone guardrails.**
-2. **Replace the site prototype with the upstream-derived clone and prove sync behavior.**
+1. **Preserve the merged adaptive clone guardrails and structural-adapter baseline as migration evidence.**
+2. **Migrate Mission 1 to vendored upstream + assertive overlay and prove the full preflight/sandbox/trusted-validation/artifact-promotion path.**
 3. **Fix Pages and complete end-to-end marketplace/site publication evidence.**
 4. **Define Official/Experimental lifecycle metadata and display it on the site.**
 5. **Wire missing reusable governance checks through AQC rather than implementing them locally.**

@@ -52,9 +52,11 @@ It never installs, removes, disables, renames, or blocks anything. It does not h
 
 ## Website architecture
 
-The website follows the reviewed structure of the current Awesome Copilot site while remaining a small dependency-free static build. The local adapter uses the same broad page composition: top navigation, framed hero, responsive resource grid, catalog cards, closing CTA, and light/dark theme behavior.
+The current website follows the reviewed structure of the Awesome Copilot site while remaining a small dependency-free static build. The local adapter uses the same broad page composition: top navigation, framed hero, responsive resource grid, catalog cards, closing CTA, and light/dark theme behavior.
 
-The reviewed upstream architecture baseline is recorded in `website/upstream-baseline.json` and explained in `website/UPSTREAM.md`. The Awesome Copilot resource catalog is never imported. A clone-specific local validator verifies the generated site stays aligned with that boundary.
+That adapter is the **current proven baseline**, not the intended final maintenance model. The next Mission 1 evolution is a generated vendored copy of the reviewed upstream website with pruning plus a small fail-closed local overlay. See [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
+
+The reviewed upstream architecture baseline is recorded in `website/upstream-baseline.json` and explained in `website/UPSTREAM.md`. The Awesome Copilot resource catalog is never imported implicitly; Basic Plugin's own catalog remains authoritative.
 
 ## Marketplace automation
 
@@ -64,7 +66,7 @@ Set the `AQC_READ_TOKEN` repository secret to a read-only token that can checkou
 - Fork and Dependabot pull requests run secret-free local checks. For each exact head, a maintainer must remove and reapply `aqc-trusted-validation` to authorize the separate `Trusted AQC checks` path before merge.
 - A push to `main` publishes the generated `marketplace` branch. Publication is serialized, and manual dispatches are restricted to `main`.
 - GitHub Pages deploys the generated `site/` artifact.
-- A weekly/manual sync job compares the reviewed Awesome Copilot pin with current upstream website structure before advancing it. Routine changes can auto-merge after local and AQC validation, broader changes require a reviewed PR, and architecture rewrites stop the sync and open/refresh a manual migration issue. Upstream resources are never imported automatically.
+- The **current structural-adapter** weekly/manual sync job compares the reviewed Awesome Copilot pin with current upstream website structure before advancing it. Routine changes can auto-merge after local and AQC validation, broader changes require a reviewed PR, and architecture rewrites stop the sync and open/refresh a manual migration issue. This current behavior does not authorize automatic merge once executable upstream code is vendored; the planned vendoring trust boundary is documented separately. Upstream resources are never imported automatically.
 
 See [UPSTREAM_POLICY.md](UPSTREAM_POLICY.md) for the immutable upstream and AQC pinning contract.
 

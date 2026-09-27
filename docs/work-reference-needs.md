@@ -113,3 +113,52 @@ instruction or a dependency of the installed plugin.
 smoke objective and unknown managed-environment behavior remain applicable.
 This reference records future development intent; implementation work should update
 the project state when a concrete capability is selected.
+
+
+## Work Implementation Lessons Captured 2026-09-26
+
+A newer work implementation supplied as reference demonstrates several portable patterns that are
+useful for Basic Plugin without copying company-specific configuration.
+
+### Portable patterns
+
+- Treat the upstream website/tooling as generated vendored state at an immutable reviewed commit.
+- Keep copy/prune/keep policy in one reviewed configuration.
+- Replace vendored roots wholesale so deleted upstream files cannot survive as local leftovers.
+- Record provenance and a deterministic digest of the vendored tree.
+- Put local customization in assertive overlay/codemod rules that fail when a required upstream target
+  no longer matches.
+- Derive named integration points from those overlay rules instead of separately maintaining a critical
+  path list.
+- Classify upstream candidates from captured evidence with four outcomes:
+  `routine`, `review`, `architecture`, and `indeterminate`.
+- Keep numerical classification policy in configuration.
+- Validate the production website with browser-level route/search/layout/console/network checks in
+  addition to deterministic generated-output checks.
+- Store Experimental lifecycle metadata in one repository-path registry so different artifact formats
+  do not need repository-specific frontmatter extensions.
+
+These patterns inform [the vendoring direction](upstream-vendoring-direction.md); they are not proof
+that the same scripts or policy should be copied verbatim.
+
+### Evaluation clarification
+
+Waza remains the likely long-term skill-evaluation direction, but the referenced work environment is
+not standardizing on it yet because the available version is still too immature for that role. A custom
+Copilot CLI runner was explored but is not committed durable work state.
+
+Basic Plugin/AQC should therefore preserve runner-neutral scenarios and avoid investing in a permanent
+custom runner solely to bridge the current Waza maturity gap.
+
+### Experimental lifecycle clarification
+
+A `reviewBy` date exists as lifecycle metadata in the reference implementation, but its promotion,
+expiration, notification, blocking, and retirement semantics are still under discussion.
+
+Do not infer or implement automatic behavior from that field until an explicit policy exists.
+
+### Work-only details remain external
+
+Do not copy enterprise branding, private endpoints, internal package registries, company identities,
+private artifact-hosting workarounds, or deployment constraints into Basic Plugin. Only portable
+engineering patterns belong in the personal implementation.
