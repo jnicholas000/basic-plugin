@@ -41,7 +41,10 @@ rules should become the executable source of local integration points for change
 The target classifier adds an `indeterminate` result for incomplete/truncated evidence or failed/unknown
 candidate validation. Routine handling must never be inferred when the automation cannot prove the
 candidate state. Candidate-controlled website/build code must never run in the job that holds repository
-write permission, private AQC credentials, or publication credentials.
+write permission, private AQC credentials, or publication credentials. This applies both before and after
+merge: once vendored code participates in the build, credential-bearing push-to-`main` workflows must
+promote already-validated artifacts or otherwise avoid re-executing vendored code. Automatic merge for
+executable vendored changes remains disabled until that post-merge boundary is implemented and verified.
 
 This section records direction only. Until the vendoring implementation lands, the structural-adapter
 pin/baseline and existing three-state workflow remain the executable contract.

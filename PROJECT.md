@@ -119,6 +119,7 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
   [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
 - Introduce the four-state evidence classifier and derive integration points from overlay rules.
 - Add production-build browser smoke coverage before allowing routine baseline advancement.
+- Redesign post-merge quality/publication to promote validated artifacts without re-executing vendored upstream code under credentials.
 - Add a central Experimental metadata registry, while leaving review-date enforcement undefined until policy exists.
 - Fix and verify GitHub Pages deployment separately from marketplace publication.
 - Expand runtime trust/collision experiments.
@@ -163,7 +164,7 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 Implement the first bounded slice of
 [the vendored-upstream direction](docs/upstream-vendoring-direction.md): neutral vendor configuration,
-read-only static preflight classification, generated provenance, and an assertive overlay. Preserve the personal-runtime smoke as a parallel
+read-only static preflight classification, generated provenance, an assertive overlay, and the post-merge artifact-promotion boundary. Preserve the personal-runtime smoke as a parallel
 evidence need, not a substitute for clone-sync validation.
 
 ## Evidence and Detailed Plans

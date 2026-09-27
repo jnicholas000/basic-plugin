@@ -116,7 +116,9 @@ See [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md)
 - Add a read-only static candidate preflight before any upstream candidate code can execute.
 - Run candidate vendoring/build/smoke validation only in a credential-free sandbox.
 - Run private AQC in a separate trusted job against sandbox-produced artifacts as data; do not execute candidate scripts there.
+- Redesign post-merge quality/publication so credential-bearing jobs promote validated artifacts instead of rebuilding vendored code.
 - Keep write-capable orchestration separate and make it consume evidence/validated artifacts only.
+- Keep automatic merge disabled for executable vendored changes until that post-merge boundary is proven.
 - Treat the vendored tree as generated state and record provenance plus a deterministic tree digest.
 - Move local site customization into fail-closed overlay rules rather than a long-lived fork.
 - Derive classifier integration points from named overlay rules.
@@ -342,7 +344,7 @@ Basic Plugin proves portable patterns. Enterprise identity, credentials, interna
 # Priority Order
 
 1. **Preserve the merged adaptive clone guardrails and structural-adapter baseline as migration evidence.**
-2. **Migrate Mission 1 to vendored upstream + assertive overlay and prove the preflight/sandbox/trusted-validation candidate path.**
+2. **Migrate Mission 1 to vendored upstream + assertive overlay and prove the full preflight/sandbox/trusted-validation/artifact-promotion path.**
 3. **Fix Pages and complete end-to-end marketplace/site publication evidence.**
 4. **Define Official/Experimental lifecycle metadata and display it on the site.**
 5. **Wire missing reusable governance checks through AQC rather than implementing them locally.**

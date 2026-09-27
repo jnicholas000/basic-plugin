@@ -90,7 +90,7 @@ The target classifier has four outcomes:
 
 | Class | Meaning | Default action |
 | --- | --- | --- |
-| `routine` | Only low-risk consumed content/assets or small implementation edits changed; overlay and validation still pass. | Candidate may advance automatically only after every required gate passes. |
+| `routine` | Only low-risk consumed content/assets or small implementation edits changed; overlay and validation still pass. | Eligible for automatic advancement only after the full artifact-promotion trust boundary exists; until then require human merge. |
 | `review` | A consumed implementation/config/install surface, dependency shape, overlay target, or rename changed without proving an architecture replacement. | Open/update a PR and require human review. |
 | `architecture` | Framework shape/major version or enough local integration points/consumed implementation surface changed that the adapter must be reconsidered. | Do not advance the accepted baseline; treat as a migration. |
 | `indeterminate` | Evidence is incomplete, truncated, validation failed, or the overlay outcome is unknown. | Fail the automation and require a human classification. |
@@ -179,6 +179,28 @@ Combine static evidence with overlay/build/smoke and trusted artifact-validation
 A routine result is not sufficient by itself. Every required gate must also be green, and the accepted
 baseline moves only through the explicitly authorized orchestration path.
 
+### Post-merge execution boundary
+
+The trust boundary continues **after merge**.
+
+Once the site build can execute vendored upstream JavaScript, no credential-bearing push-to-`main`
+workflow may rebuild that site from source. In particular, publication and private-quality jobs must not
+run a build command that transitively executes vendored upstream code while holding repository write
+permission, `AQC_READ_TOKEN`, publication credentials, or other secrets.
+
+Before automatic routine merges are enabled for executable vendored changes, choose and prove one of
+these patterns:
+
+1. **Artifact promotion:** the credential-free candidate sandbox produces immutable/content-addressed
+   site and marketplace outputs. Trusted AQC validates those outputs as data. After merge, credentialed
+   publication promotes the already-validated outputs without rebuilding them.
+2. **Equivalent isolation:** redesign post-merge workflows so every vendored-code execution still occurs
+   in a credential-free job, and only resulting validated artifacts/evidence cross into credentialed
+   publication jobs.
+
+Until that boundary is implemented, `routine` may reduce review effort but must **not** mean automatic
+merge for a change that can alter executable vendored website/build code.
+
 ## Browser smoke direction
 
 The follow-up site implementation should add browser-level validation over the production build, focused on behavior that static generation checks cannot prove:
@@ -247,6 +269,7 @@ Portable engineering patterns may inform Basic Plugin, but the following stay ou
 6. Replace the current three-state classifier with the evidence-based four-state model.
 7. Derive integration points from overlay rules and add recorded classifier fixtures.
 8. Add production-build browser smoke coverage.
-9. Enable routine baseline advancement only after the full preflight/sandbox/trusted-validation path has demonstrated safe behavior.
+9. Convert post-merge quality/publication to artifact promotion or an equivalent no-reexecution trust boundary.
+10. Enable routine automatic baseline advancement only after the full preflight/sandbox/trusted-validation/post-merge path has demonstrated safe behavior.
 
 This sequence intentionally keeps the migration reversible and prevents the design lesson from becoming an overnight rewrite.
