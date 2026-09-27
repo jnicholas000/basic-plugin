@@ -6,6 +6,7 @@ const repositoryDirectory = process.env.UPSTREAM_REPO_DIR;
 const base = process.env.UPSTREAM_BASE;
 const head = process.env.UPSTREAM_HEAD;
 const reportPath = process.env.UPSTREAM_REPORT;
+const baselineFile = 'website/upstream-baseline.json';
 
 if (!repositoryDirectory || !base || !head || !reportPath) {
   throw new Error('UPSTREAM_REPO_DIR, UPSTREAM_BASE, UPSTREAM_HEAD, and UPSTREAM_REPORT are required');
@@ -59,7 +60,14 @@ function lineStats() {
 const files = changedFiles();
 const basePackage = readPackage(base);
 const headPackage = readPackage(head);
-const result = classifyWebsiteChange({ files, basePackage, headPackage });
+const baseline = JSON.parse(await readFile(baselineFile, 'utf8'));
+const criticalPaths = Array.isArray(baseline.sourceFiles) ? baseline.sourceFiles : [];
+const result = classifyWebsiteChange({
+  files,
+  basePackage,
+  headPackage,
+  criticalPaths,
+});
 const lines = lineStats();
 
 const signals =

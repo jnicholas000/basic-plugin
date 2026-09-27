@@ -1,1 +1,97 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Holo Plugin Market</title><meta name="description" content="A curated marketplace for reliable AI plugins."><link rel="stylesheet" href="styles.css"></head><body><div class="scanlines"></div><header><a class="brand" href="."><span class="orb"></span><span>HOLO<span class="muted">/MARKET</span></span></a><nav><a href="#catalog">Catalog</a><a href="https://github.com/jnicholas000/basic-plugin">GitHub ↗</a></nav></header><main><section class="hero"><p class="kicker">AQC-FIRST PLUGIN MARKETPLACE</p><h1>Find the right<br><em>agent capability.</em></h1><p class="lede">A focused, reviewable marketplace for skills, prompts, instructions, and agents—wrapped in a holographic interface and guarded by automated quality control.</p><a class="cta" href="#catalog">Explore plugins <span>↓</span></a></section><section id="catalog" class="catalog"><div class="section-head"><div><p class="kicker">CURATED CATALOG</p><h2>Plugins worth installing</h2></div><span class="status">● AQC VERIFIED PIPELINE</span></div><div class="grid"><!-- MARKETPLACE_CARDS --></div></section></main><footer>Generated <!-- GENERATED_AT --> · Structure inspired by <a href="https://github.com/github/awesome-copilot">Awesome Copilot</a></footer><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A local proving ground for GitHub Copilot plugins, agents, skills, MCP servers, hooks, and marketplace governance.">
+  <meta name="color-scheme" content="light dark">
+  <title>Basic Plugin Lab</title>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('basic-plugin-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      } catch (_) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="top-bar">
+    <div class="page-shell top-bar-inner">
+      <a class="brand" href="." aria-label="Basic Plugin Lab home">
+        <span class="brand-mark" aria-hidden="true">BP</span>
+        <span class="brand-label">Basic Plugin <strong>Lab</strong></span>
+      </a>
+      <nav class="top-nav" aria-label="Primary navigation">
+        <a href="#resources">Resources</a>
+        <a href="#catalog">Catalog</a>
+        <a href="https://github.com/jnicholas000/basic-plugin/blob/main/ROADMAP.md">Roadmap</a>
+        <a href="https://github.com/jnicholas000/basic-plugin">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">Theme</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero-frame">
+      <div class="page-shell frame-inner hero-inner">
+        <p class="eyebrow">COPILOT CUSTOMIZATION LAB</p>
+        <h1>A proving ground for GitHub Copilot customizations</h1>
+        <p class="hero-copy">Explore a small, reviewable collection of plugins, agents, skills, MCP configuration, and runtime experiments before they earn a wider audience.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#resources">Explore resources</a>
+          <a class="button button-secondary" href="https://github.com/jnicholas000/basic-plugin">View repository</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="resource-frame" aria-labelledby="resources-heading">
+      <div class="page-shell section-intro">
+        <p class="eyebrow">LOCAL RESOURCES</p>
+        <h2 id="resources-heading">Everything in the lab</h2>
+        <p>Counts come from the Basic Plugin repository at build time. No Awesome Copilot resource catalog is imported.</p>
+      </div>
+      <div class="page-shell resource-grid"><!-- RESOURCE_CARDS --></div>
+    </section>
+
+    <section id="catalog" class="catalog-section" aria-labelledby="catalog-heading">
+      <div class="page-shell">
+        <div class="section-heading-row">
+          <div>
+            <p class="eyebrow">PLUGIN CATALOG</p>
+            <h2 id="catalog-heading">Available plugins</h2>
+          </div>
+          <span class="quality-pill">AQC VALIDATED PIPELINE</span>
+        </div>
+        <div class="plugin-grid"><!-- MARKETPLACE_CARDS --></div>
+      </div>
+    </section>
+
+    <section class="cta-frame" aria-labelledby="quality-heading">
+      <div class="page-shell frame-inner cta-inner">
+        <p class="eyebrow">QUALITY WITHOUT COPY-PASTE CI</p>
+        <h2 id="quality-heading">Reusable checks live in AQC. Clone logic lives here.</h2>
+        <p>Basic Plugin owns the website adapter, upstream synchronization, and runtime experiments. AI Quality Control owns reusable validation, evaluation, security, and governance checks.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://github.com/jnicholas000/ai-quality-control">Open AQC</a>
+          <a class="button button-secondary" href="https://github.com/jnicholas000/basic-plugin/blob/main/website/UPSTREAM.md">See upstream mapping</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="page-shell footer-inner">
+      <span>Catalog snapshot <!-- GENERATED_AT --></span>
+      <span>Awesome Copilot structure baseline <a href="https://github.com/github/awesome-copilot/commit/<!-- UPSTREAM_REF -->"><code><!-- UPSTREAM_REF_SHORT --></code></a></span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
