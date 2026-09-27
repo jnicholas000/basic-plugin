@@ -84,9 +84,11 @@ If a clone check later proves generally useful beyond this repository, promote t
 - Architecture migrations preserve the reviewed pin and create a durable manual path.
 - The first live architecture comparison identified the September 2026 Astro 7 + React 19 + Primer Brand rewrite as an architecture migration, recorded in issue #9.
 
-### In progress
+### Completed baseline
 
-- Finish the thin structural adapter as a proven baseline for the current Awesome Copilot architecture.
+- PR #10 established the thin structural adapter as the proven baseline for the current Awesome Copilot architecture.
+
+### In progress
 - Preserve local marketplace data as the only displayed artifact source.
 - Record the reviewed architecture identity and source mapping in `website/upstream-baseline.json` and `website/UPSTREAM.md`.
 - Validate generated-site drift and the no-upstream-catalog boundary locally.
@@ -109,6 +111,8 @@ See [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md)
 ### Next
 
 - Add neutral vendor configuration with a full accepted SHA plus copy/prune/keep rules.
+- Add a read-only static candidate preflight before any upstream candidate code can execute.
+- Run candidate build/smoke validation only in a credential-free sandbox; write-capable orchestration consumes evidence only.
 - Treat the vendored tree as generated state and record provenance plus a deterministic tree digest.
 - Move local site customization into fail-closed overlay rules rather than a long-lived fork.
 - Derive classifier integration points from named overlay rules.

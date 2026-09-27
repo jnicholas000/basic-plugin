@@ -14,20 +14,26 @@ This document records the target architecture only. It does not claim the vendor
 ## Target flow
 
 ```text
-reviewed Awesome Copilot SHA
+resolve candidate Awesome Copilot SHA
         ↓
-vendor selected upstream website/tooling
+read-only static preflight
+(compare metadata, dependency shape, paths, rename/removal risk)
         ↓
-prune content Basic Plugin does not publish
+architecture / indeterminate → stop automated candidate execution
         ↓
-apply assertive local overlay
+routine / review → credential-free validation sandbox
+(vendor as data → prune → local overlay → build → smoke → clone checks → AQC)
         ↓
-inject Basic Plugin catalog data
+final evidence classification
         ↓
-build + browser smoke + clone checks + AQC
+write-capable orchestration consumes evidence only
+(PR / issue / accepted-baseline decision)
         ↓
-publish generated site
+publish generated site only after the reviewed baseline moves
 ```
+
+The trust boundary is intentional: **no upstream candidate code executes in a job that has repository
+write permission, private AQC credentials, publication credentials, or other secrets.**
 
 The Awesome Copilot **resource catalog is never an implicit input**. Basic Plugin's own authored artifacts and generated marketplace data remain authoritative for what the site publishes.
 
@@ -100,18 +106,59 @@ Commit subjects and release labels are context, not evidence.
 
 ## Candidate evaluation flow
 
-A candidate upstream SHA should be resolved once and reused for every step in that evaluation:
+A candidate upstream SHA should be resolved once and reused for every step in that evaluation.
 
-1. vendor the candidate without changing the accepted baseline;
-2. apply the overlay;
-3. build the site;
+### Phase 1: static preflight, no candidate execution
+
+Run with read-only repository access and no private credentials.
+
+1. Resolve the candidate SHA once.
+2. Compare accepted → candidate using metadata only.
+3. Fetch dependency manifests and other specifically required text/config files as data.
+4. Evaluate framework/dependency changes, rename/removal risk, overlay-target/integration-point changes,
+   diff truncation, and other static classifier signals.
+5. Produce a signed/immutable evidence artifact for later jobs.
+
+If static evidence already establishes `architecture` or `indeterminate`, stop the automated candidate
+execution path. A separate write-capable orchestration job may create/update the migration issue from
+the evidence, but it must not execute candidate code.
+
+### Phase 2: credential-free candidate validation
+
+Only candidates that pass the static preflight into the `routine` or `review` validation path may
+be prepared automatically.
+
+Run this phase in a job/container with:
+
+- no repository write permission;
+- no private AQC token or publication credential;
+- no persisted checkout credential; and
+- no secrets exposed to candidate-controlled build code.
+
+Then:
+
+1. vendor the candidate as data without changing the accepted baseline;
+2. apply the locally trusted overlay;
+3. build the site in the sandbox;
 4. run deterministic clone validation;
-5. run browser smoke coverage;
-6. run AQC;
-7. classify the same candidate from captured evidence; and
-8. only then decide whether the accepted baseline may move.
+5. run browser smoke coverage; and
+6. run only validation that is safe in the credential-free environment.
 
-A routine result is not sufficient by itself. Every required gate must also be green.
+Because an Astro/config/build pipeline can execute repository JavaScript, this entire phase is treated
+as untrusted code execution even when the static preflight class looked routine.
+
+### Phase 3: final classification and orchestration
+
+Combine static evidence with overlay/build/validation outcomes and run the final pure classifier.
+
+- `routine`: a later write-capable job may create/update the sync PR and enable the configured merge
+  path, but must consume prepared evidence/artifacts rather than execute candidate code.
+- `review`: create/update a PR for human review; no automatic baseline advancement.
+- `architecture`: leave the accepted baseline unchanged and create/update a migration task.
+- `indeterminate`: fail closed and require human classification.
+
+A routine result is not sufficient by itself. Every required gate must also be green, and the accepted
+baseline moves only through the explicitly authorized orchestration path.
 
 ## Browser smoke direction
 
@@ -173,8 +220,8 @@ Portable engineering patterns may inform Basic Plugin, but the following stay ou
 
 ## Migration sequence
 
-1. Finish the current structural-adapter PR and preserve it as the proven baseline.
-2. Add neutral vendoring configuration, sync tooling, provenance manifest, and assertive overlay.
+1. Preserve merged PR #10 as the proven structural-adapter baseline.
+2. Add neutral vendoring configuration, read-only preflight classification, sync tooling, provenance manifest, and assertive overlay.
 3. Vendor the current reviewed Awesome Copilot SHA and reproduce the required Basic Plugin site behavior.
 4. Compare the vendored output with the current adapter and remove the hand-authored site implementation only after parity is established.
 5. Replace the current three-state classifier with the evidence-based four-state model.

@@ -76,8 +76,8 @@ Use the repository as the active proving ground for the Awesome Copilot-derived 
 publication, Official/Experimental lifecycle, artifact trust, runtime collision diagnostics, and
 non-Starfleet skill/agent incubation.
 
-Finish the current structural-adapter migration as a proven baseline, then evolve Mission 1 toward a
-vendored Awesome Copilot website with a small assertive local overlay. The vendored model should keep
+PR #10 is the proven structural-adapter baseline. Evolve Mission 1 toward a vendored Awesome Copilot
+website with a small assertive local overlay. The vendored model should keep
 upstream implementation generated and reproducible while Basic Plugin's own catalog remains authoritative
 for published resources.
 
@@ -108,8 +108,8 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ### Now
 
-- Land the manual site migration recorded by issue #9 and preserve it as the proven structural-adapter baseline.
-- Record the vendored-upstream follow-up architecture without mixing that larger migration into the current site PR.
+- Preserve merged PR #10 as the proven structural-adapter baseline.
+- Land the vendored-upstream follow-up architecture as the next Mission 1 contract.
 - Preserve AQC as the reusable quality engine while keeping clone-specific synchronization checks local.
 - Continue personal-environment runtime validation for the merged plugin baseline.
 
@@ -161,9 +161,9 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Validate and merge the issue #9 structural-adapter migration, then implement the first bounded slice of
+Implement the first bounded slice of
 [the vendored-upstream direction](docs/upstream-vendoring-direction.md): neutral vendor configuration,
-generated provenance, and an assertive overlay. Preserve the personal-runtime smoke as a parallel
+read-only static preflight classification, generated provenance, and an assertive overlay. Preserve the personal-runtime smoke as a parallel
 evidence need, not a substitute for clone-sync validation.
 
 ## Evidence and Detailed Plans

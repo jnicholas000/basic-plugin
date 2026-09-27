@@ -17,7 +17,8 @@
     "website/src/components/brand/HomePage.tsx",
     "website/src/components/brand/PageShell.tsx",
     "website/src/components/brand/TopNav.tsx",
-    "website/src/components/brand/styles/styles.module.css"
+    "website/src/components/brand/styles/styles.module.css",
+    "website/src/lib/site-data.ts"
   ],
   "localStrategy": "structural-static-adapter",
   "capturedOn": "2026-09-26"

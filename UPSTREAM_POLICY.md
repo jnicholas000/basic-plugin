@@ -31,13 +31,15 @@ The current manual architecture migration is reviewed against Awesome Copilot co
 The current implementation is a structural adapter. The next Mission 1 architecture is documented in
 [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
 
-That follow-up should vendor a reviewed upstream website commit as generated state, prune unused content,
+That follow-up should statically classify candidate risk before any candidate code executes, then vendor
+an allowed candidate as generated state inside a credential-free validation sandbox, prune unused content,
 and apply a small assertive overlay that fails when required upstream targets disappear. Named overlay
 rules should become the executable source of local integration points for change classification.
 
 The target classifier adds an `indeterminate` result for incomplete/truncated evidence or failed/unknown
 candidate validation. Routine handling must never be inferred when the automation cannot prove the
-candidate state.
+candidate state. Candidate-controlled website/build code must never run in the job that holds repository
+write permission, private AQC credentials, or publication credentials.
 
 This section records direction only. Until the vendoring implementation lands, the structural-adapter
 pin/baseline and existing three-state workflow remain the executable contract.
