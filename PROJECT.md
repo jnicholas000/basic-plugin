@@ -67,7 +67,7 @@ PR #7 added the tiered upstream website synchronization guardrail. The first rea
 found the expected architecture migration: the prior reviewed baseline was 63 commits behind the
 current Astro 7 + React 19 + Primer Brand website. Issue #9 records that manual migration.
 
-This branch replaces the Holo prototype with a local structural adapter for the current Awesome
+PR #10 replaced the Holo prototype with a local structural adapter for the current Awesome
 Copilot page model while preserving Basic Plugin's local catalog as the only published resource data.
 
 ## Current Objective
@@ -93,7 +93,7 @@ local to Basic Plugin. Continue personal-environment runtime evidence as a paral
 - Agent Plugins 1.0 manifest and portable MCP configuration.
 - Pinned skill-creator and Custom Agent Foundry components with third-party notices.
 - Read-only capability-collision inventory and passive Capability Sentinel hooks.
-- Generated marketplace index and Holo-branded static catalog shell.
+- Generated marketplace index and Awesome Copilot-derived static structural-adapter site.
 - Secret-free local build and generated-output inventory validation.
 - Immutable reviewed pins for Awesome Copilot structural tracking and the private AQC engine.
 - Deterministic upstream website classification with routine, review, and architecture paths.

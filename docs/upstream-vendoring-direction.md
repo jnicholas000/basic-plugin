@@ -22,7 +22,10 @@ read-only static preflight
 architecture / indeterminate → stop automated candidate execution
         ↓
 routine / review → credential-free validation sandbox
-(vendor as data → prune → local overlay → build → smoke → clone checks → AQC)
+(vendor as data → prune → local overlay → build → smoke → clone checks)
+        ↓
+trusted artifact-only validation
+(pinned private AQC validates sandbox-produced artifacts as data; no candidate scripts)
         ↓
 final evidence classification
         ↓
@@ -117,7 +120,7 @@ Run with read-only repository access and no private credentials.
 3. Fetch dependency manifests and other specifically required text/config files as data.
 4. Evaluate framework/dependency changes, rename/removal risk, overlay-target/integration-point changes,
    diff truncation, and other static classifier signals.
-5. Produce a signed/immutable evidence artifact for later jobs.
+5. Produce a content-addressed, immutable-by-convention evidence artifact for later jobs; do not require a signing key unless the implementation introduces a concrete signing mechanism.
 
 If static evidence already establishes `architecture` or `indeterminate`, stop the automated candidate
 execution path. A separate write-capable orchestration job may create/update the migration issue from
@@ -147,9 +150,25 @@ Then:
 Because an Astro/config/build pipeline can execute repository JavaScript, this entire phase is treated
 as untrusted code execution even when the static preflight class looked routine.
 
-### Phase 3: final classification and orchestration
+### Phase 3: trusted artifact-only validation
 
-Combine static evidence with overlay/build/validation outcomes and run the final pure classifier.
+Private AQC currently requires trusted repository access. Keep that credential out of the candidate
+sandbox.
+
+A separate trusted job may:
+
+1. checkout the immutable-pinned AQC engine with the minimum read credential;
+2. download the sandbox-produced source/catalog/site artifacts into an isolated data directory;
+3. run AQC validations that treat those artifacts as data; and
+4. publish only validation results/evidence for orchestration.
+
+It must not run candidate package scripts, Astro builds, repository hooks, or other candidate-controlled
+executables. If a future AQC check requires executing candidate code, that check belongs back in the
+credential-free sandbox or needs a separate explicitly sandboxed design.
+
+### Phase 4: final classification and orchestration
+
+Combine static evidence with overlay/build/smoke and trusted artifact-validation outcomes and run the final pure classifier.
 
 - `routine`: a later write-capable job may create/update the sync PR and enable the configured merge
   path, but must consume prepared evidence/artifacts rather than execute candidate code.
@@ -222,11 +241,12 @@ Portable engineering patterns may inform Basic Plugin, but the following stay ou
 
 1. Preserve merged PR #10 as the proven structural-adapter baseline.
 2. Add neutral vendoring configuration, read-only preflight classification, sync tooling, provenance manifest, and assertive overlay.
-3. Vendor the current reviewed Awesome Copilot SHA and reproduce the required Basic Plugin site behavior.
-4. Compare the vendored output with the current adapter and remove the hand-authored site implementation only after parity is established.
-5. Replace the current three-state classifier with the evidence-based four-state model.
-6. Derive integration points from overlay rules and add recorded classifier fixtures.
-7. Add production-build browser smoke coverage.
-8. Enable routine baseline advancement only after the full candidate path has demonstrated safe behavior.
+3. Add the credential-free candidate sandbox and separate trusted artifact-only AQC validation boundary.
+4. Vendor the current reviewed Awesome Copilot SHA and reproduce the required Basic Plugin site behavior.
+5. Compare the vendored output with the current adapter and remove the hand-authored site implementation only after parity is established.
+6. Replace the current three-state classifier with the evidence-based four-state model.
+7. Derive integration points from overlay rules and add recorded classifier fixtures.
+8. Add production-build browser smoke coverage.
+9. Enable routine baseline advancement only after the full preflight/sandbox/trusted-validation path has demonstrated safe behavior.
 
 This sequence intentionally keeps the migration reversible and prevents the design lesson from becoming an overnight rewrite.

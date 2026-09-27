@@ -33,7 +33,9 @@ The current implementation is a structural adapter. The next Mission 1 architect
 
 That follow-up should statically classify candidate risk before any candidate code executes, then vendor
 an allowed candidate as generated state inside a credential-free validation sandbox, prune unused content,
-and apply a small assertive overlay that fails when required upstream targets disappear. Named overlay
+and apply a small assertive overlay that fails when required upstream targets disappear. Private AQC
+validation should run separately against sandbox-produced artifacts as data, without executing candidate
+scripts in the credential-bearing AQC job. Named overlay
 rules should become the executable source of local integration points for change classification.
 
 The target classifier adds an `indeterminate` result for incomplete/truncated evidence or failed/unknown

@@ -87,23 +87,25 @@ If a clone check later proves generally useful beyond this repository, promote t
 ### Completed baseline
 
 - PR #10 established the thin structural adapter as the proven baseline for the current Awesome Copilot architecture.
+- Basic Plugin's local marketplace data is the only displayed artifact source.
+- The reviewed architecture identity and source mapping are recorded in `website/upstream-baseline.json` and `website/UPSTREAM.md`.
+- Clone-specific validation detects generated-site drift and protects the no-upstream-catalog boundary.
 
 ### In progress
-- Preserve local marketplace data as the only displayed artifact source.
-- Record the reviewed architecture identity and source mapping in `website/upstream-baseline.json` and `website/UPSTREAM.md`.
-- Validate generated-site drift and the no-upstream-catalog boundary locally.
+
+- Define and implement the vendored-upstream trust boundary, beginning with read-only static candidate preflight and neutral vendor configuration.
 
 ### Target architecture
 
 The next implementation should replace hand-authored upstream-like UI with:
 
 ```text
-reviewed Awesome Copilot SHA
-  → generated vendored site/tooling
-  → prune unused upstream content
-  → assertive local overlay
-  → inject Basic Plugin catalog
-  → build + browser smoke + clone checks + AQC
+resolve candidate Awesome Copilot SHA
+  → read-only static preflight
+  → routine/review only: credential-free vendoring + overlay + build
+  → browser smoke + clone checks
+  → trusted artifact-only AQC validation
+  → final classification + write-capable orchestration
 ```
 
 See [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
@@ -112,7 +114,9 @@ See [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md)
 
 - Add neutral vendor configuration with a full accepted SHA plus copy/prune/keep rules.
 - Add a read-only static candidate preflight before any upstream candidate code can execute.
-- Run candidate build/smoke validation only in a credential-free sandbox; write-capable orchestration consumes evidence only.
+- Run candidate vendoring/build/smoke validation only in a credential-free sandbox.
+- Run private AQC in a separate trusted job against sandbox-produced artifacts as data; do not execute candidate scripts there.
+- Keep write-capable orchestration separate and make it consume evidence/validated artifacts only.
 - Treat the vendored tree as generated state and record provenance plus a deterministic tree digest.
 - Move local site customization into fail-closed overlay rules rather than a long-lived fork.
 - Derive classifier integration points from named overlay rules.
@@ -337,8 +341,8 @@ Basic Plugin proves portable patterns. Enterprise identity, credentials, interna
 
 # Priority Order
 
-1. **Finish PR #7 and adaptive clone guardrails.**
-2. **Finish the structural-adapter baseline, then migrate Mission 1 to vendored upstream + assertive overlay and prove candidate sync behavior.**
+1. **Preserve the merged adaptive clone guardrails and structural-adapter baseline as migration evidence.**
+2. **Migrate Mission 1 to vendored upstream + assertive overlay and prove the preflight/sandbox/trusted-validation candidate path.**
 3. **Fix Pages and complete end-to-end marketplace/site publication evidence.**
 4. **Define Official/Experimental lifecycle metadata and display it on the site.**
 5. **Wire missing reusable governance checks through AQC rather than implementing them locally.**
