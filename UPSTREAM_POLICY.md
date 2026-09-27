@@ -24,3 +24,20 @@ The local branding/adaptation layer should stay small and separate from upstream
 ## Current reviewed website architecture
 
 The current manual architecture migration is reviewed against Awesome Copilot commit `6c4d33b9cfca967a28bb2962ef4d55e4a384c88c` (2026-09-26). The local adapter tracks its Astro 7 + React 19 + Primer Brand page structure without importing the upstream resource catalog. The pin in `.env.example` and `website/upstream-baseline.json` move together for routine/review-class syncs.
+
+
+## Planned vendoring evolution
+
+The current implementation is a structural adapter. The next Mission 1 architecture is documented in
+[docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
+
+That follow-up should vendor a reviewed upstream website commit as generated state, prune unused content,
+and apply a small assertive overlay that fails when required upstream targets disappear. Named overlay
+rules should become the executable source of local integration points for change classification.
+
+The target classifier adds an `indeterminate` result for incomplete/truncated evidence or failed/unknown
+candidate validation. Routine handling must never be inferred when the automation cannot prove the
+candidate state.
+
+This section records direction only. Until the vendoring implementation lands, the structural-adapter
+pin/baseline and existing three-state workflow remain the executable contract.

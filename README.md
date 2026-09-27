@@ -52,9 +52,11 @@ It never installs, removes, disables, renames, or blocks anything. It does not h
 
 ## Website architecture
 
-The website follows the reviewed structure of the current Awesome Copilot site while remaining a small dependency-free static build. The local adapter uses the same broad page composition: top navigation, framed hero, responsive resource grid, catalog cards, closing CTA, and light/dark theme behavior.
+The current website follows the reviewed structure of the Awesome Copilot site while remaining a small dependency-free static build. The local adapter uses the same broad page composition: top navigation, framed hero, responsive resource grid, catalog cards, closing CTA, and light/dark theme behavior.
 
-The reviewed upstream architecture baseline is recorded in `website/upstream-baseline.json` and explained in `website/UPSTREAM.md`. The Awesome Copilot resource catalog is never imported. A clone-specific local validator verifies the generated site stays aligned with that boundary.
+That adapter is the **current proven baseline**, not the intended final maintenance model. The next Mission 1 evolution is a generated vendored copy of the reviewed upstream website with pruning plus a small fail-closed local overlay. See [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
+
+The reviewed upstream architecture baseline is recorded in `website/upstream-baseline.json` and explained in `website/UPSTREAM.md`. The Awesome Copilot resource catalog is never imported implicitly; Basic Plugin's own catalog remains authoritative.
 
 ## Marketplace automation
 

@@ -76,9 +76,14 @@ Use the repository as the active proving ground for the Awesome Copilot-derived 
 publication, Official/Experimental lifecycle, artifact trust, runtime collision diagnostics, and
 non-Starfleet skill/agent incubation.
 
-Complete the first manual website architecture migration against reviewed Awesome Copilot commit
-`6c4d33b9cfca967a28bb2962ef4d55e4a384c88c`, validate the generated local adapter through the
-existing AQC pipeline, and establish that commit as the new synchronization baseline.
+Finish the current structural-adapter migration as a proven baseline, then evolve Mission 1 toward a
+vendored Awesome Copilot website with a small assertive local overlay. The vendored model should keep
+upstream implementation generated and reproducible while Basic Plugin's own catalog remains authoritative
+for published resources.
+
+The target follow-up also moves upstream classification toward an evidence-based four-state model
+(`routine`, `review`, `architecture`, `indeterminate`) and derives local integration points from
+the overlay rather than maintaining a second critical-path list.
 
 Keep reusable CI/evaluation/security checks in AQC and clone-specific synchronization/migration checks
 local to Basic Plugin. Continue personal-environment runtime evidence as a parallel track.
@@ -103,16 +108,19 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ### Now
 
-- Land the manual site migration recorded by issue #9 and establish the current architecture baseline.
+- Land the manual site migration recorded by issue #9 and preserve it as the proven structural-adapter baseline.
+- Record the vendored-upstream follow-up architecture without mixing that larger migration into the current site PR.
 - Preserve AQC as the reusable quality engine while keeping clone-specific synchronization checks local.
 - Continue personal-environment runtime validation for the merged plugin baseline.
 
 ### Next
 
-- Run the sync workflow against the new baseline and record the first post-migration routine/review classification.
+- Implement the vendored Awesome Copilot website + assertive overlay described in
+  [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
+- Introduce the four-state evidence classifier and derive integration points from overlay rules.
+- Add production-build browser smoke coverage before allowing routine baseline advancement.
+- Add a central Experimental metadata registry, while leaving review-date enforcement undefined until policy exists.
 - Fix and verify GitHub Pages deployment separately from marketplace publication.
-- Add Official/Experimental lifecycle metadata and site presentation.
-- Wire missing reusable governance/evaluation capabilities through AQC.
 - Expand runtime trust/collision experiments.
 
 ### Later / Out of Scope
@@ -153,14 +161,16 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Validate and merge the issue #9 manual architecture migration, then run the upstream-sync workflow
-against the new reviewed baseline. Preserve the personal-runtime smoke as a parallel evidence need,
-not a substitute for clone-sync validation.
+Validate and merge the issue #9 structural-adapter migration, then implement the first bounded slice of
+[the vendored-upstream direction](docs/upstream-vendoring-direction.md): neutral vendor configuration,
+generated provenance, and an assertive overlay. Preserve the personal-runtime smoke as a parallel
+evidence need, not a substitute for clone-sync validation.
 
 ## Evidence and Detailed Plans
 
 - README.md for package contents, website architecture, marketplace automation, install steps, and smoke protocol.
 - website/UPSTREAM.md and website/upstream-baseline.json for the reviewed clone architecture and source mapping.
+- docs/upstream-vendoring-direction.md for the next Mission 1 architecture and migration sequence.
 - UPSTREAM_POLICY.md for immutable upstream/AQC pinning and trust-boundary rules.
 - marketplace.contract.json for generated-output and materialized-distribution requirements.
 - .github/workflows/quality.yml for local and same-repository AQC gates.
