@@ -67,7 +67,7 @@ PR #7 added the tiered upstream website synchronization guardrail. The first rea
 found the expected architecture migration: the prior reviewed baseline was 63 commits behind the
 current Astro 7 + React 19 + Primer Brand website. Issue #9 records that manual migration.
 
-This branch replaces the Holo prototype with a local structural adapter for the current Awesome
+PR #10 replaced the Holo prototype with a local structural adapter for the current Awesome
 Copilot page model while preserving Basic Plugin's local catalog as the only published resource data.
 
 ## Current Objective
@@ -76,9 +76,14 @@ Use the repository as the active proving ground for the Awesome Copilot-derived 
 publication, Official/Experimental lifecycle, artifact trust, runtime collision diagnostics, and
 non-Starfleet skill/agent incubation.
 
-Complete the first manual website architecture migration against reviewed Awesome Copilot commit
-`6c4d33b9cfca967a28bb2962ef4d55e4a384c88c`, validate the generated local adapter through the
-existing AQC pipeline, and establish that commit as the new synchronization baseline.
+PR #10 is the proven structural-adapter baseline. Evolve Mission 1 toward a vendored Awesome Copilot
+website with a small assertive local overlay. The vendored model should keep
+upstream implementation generated and reproducible while Basic Plugin's own catalog remains authoritative
+for published resources.
+
+The target follow-up also moves upstream classification toward an evidence-based four-state model
+(`routine`, `review`, `architecture`, `indeterminate`) and derives local integration points from
+the overlay rather than maintaining a second critical-path list.
 
 Keep reusable CI/evaluation/security checks in AQC and clone-specific synchronization/migration checks
 local to Basic Plugin. Continue personal-environment runtime evidence as a parallel track.
@@ -88,7 +93,7 @@ local to Basic Plugin. Continue personal-environment runtime evidence as a paral
 - Agent Plugins 1.0 manifest and portable MCP configuration.
 - Pinned skill-creator and Custom Agent Foundry components with third-party notices.
 - Read-only capability-collision inventory and passive Capability Sentinel hooks.
-- Generated marketplace index and Holo-branded static catalog shell.
+- Generated marketplace index and Awesome Copilot-derived static structural-adapter site.
 - Secret-free local build and generated-output inventory validation.
 - Immutable reviewed pins for Awesome Copilot structural tracking and the private AQC engine.
 - Deterministic upstream website classification with routine, review, and architecture paths.
@@ -103,16 +108,20 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ### Now
 
-- Land the manual site migration recorded by issue #9 and establish the current architecture baseline.
+- Preserve merged PR #10 as the proven structural-adapter baseline.
+- Land the vendored-upstream follow-up architecture as the next Mission 1 contract.
 - Preserve AQC as the reusable quality engine while keeping clone-specific synchronization checks local.
 - Continue personal-environment runtime validation for the merged plugin baseline.
 
 ### Next
 
-- Run the sync workflow against the new baseline and record the first post-migration routine/review classification.
+- Implement the vendored Awesome Copilot website + assertive overlay described in
+  [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
+- Introduce the four-state evidence classifier, derive integration points from overlay rules, and restrict `routine` to an explicit non-executable allowlist.
+- Add production-build browser smoke coverage before allowing routine baseline advancement.
+- Redesign post-merge quality/publication to promote validated artifacts without re-executing vendored upstream code under credentials.
+- Add a central Experimental metadata registry, while leaving review-date enforcement undefined until policy exists.
 - Fix and verify GitHub Pages deployment separately from marketplace publication.
-- Add Official/Experimental lifecycle metadata and site presentation.
-- Wire missing reusable governance/evaluation capabilities through AQC.
 - Expand runtime trust/collision experiments.
 
 ### Later / Out of Scope
@@ -153,14 +162,16 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Validate and merge the issue #9 manual architecture migration, then run the upstream-sync workflow
-against the new reviewed baseline. Preserve the personal-runtime smoke as a parallel evidence need,
-not a substitute for clone-sync validation.
+Implement the first bounded slice of
+[the vendored-upstream direction](docs/upstream-vendoring-direction.md): neutral vendor configuration,
+read-only static preflight classification, generated provenance, an assertive overlay, and the post-merge artifact-promotion boundary. Preserve the personal-runtime smoke as a parallel
+evidence need, not a substitute for clone-sync validation.
 
 ## Evidence and Detailed Plans
 
 - README.md for package contents, website architecture, marketplace automation, install steps, and smoke protocol.
 - website/UPSTREAM.md and website/upstream-baseline.json for the reviewed clone architecture and source mapping.
+- docs/upstream-vendoring-direction.md for the next Mission 1 architecture and migration sequence.
 - UPSTREAM_POLICY.md for immutable upstream/AQC pinning and trust-boundary rules.
 - marketplace.contract.json for generated-output and materialized-distribution requirements.
 - .github/workflows/quality.yml for local and same-repository AQC gates.
