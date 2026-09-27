@@ -31,8 +31,8 @@ basic-plugin/
 ├── com.github.copilot/
 │   └── agents/
 │       └── custom-agent-foundry.agent.md
-├── website/                    # branded Holo source wrapper
-├── site/                       # generated static site
+├── website/                    # Awesome Copilot structural adapter
+├── site/                       # generated static site from local catalog data
 ├── marketplace/               # generated catalog
 ├── eng/                        # generation and validation scripts
 └── .github/workflows/          # quality, sync, publication, and Pages jobs
@@ -49,6 +49,12 @@ basic-plugin/
 At session start, the sentinel checks the current project plus Copilot's standard capability locations. It supplies a concise warning only when it finds a collision. When an agent performs a capability-related search or read and receives multiple matching definitions, a narrow follow-up hook rechecks the inventory and supplies the same warning when warranted.
 
 It never installs, removes, disables, renames, or blocks anything. It does not have a post-install lifecycle event, and VS Code does not currently expose this hook surface for plugins. A newly installed plugin is therefore checked at the next supported Copilot CLI or cloud-agent session, not at the instant of installation.
+
+## Website architecture
+
+The website follows the reviewed structure of the current Awesome Copilot site while remaining a small dependency-free static build. The local adapter uses the same broad page composition: top navigation, framed hero, responsive resource grid, catalog cards, closing CTA, and light/dark theme behavior.
+
+The reviewed upstream architecture baseline is recorded in `website/upstream-baseline.json` and explained in `website/UPSTREAM.md`. The Awesome Copilot resource catalog is never imported. A clone-specific local validator verifies the generated site stays aligned with that boundary.
 
 ## Marketplace automation
 
