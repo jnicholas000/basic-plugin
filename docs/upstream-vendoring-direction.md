@@ -90,20 +90,26 @@ The target classifier has four outcomes:
 
 | Class | Meaning | Default action |
 | --- | --- | --- |
-| `routine` | Only low-risk consumed content/assets or small implementation edits changed; overlay and validation still pass. | Eligible for automatic advancement only after the full artifact-promotion trust boundary exists; until then require human merge. |
-| `review` | A consumed implementation/config/install surface, dependency shape, overlay target, or rename changed without proving an architecture replacement. | Open/update a PR and require human review. |
+| `routine` | Only explicitly allowlisted non-executable content/assets changed; no implementation, route, config, manifest, dependency/lockfile, build-tooling, install/data, or overlay-target surface changed. | Eligible for automatic advancement only after the full artifact-promotion trust boundary exists; until then require human merge. |
+| `review` | Any executable/behavioral surface changed without proving an architecture replacement, including implementation, route, config, manifest, dependency/lockfile, build tooling, install/data, overlay targets, or renames. | Open/update a PR and require human review. |
 | `architecture` | Framework shape/major version or enough local integration points/consumed implementation surface changed that the adapter must be reconsidered. | Do not advance the accepted baseline; treat as a migration. |
 | `indeterminate` | Evidence is incomplete, truncated, validation failed, or the overlay outcome is unknown. | Fail the automation and require a human classification. |
 
 Classification should be a pure function of captured evidence so recorded scenarios can be replayed deterministically.
 
-Numeric policy belongs in configuration rather than code. Candidate thresholds include:
+Policy belongs in configuration rather than code. Candidate policy should include:
 
-- maximum implementation files/changed lines for routine handling;
+- an explicit allowlist of non-executable paths/extensions that may qualify for `routine`;
+- an explicit deny/review set for implementation, route, config, manifest, dependency/lockfile,
+  build-tooling, install/data, and overlay-target surfaces;
 - architecture thresholds based on implementation-file count and share of the consumed surface;
 - number of lost overlay integration points;
 - framework/dependency patterns; and
 - explicit install/data/config surfaces.
+
+A small diff is not sufficient to make executable upstream code `routine`. Size thresholds may help
+distinguish `review` from `architecture`, but they must not downgrade executable changes into the
+automatic path.
 
 Commit subjects and release labels are context, not evidence.
 
@@ -188,8 +194,7 @@ workflow may rebuild that site from source. In particular, publication and priva
 run a build command that transitively executes vendored upstream code while holding repository write
 permission, `AQC_READ_TOKEN`, publication credentials, or other secrets.
 
-Before automatic routine merges are enabled for executable vendored changes, choose and prove one of
-these patterns:
+Before automatic routine merges are enabled at all, choose and prove one of these post-merge patterns:
 
 1. **Artifact promotion:** the credential-free candidate sandbox produces immutable/content-addressed
    site and marketplace outputs. Trusted AQC validates those outputs as data. After merge, credentialed
@@ -198,8 +203,8 @@ these patterns:
    in a credential-free job, and only resulting validated artifacts/evidence cross into credentialed
    publication jobs.
 
-Until that boundary is implemented, `routine` may reduce review effort but must **not** mean automatic
-merge for a change that can alter executable vendored website/build code.
+Even after that boundary is implemented, automatic merge is limited to the configured non-executable
+allowlist. Any change that can alter executable vendored website/build behavior requires human review.
 
 ## Browser smoke direction
 
@@ -270,6 +275,6 @@ Portable engineering patterns may inform Basic Plugin, but the following stay ou
 7. Derive integration points from overlay rules and add recorded classifier fixtures.
 8. Add production-build browser smoke coverage.
 9. Convert post-merge quality/publication to artifact promotion or an equivalent no-reexecution trust boundary.
-10. Enable routine automatic baseline advancement only after the full preflight/sandbox/trusted-validation/post-merge path has demonstrated safe behavior.
+10. Enable routine automatic baseline advancement only for the explicit non-executable allowlist and only after the full preflight/sandbox/trusted-validation/post-merge path has demonstrated safe behavior.
 
 This sequence intentionally keeps the migration reversible and prevents the design lesson from becoming an overnight rewrite.

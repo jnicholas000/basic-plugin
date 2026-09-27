@@ -118,12 +118,13 @@ See [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md)
 - Run private AQC in a separate trusted job against sandbox-produced artifacts as data; do not execute candidate scripts there.
 - Redesign post-merge quality/publication so credential-bearing jobs promote validated artifacts instead of rebuilding vendored code.
 - Keep write-capable orchestration separate and make it consume evidence/validated artifacts only.
-- Keep automatic merge disabled for executable vendored changes until that post-merge boundary is proven.
+- Keep automatic merge limited to an explicit non-executable allowlist, and disabled entirely until the post-merge boundary is proven.
 - Treat the vendored tree as generated state and record provenance plus a deterministic tree digest.
 - Move local site customization into fail-closed overlay rules rather than a long-lived fork.
 - Derive classifier integration points from named overlay rules.
 - Upgrade change classification to `routine`, `review`, `architecture`, and `indeterminate`.
-- Keep numeric classification thresholds in reviewed configuration.
+- Make `routine` an explicit non-executable allowlist; implementation/config/dependency/build-tooling changes require human review regardless of size.
+- Keep classification policy and architecture thresholds in reviewed configuration.
 - Add production-build browser smoke coverage before enabling routine baseline advancement.
 - Keep framework-migration and clone-specific validation logic local to Basic Plugin.
 

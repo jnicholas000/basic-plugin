@@ -43,8 +43,10 @@ candidate validation. Routine handling must never be inferred when the automatio
 candidate state. Candidate-controlled website/build code must never run in the job that holds repository
 write permission, private AQC credentials, or publication credentials. This applies both before and after
 merge: once vendored code participates in the build, credential-bearing push-to-`main` workflows must
-promote already-validated artifacts or otherwise avoid re-executing vendored code. Automatic merge for
-executable vendored changes remains disabled until that post-merge boundary is implemented and verified.
+promote already-validated artifacts or otherwise avoid re-executing vendored code. Automatic merge remains disabled until that post-merge boundary is implemented and verified. Afterward,
+automatic merge is limited to an explicit non-executable allowlist; any implementation, route, config,
+manifest, dependency/lockfile, build-tooling, install/data, overlay-target, or rename change requires
+human review regardless of diff size.
 
 This section records direction only. Until the vendoring implementation lands, the structural-adapter
 pin/baseline and existing three-state workflow remain the executable contract.

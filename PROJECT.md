@@ -117,7 +117,7 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 - Implement the vendored Awesome Copilot website + assertive overlay described in
   [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
-- Introduce the four-state evidence classifier and derive integration points from overlay rules.
+- Introduce the four-state evidence classifier, derive integration points from overlay rules, and restrict `routine` to an explicit non-executable allowlist.
 - Add production-build browser smoke coverage before allowing routine baseline advancement.
 - Redesign post-merge quality/publication to promote validated artifacts without re-executing vendored upstream code under credentials.
 - Add a central Experimental metadata registry, while leaving review-date enforcement undefined until policy exists.
