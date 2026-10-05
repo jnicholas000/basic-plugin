@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repository": "github/awesome-copilot",
-  "ref": "6c4d33b9cfca967a28bb2962ef4d55e4a384c88c",
+  "ref": "143a3d976b3c1603cc8932984d5e1f28501cb5fc",
   "architecture": {
     "framework": "Astro 7",
     "islands": "React 19",
@@ -21,5 +21,5 @@
     "website/src/lib/site-data.ts"
   ],
   "localStrategy": "structural-static-adapter",
-  "capturedOn": "2026-09-26"
+  "capturedOn": "2026-10-05"
 }
