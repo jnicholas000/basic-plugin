@@ -11,7 +11,7 @@
     "routineExtensions": [".png", ".jpg", ".jpeg", ".webp", ".ico"],
     "reviewPrefixes": ["website/src/", "website/scripts/", "website/data/"],
     "reviewPaths": ["website/package.json", "website/package-lock.json", "website/astro.config.mjs"],
-    "frameworkDependencies": ["astro", "react", "react-dom", "@astrojs/react", "@primer/react-brand"],
+    "frameworkDependencies": ["astro", "react", "react-dom", "@astrojs/react", "@astrojs/starlight", "@primer/react-brand"],
     "implementationExtensions": [".ts", ".tsx", ".js", ".mjs", ".astro", ".css"],
     "architectureMinimumFiles": 20,
     "architectureShare": 0.5,

@@ -29,6 +29,13 @@ test('framework shape/major and consumed surface replacement are architecture', 
   const paths = Array.from({ length: 20 }, (_, i) => `website/src/lib/${i}.ts`);
   assert.equal(classifyPreflight({ ...base, consumedPaths: paths, files: paths.map(path => ({ status: 'M', path })) }, { ...config, copy: ['website/src'], prune: [], keep: [] }, overlay).classification, 'architecture');
 });
+test('adding Starlight preserves Astro/React but stops candidate execution for architecture review', () => {
+  const result = classify({ headPackage: { dependencies: { ...pkg.dependencies, '@astrojs/starlight': '^0.37.0' } } });
+  assert.equal(result.classification, 'architecture');
+  assert.equal(result.candidateExecutionAllowed, false);
+  assert.equal(result.automaticBaselineAdvancement, false);
+  assert.ok(result.signals.includes('Framework shape changed: @astrojs/starlight'));
+});
 test('missing, truncated, unbound and unresolvable evidence fails closed', () => {
   for (const values of [{ complete: false }, { truncated: true }, { basePackage: null }, { base: 'c'.repeat(40) }, { files: [{ path: '../private', status: 'M' }] }, { headPackage: { dependencies: { astro: 'latest', react: '^19.0.0' } } }, { basePackage: [], headPackage: [] }, { basePackage: { dependencies: [] } }, { basePackage: {}, headPackage: {} }, { basePackage: { dependencies: { astro: 'latest' } }, headPackage: { dependencies: { astro: 'latest' } } }]) {
     const result = classify(values);
