@@ -20,7 +20,7 @@ npm run site:vendor:validate
 The upstream checkout must already contain the full immutable commit. Generated roots are replaced
 wholesale after successful preparation. Never edit `website/vendor-generated/`; change the
 reviewed config or overlay and regenerate. `provenance.json` records SHA, accepted/candidate role,
-inputs, rule count, config/overlay digests, ordered file hashes, file count, and content digest.
+inputs, rule count, config/overlay digests, overlay source paths and byte hashes, ordered file hashes, file count, and content digest. Overlay source drift requires regeneration.
 Candidate generation writes to `website/vendor-candidate/`, preserves the accepted generated tree and SHA, and labels provenance `candidate`. The accepted provenance validator also requires the vendor SHA to match the reviewed structural baseline.
 
 ## Read-only static preflight

@@ -1,5 +1,12 @@
 {
   "schemaVersion": 1,
+  "overlaySources": [
+    {
+      "path": "website/overlay/local-site-data.ts",
+      "sha256": "b801777c170893dec70d3820f803456fdbba3e32a6c4508ee344f95093b043ed",
+      "bytes": 343
+    }
+  ],
   "repository": "github/awesome-copilot",
   "upstreamSha": "6c4d33b9cfca967a28bb2962ef4d55e4a384c88c",
   "role": "accepted",

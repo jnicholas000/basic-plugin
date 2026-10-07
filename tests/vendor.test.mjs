@@ -30,7 +30,7 @@ test('framework shape/major and consumed surface replacement are architecture', 
   assert.equal(classifyPreflight({ ...base, consumedPaths: paths, files: paths.map(path => ({ status: 'M', path })) }, { ...config, copy: ['website/src'], prune: [], keep: [] }, overlay).classification, 'architecture');
 });
 test('missing, truncated, unbound and unresolvable evidence fails closed', () => {
-  for (const values of [{ complete: false }, { truncated: true }, { basePackage: null }, { base: 'c'.repeat(40) }, { files: [{ path: '../private', status: 'M' }] }, { headPackage: { dependencies: { astro: 'latest', react: '^19.0.0' } } }]) {
+  for (const values of [{ complete: false }, { truncated: true }, { basePackage: null }, { base: 'c'.repeat(40) }, { files: [{ path: '../private', status: 'M' }] }, { headPackage: { dependencies: { astro: 'latest', react: '^19.0.0' } } }, { basePackage: [], headPackage: [] }, { basePackage: { dependencies: [] } }, { basePackage: {}, headPackage: {} }, { basePackage: { dependencies: { astro: 'latest' } }, headPackage: { dependencies: { astro: 'latest' } } }]) {
     const result = classify(values);
     assert.equal(result.classification, 'indeterminate');
     assert.equal(result.candidateExecutionAllowed, false);
@@ -89,6 +89,11 @@ test('committed provenance catches modified bytes and unexpected files', async (
     await cp('website', path.join(root, 'website'), { recursive: true });
     const run = () => execFileSync(process.execPath, [validator], { cwd: root, encoding: 'utf8', stdio: 'pipe' });
     assert.match(run(), /Validated 3/);
+    const overlaySourceFile = path.join(root, 'website/overlay/local-site-data.ts');
+    const overlaySourceBytes = await readFile(overlaySourceFile);
+    await writeFile(overlaySourceFile, 'changed local catalog adapter');
+    assert.throws(run, /Overlay source drift/);
+    await writeFile(overlaySourceFile, overlaySourceBytes);
     const baselineFile = path.join(root, 'website/upstream-baseline.json');
     const baselineBytes = await readFile(baselineFile);
     await writeFile(baselineFile, JSON.stringify({ ref: 'a'.repeat(40) }));

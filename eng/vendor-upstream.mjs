@@ -63,7 +63,8 @@ export async function vendor({ repository, config, overlay, ref = config.accepte
   }
   const overlaid = applyOverlay(files, overlay, sources);
   const inventory = [...overlaid].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([file, bytes]) => ({ path: file, sha256: digest(bytes), bytes: bytes.length }));
-  const provenance = { schemaVersion: 1, repository: config.repository, upstreamSha: ref, role, copy: config.copy, prune: config.prune, keep: config.keep, overlayRuleCount: overlay.rules.length, configDigest: digest(JSON.stringify(config)), overlayDigest: digest(JSON.stringify(overlay)), fileCount: inventory.length, contentDigest: digest(JSON.stringify(inventory)), files: inventory };
+  const overlaySources = [...sources].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([file, bytes]) => ({ path: file, sha256: digest(bytes), bytes: bytes.length }));
+  const provenance = { schemaVersion: 1, overlaySources, repository: config.repository, upstreamSha: ref, role, copy: config.copy, prune: config.prune, keep: config.keep, overlayRuleCount: overlay.rules.length, configDigest: digest(JSON.stringify(config)), overlayDigest: digest(JSON.stringify(overlay)), fileCount: inventory.length, contentDigest: digest(JSON.stringify(inventory)), files: inventory };
   const target = path.resolve(output);
   if (target === path.resolve(localRoot) || !target.startsWith(`${path.resolve(localRoot)}${path.sep}`)) throw new Error('Output must be an owned child of localRoot');
   const staging = `${target}.staging`;

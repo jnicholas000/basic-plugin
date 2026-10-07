@@ -7,6 +7,13 @@ const baseline = JSON.parse(await readFile('website/upstream-baseline.json', 'ut
 if (config.acceptedSha !== baseline.ref) throw new Error('Vendor accepted SHA must match the reviewed site baseline');
 const manifest = JSON.parse(await readFile(`${root}/provenance.json`, 'utf8'));
 if (manifest.role !== 'accepted' || manifest.upstreamSha !== config.acceptedSha || manifest.repository !== config.repository || manifest.configDigest !== digest(JSON.stringify(config)) || manifest.overlayDigest !== digest(JSON.stringify(overlay)) || manifest.overlayRuleCount !== overlay.rules.length || manifest.contentDigest !== digest(JSON.stringify(manifest.files)) || manifest.fileCount !== manifest.files.length) throw new Error('Vendor provenance does not match accepted configuration');
+const overlaySources = [];
+for (const source of [...new Set(overlay.rules.map(rule => rule.source).filter(Boolean))].sort()) {
+  safePath(source);
+  const bytes = await readFile(source);
+  overlaySources.push({ path: source, sha256: digest(bytes), bytes: bytes.length });
+}
+if (JSON.stringify(manifest.overlaySources) !== JSON.stringify(overlaySources)) throw new Error('Overlay source drift: regenerate the accepted vendor tree');
 async function inventory(dir, prefix = '') {
   const paths = [];
   for (const name of await readdir(dir)) {

@@ -15,16 +15,20 @@ export function classifyPreflight(evidence, config, overlay) {
     }
     evidence.consumedPaths.forEach(safePath);
   } catch { return result('indeterminate', ['Invalid path/status evidence']); }
+  const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  const validPackage = pkg => object(pkg) && ['dependencies', 'devDependencies', 'peerDependencies'].every(group => pkg[group] === undefined || (object(pkg[group]) && Object.values(pkg[group]).every(value => typeof value === 'string' && value.length > 0)));
+  if (!validPackage(evidence.basePackage) || !validPackage(evidence.headPackage)) return result('indeterminate', ['Malformed package/dependency metadata']);
   const architecture = [];
   const dependencies = pkg => ({ ...pkg.dependencies, ...pkg.devDependencies, ...pkg.peerDependencies });
   const before = dependencies(evidence.basePackage), after = dependencies(evidence.headPackage);
+  if (!config.policy.frameworkDependencies.some(name => before[name])) return result('indeterminate', ['Missing accepted framework metadata']);
   for (const name of config.policy.frameworkDependencies) {
     const a = before[name], b = after[name];
+    // Reject ranges/aliases we cannot resolve statically, including unchanged values.
+    const major = value => typeof value === 'string' && /^(?:\^|~)?\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(value) ? Number(value.match(/\d+/)[0]) : null;
+    if ((a && major(a) === null) || (b && major(b) === null)) return result('indeterminate', [`Unresolved framework version: ${name}`]);
     if (a === b) continue;
     if (!a || !b) { architecture.push(`Framework shape changed: ${name}`); continue; }
-    // Reject ranges/aliases we cannot resolve statically rather than guessing.
-    const major = value => typeof value === 'string' && /^(?:\^|~)?\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(value) ? Number(value.match(/\d+/)[0]) : null;
-    if (major(a) === null || major(b) === null) return result('indeterminate', [`Unresolved framework version: ${name}`]);
     if (major(a) !== major(b)) architecture.push(`Framework major changed: ${name}`);
   }
   const targets = overlay.rules.filter(rule => rule.allowMissing !== true).map(rule => rule.target);
