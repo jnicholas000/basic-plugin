@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "repository": "github/awesome-copilot",
+  "acceptedSha": "6c4d33b9cfca967a28bb2962ef4d55e4a384c88c",
+  "copy": ["website/package.json", "website/astro.config.mjs", "website/src/lib"],
+  "prune": ["website/src/lib"],
+  "keep": ["website/src/lib/site-data.ts"],
+  "overlay": "website/overlay.json",
+  "policy": {
+    "routinePrefixes": ["website/public/"],
+    "routineExtensions": [".png", ".jpg", ".jpeg", ".webp", ".ico"],
+    "reviewPrefixes": ["website/src/", "website/scripts/", "website/data/"],
+    "reviewPaths": ["website/package.json", "website/package-lock.json", "website/astro.config.mjs"],
+    "frameworkDependencies": ["astro", "react", "react-dom", "@astrojs/react", "@astrojs/starlight", "@primer/react-brand"],
+    "implementationExtensions": [".ts", ".tsx", ".js", ".mjs", ".astro", ".css"],
+    "architectureMinimumFiles": 20,
+    "architectureShare": 0.5,
+    "lostIntegrationPoints": 1
+  }
+}

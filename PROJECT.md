@@ -5,7 +5,7 @@ project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: active
 current_phase: Adaptive marketplace clone and customization incubation
-last_reviewed: 2026-09-26
+last_reviewed: 2026-10-07
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -70,6 +70,16 @@ current Astro 7 + React 19 + Primer Brand website. Issue #9 records that manual 
 PR #10 replaced the Holo prototype with a local structural adapter for the current Awesome
 Copilot page model while preserving Basic Plugin's local catalog as the only published resource data.
 
+The first bounded vendoring slice adds neutral configuration, a generated three-file seed with deterministic
+provenance, a required local catalog overlay, and read-only four-state preflight. The production adapter
+remains active; vendored-site parity is not established. Scheduled sync no longer advances pins or enables
+auto-merge. Quality and publication separate secret-free generation from pinned AQC artifact validation;
+post-merge publication promotes validated bytes without executing repository build code under credentials.
+Local vendor/classifier tests and workflow-boundary checks pass. Hosted local quality and private AQC
+artifact validation passed on the first slice head `51bd8c8ff859a09a6f04a37ab5e5f95730e37d10` in
+[run 37634477054](https://github.com/jnicholas000/basic-plugin/actions/runs/37634477054).
+Post-merge artifact promotion and Pages deployment of this slice remain unexecuted.
+
 ## Current Objective
 
 Use the repository as the active proving ground for the Awesome Copilot-derived site clone, marketplace
@@ -109,17 +119,17 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 ### Now
 
 - Preserve merged PR #10 as the proven structural-adapter baseline.
-- Land the vendored-upstream follow-up architecture as the next Mission 1 contract.
+- Verify the bounded vendoring foundation and complete candidate sandbox/parity gates.
 - Preserve AQC as the reusable quality engine while keeping clone-specific synchronization checks local.
 - Continue personal-environment runtime validation for the merged plugin baseline.
 
 ### Next
 
-- Implement the vendored Awesome Copilot website + assertive overlay described in
+- Complete vendored Awesome Copilot site parity against the assertive overlay described in
   [docs/upstream-vendoring-direction.md](docs/upstream-vendoring-direction.md).
-- Introduce the four-state evidence classifier, derive integration points from overlay rules, and restrict `routine` to an explicit non-executable allowlist.
+- Combine implemented four-state static preflight with candidate build/smoke and trusted validation evidence.
 - Add production-build browser smoke coverage before allowing routine baseline advancement.
-- Redesign post-merge quality/publication to promote validated artifacts without re-executing vendored upstream code under credentials.
+- Verify hosted artifact promotion without re-executing vendored upstream code under credentials.
 - Add a central Experimental metadata registry, while leaving review-date enforcement undefined until policy exists.
 - Fix and verify GitHub Pages deployment separately from marketplace publication.
 - Expand runtime trust/collision experiments.
@@ -162,10 +172,10 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Implement the first bounded slice of
-[the vendored-upstream direction](docs/upstream-vendoring-direction.md): neutral vendor configuration,
-read-only static preflight classification, generated provenance, an assertive overlay, and the post-merge artifact-promotion boundary. Preserve the personal-runtime smoke as a parallel
-evidence need, not a substitute for clone-sync validation.
+Review and verify the [first bounded vendoring slice](docs/vendor-slice.md), then add the credential-free
+candidate sandbox and final evidence gates before the vendored-site parity migration. Keep automatic
+baseline advancement disabled until browser smoke and the full trust boundary have run successfully.
+Personal-runtime smoke remains a parallel evidence need.
 
 ## Evidence and Detailed Plans
 

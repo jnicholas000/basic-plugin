@@ -4,57 +4,112 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: marketplace-publication
   cancel-in-progress: true
 jobs:
-  publish:
+  prepare:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-        with: { fetch-depth: 0 }
+        with: { persist-credentials: false }
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
-      - name: Check AQC access
-        env: { AQC_READ_TOKEN: '${{ secrets.AQC_READ_TOKEN }}' }
-        run: test -n "$AQC_READ_TOKEN" || { echo 'AQC_READ_TOKEN is required; see UPSTREAM_POLICY.md'; exit 1; }
-      - name: Checkout pinned AQC engine
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Generate and validate without secrets or write credentials
+        run: |
+          npm run build
+          mkdir -p plugins/basic-plugin
+          cp -R plugin.json mcp.json hooks.json hooks skills com.github.copilot plugins/basic-plugin/
+          node eng/validate-marketplace.mjs --distribution-root plugins/basic-plugin
+      - name: Bind prepared snapshot to this exact source head
+        run: |
+          printf '%s\n' "$GITHUB_SHA" > promotion-source-sha
+          tar --exclude=.git --exclude=node_modules --exclude=.aqc -czf "$RUNNER_TEMP/promotion.tgz" .
+          cd "$RUNNER_TEMP"
+          sha256sum promotion.tgz > promotion.sha256
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: promotion-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/promotion.tgz
+            ${{ runner.temp }}/promotion.sha256
+          if-no-files-found: error
+  validate:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: promotion-${{ github.sha }}
+          path: prepared
+      - name: Check digest and source binding
+        run: |
+          cd prepared
+          sha256sum --check promotion.sha256
+          mkdir data
+          python - <<'PYDATA'
+          import tarfile
+          with tarfile.open('promotion.tgz') as archive:
+              archive.extractall('data', filter='data')
+          PYDATA
+          test "$(cat data/promotion-source-sha)" = "$GITHUB_SHA"
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           repository: jnicholas000/ai-quality-control
           ref: a8a345b385d844e4857f97d86d43eac41b513732
-          path: .aqc
+          path: trusted-aqc-engine
           token: '${{ secrets.AQC_READ_TOKEN }}'
-      - name: Install pinned AQC dependencies
-        run: npm ci --prefix .aqc --ignore-scripts
-      - run: npm run build
-      - name: Execute generated-output inventory contract
-        run: npm run validate
-      - name: Validate generated artifacts before publication
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
+      - name: Install only pinned AQC dependencies
+        run: npm ci --prefix trusted-aqc-engine --ignore-scripts
+      - name: Validate prepared artifacts as data only
         run: |
-          node .aqc/src/cli/aqc.mjs validate marketplace --profile generic --format json
-          node .aqc/src/cli/aqc.mjs validate site --profile generic --format json
-      - name: Publish generated distribution
+          node trusted-aqc-engine/src/cli/aqc.mjs validate prepared/data/marketplace --profile generic --format json
+          node trusted-aqc-engine/src/cli/aqc.mjs validate prepared/data/site --profile generic --format json
+          node trusted-aqc-engine/src/cli/aqc.mjs validate prepared/data/plugins/basic-plugin --profile copilot --format json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: validated-promotion-${{ github.sha }}
+          path: |
+            prepared/promotion.tgz
+            prepared/promotion.sha256
+          if-no-files-found: error
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with: { fetch-depth: 0 }
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: validated-promotion-${{ github.sha }}
+          path: '${{ runner.temp }}/promotion'
+      - name: Promote validated bytes without executing repository code
         run: |
           set -euo pipefail
-          snapshot_dir="$(mktemp -d)"
-          rsync -a --exclude .git --exclude .aqc --exclude node_modules ./ "$snapshot_dir/"
-          mv "$GITHUB_WORKSPACE/.aqc" "$snapshot_dir/.aqc-engine"
+          cd "$RUNNER_TEMP/promotion"
+          sha256sum --check promotion.sha256
+          mkdir data
+          python - <<'PYDATA'
+          import tarfile
+          with tarfile.open('promotion.tgz') as archive:
+              archive.extractall('data', filter='data')
+          PYDATA
+          test "$(cat data/promotion-source-sha)" = "$GITHUB_SHA"
+          cd "$GITHUB_WORKSPACE"
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA"
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git fetch origin marketplace || true
           git checkout -B marketplace origin/marketplace 2>/dev/null || git checkout --orphan marketplace
           git rm -rf . 2>/dev/null || true
-          cp -R "$snapshot_dir"/. .
-          rm -rf .aqc-engine
-          mkdir -p plugins/basic-plugin
-          cp -R "$snapshot_dir"/plugin.json "$snapshot_dir"/mcp.json "$snapshot_dir"/hooks.json "$snapshot_dir"/hooks "$snapshot_dir"/skills "$snapshot_dir"/com.github.copilot plugins/basic-plugin/
-          echo "Execute materialized-distribution inventory contract"
-          node eng/validate-marketplace.mjs --distribution-root plugins/basic-plugin
-          echo "Validating materialized distribution with AQC"
-          node "$snapshot_dir/.aqc-engine/src/cli/aqc.mjs" validate plugins/basic-plugin --profile copilot --format json
-          rm -rf "$snapshot_dir"
-          git add -A && git commit -m "chore: publish marketplace from ${GITHUB_SHA}" --allow-empty
+          cp -R "$RUNNER_TEMP/promotion/data"/. .
+          git add -A
+          git -c core.hooksPath=/dev/null commit -m "chore: promote marketplace from ${GITHUB_SHA}" --allow-empty
           git push origin marketplace --force
