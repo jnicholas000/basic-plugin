@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "overlaySources": [
+    {
+      "path": "website/overlay/local-site-data.ts",
+      "sha256": "b801777c170893dec70d3820f803456fdbba3e32a6c4508ee344f95093b043ed",
+      "bytes": 343
+    }
+  ],
+  "repository": "github/awesome-copilot",
+  "upstreamSha": "6c4d33b9cfca967a28bb2962ef4d55e4a384c88c",
+  "role": "accepted",
+  "copy": [
+    "website/package.json",
+    "website/astro.config.mjs",
+    "website/src/lib"
+  ],
+  "prune": [
+    "website/src/lib"
+  ],
+  "keep": [
+    "website/src/lib/site-data.ts"
+  ],
+  "overlayRuleCount": 1,
+  "configDigest": "39258d166b4d2d44bcdcc727bb624236fdd0e27d4971425c655f70ea853719c2",
+  "overlayDigest": "36b224a800a7f30894d4873ead9d8f7bdbea9ca32404c0f466970c3974f59693",
+  "fileCount": 3,
+  "contentDigest": "c229c34dc874a9df7659431434d154a3072b614e39bd217c7661d76f13823b33",
+  "files": [
+    {
+      "path": "website/astro.config.mjs",
+      "sha256": "0d046a72d3db6946644f4b108215009980b884778757308c330ac8d5342e51ba",
+      "bytes": 5629
+    },
+    {
+      "path": "website/package.json",
+      "sha256": "05ea07146e068b3a253ae2562f27658222f95a1ae6fcdf48900045abbc84a953",
+      "bytes": 1266
+    },
+    {
+      "path": "website/src/lib/site-data.ts",
+      "sha256": "b801777c170893dec70d3820f803456fdbba3e32a6c4508ee344f95093b043ed",
+      "bytes": 343
+    }
+  ]
+}

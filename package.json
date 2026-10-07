@@ -10,9 +10,13 @@
     "marketplace:generate": "node eng/generate-marketplace.mjs",
     "site:build": "node eng/build-site.mjs",
     "validate": "node eng/validate-marketplace.mjs && npm run site:clone:validate",
-    "build": "npm run test:upstream-sync && npm run site:baseline:validate && npm run marketplace:generate && npm run site:build && npm run validate",
+    "build": "npm run test:vendor && npm run site:vendor:validate && npm run test:upstream-sync && npm run site:baseline:validate && npm run marketplace:generate && npm run site:build && npm run validate",
     "test:upstream-sync": "node --test tests/upstream-website-classifier.test.mjs tests/sync-upstream-ref.test.mjs",
     "site:baseline:validate": "node eng/validate-upstream-baseline.mjs",
-    "site:clone:validate": "node eng/validate-site-clone.mjs"
+    "site:clone:validate": "node eng/validate-site-clone.mjs",
+    "test:vendor": "node --test tests/vendor.test.mjs",
+    "site:vendor": "node eng/vendor-upstream.mjs",
+    "site:preflight": "node eng/vendor-preflight.mjs",
+    "site:vendor:validate": "node eng/validate-vendor-provenance.mjs"
   }
 }

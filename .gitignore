@@ -1,0 +1,3 @@
+# Candidate evidence is separate from the reviewed generated seed.
+website/vendor-candidate/
+__pycache__/
