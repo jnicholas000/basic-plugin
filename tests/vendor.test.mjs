@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -73,6 +73,11 @@ test('real Git vendoring is deterministic, prunes, replaces stale roots, and exe
     git('mv', 'website/src/lib/site-data.ts', 'website/src/lib/moved.ts'); git('commit', '-qam', 'rename');
     const evidence = capturePreflight(repository, ref, git('rev-parse', 'HEAD'));
     assert.equal(classifyPreflight(evidence, settings, overlay).classification, 'architecture');
+    await rm(path.join(repository, 'website/astro.config.mjs'));
+    await symlink('/etc/passwd', path.join(repository, 'website/astro.config.mjs'));
+    git('add', '.'); git('commit', '-qm', 'symlink');
+    await assert.rejects(vendor({ repository, config: settings, overlay, ref: git('rev-parse', 'HEAD'), role: 'candidate', output, localRoot: root }), /Unsupported vendor entry/);
+    assert.equal(JSON.parse(await readFile(path.join(output, 'provenance.json'), 'utf8')).upstreamSha, ref);
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
@@ -84,6 +89,11 @@ test('committed provenance catches modified bytes and unexpected files', async (
     await cp('website', path.join(root, 'website'), { recursive: true });
     const run = () => execFileSync(process.execPath, [validator], { cwd: root, encoding: 'utf8', stdio: 'pipe' });
     assert.match(run(), /Validated 3/);
+    const baselineFile = path.join(root, 'website/upstream-baseline.json');
+    const baselineBytes = await readFile(baselineFile);
+    await writeFile(baselineFile, JSON.stringify({ ref: 'a'.repeat(40) }));
+    assert.throws(run, /must match/);
+    await writeFile(baselineFile, baselineBytes);
     const file = path.join(root, 'website/vendor-generated/website/astro.config.mjs');
     await writeFile(file, 'drift');
     assert.throws(run, /Vendor drift/);

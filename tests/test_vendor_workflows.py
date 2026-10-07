@@ -1,4 +1,10 @@
 import unittest
+import hashlib
+import io
+import os
+import subprocess
+import tarfile
+import tempfile
 from pathlib import Path
 import yaml
 
@@ -45,6 +51,36 @@ class VendorWorkflowBoundaryTests(unittest.TestCase):
         self.assertNotIn('sync-upstream-ref', scripts)
         self.assertNotIn('secrets.', str(workflow))
         self.assertIn('node eng/vendor-preflight.mjs', scripts)
+
+    def run_artifact_check(self, members, source_sha):
+        script = next(step['run'] for step in self.load('publish.yml')['jobs']['validate']['steps'] if step.get('name') == 'Check digest and source binding')
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            prepared = root / 'prepared'
+            prepared.mkdir()
+            archive = prepared / 'promotion.tgz'
+            with tarfile.open(archive, 'w:gz') as output:
+                for name, content in members.items():
+                    info = tarfile.TarInfo(name)
+                    data = content.encode()
+                    info.size = len(data)
+                    output.addfile(info, io.BytesIO(data))
+            (prepared / 'promotion.sha256').write_text(hashlib.sha256(archive.read_bytes()).hexdigest() + '  promotion.tgz\n')
+            result = subprocess.run(['bash', '-e', '-c', script], cwd=root, env={**os.environ, 'GITHUB_SHA': source_sha}, text=True, capture_output=True)
+            self.assertFalse((root / 'escaped').exists())
+            return result
+
+    def test_promotion_requires_exact_source_binding(self):
+        source = 'a' * 40
+        result = self.run_artifact_check({'promotion-source-sha': source + '\n'}, source)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        wrong = self.run_artifact_check({'promotion-source-sha': 'b' * 40}, source)
+        self.assertNotEqual(wrong.returncode, 0)
+
+    def test_archive_escape_is_rejected_before_private_validation(self):
+        result = self.run_artifact_check({'../escaped': 'untrusted', 'promotion-source-sha': 'a' * 40}, 'a' * 40)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('OutsideDestinationError', result.stderr)
 
 
 if __name__ == '__main__':

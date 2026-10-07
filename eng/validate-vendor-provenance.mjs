@@ -3,6 +3,8 @@ import { digest, safePath } from './vendor-upstream.mjs';
 const root = 'website/vendor-generated';
 const config = JSON.parse(await readFile('website/vendor.config.json', 'utf8'));
 const overlay = JSON.parse(await readFile(config.overlay, 'utf8'));
+const baseline = JSON.parse(await readFile('website/upstream-baseline.json', 'utf8'));
+if (config.acceptedSha !== baseline.ref) throw new Error('Vendor accepted SHA must match the reviewed site baseline');
 const manifest = JSON.parse(await readFile(`${root}/provenance.json`, 'utf8'));
 if (manifest.role !== 'accepted' || manifest.upstreamSha !== config.acceptedSha || manifest.repository !== config.repository || manifest.configDigest !== digest(JSON.stringify(config)) || manifest.overlayDigest !== digest(JSON.stringify(overlay)) || manifest.overlayRuleCount !== overlay.rules.length || manifest.contentDigest !== digest(JSON.stringify(manifest.files)) || manifest.fileCount !== manifest.files.length) throw new Error('Vendor provenance does not match accepted configuration');
 async function inventory(dir, prefix = '') {

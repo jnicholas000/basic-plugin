@@ -75,8 +75,10 @@ provenance, a required local catalog overlay, and read-only four-state preflight
 remains active; vendored-site parity is not established. Scheduled sync no longer advances pins or enables
 auto-merge. Quality and publication separate secret-free generation from pinned AQC artifact validation;
 post-merge publication promotes validated bytes without executing repository build code under credentials.
-Local vendor/classifier tests and workflow-boundary checks pass. Hosted artifact promotion and AQC
-validation of this revision remain unverified until actual run evidence is recorded.
+Local vendor/classifier tests and workflow-boundary checks pass. Hosted local quality and private AQC
+artifact validation passed on the first slice head `51bd8c8ff859a09a6f04a37ab5e5f95730e37d10` in
+[run 37634477054](https://github.com/jnicholas000/basic-plugin/actions/runs/37634477054).
+Post-merge artifact promotion and Pages deployment of this slice remain unexecuted.
 
 ## Current Objective
 

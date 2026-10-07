@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { lstat, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { lstat, mkdir, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -28,7 +28,7 @@ export function applyOverlay(files, overlay, sources) {
       result.set(rule.target, sources.get(rule.source));
     } else if (rule.operation === 'replaceText') {
       const text = before.toString('utf8');
-      if (!rule.expected || text.split(rule.expected).length !== 2) throw new Error(`Overlay match must occur exactly once: ${rule.name}`);
+      if (typeof rule.expected !== 'string' || !rule.expected || typeof rule.replacement !== 'string' || text.split(rule.expected).length !== 2) throw new Error(`Overlay match must occur exactly once: ${rule.name}`);
       result.set(rule.target, Buffer.from(text.replace(rule.expected, rule.replacement)));
     } else throw new Error(`Unknown overlay operation: ${rule.operation}`);
   }
@@ -55,6 +55,9 @@ export async function vendor({ repository, config, overlay, ref = config.accepte
   for (const rule of overlay.rules) if (rule.source) {
     safePath(rule.source);
     const source = path.join(localRoot, rule.source);
+    const resolvedSource = await realpath(source);
+    const resolvedRoot = await realpath(localRoot);
+    if (!resolvedSource.startsWith(`${resolvedRoot}${path.sep}`)) throw new Error(`Overlay source escapes local root: ${rule.source}`);
     if (!(await lstat(source)).isFile()) throw new Error(`Overlay source must be an ordinary file: ${rule.source}`);
     sources.set(rule.source, await readFile(source));
   }
@@ -79,5 +82,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const config = JSON.parse(await readFile('website/vendor.config.json', 'utf8'));
   const overlay = JSON.parse(await readFile(config.overlay, 'utf8'));
   if (!process.env.UPSTREAM_REPO_DIR) throw new Error('UPSTREAM_REPO_DIR is required; no network/install/build commands are run');
-  await vendor({ repository: process.env.UPSTREAM_REPO_DIR, config, overlay, ref: process.env.UPSTREAM_HEAD || config.acceptedSha, role: process.env.UPSTREAM_HEAD ? 'candidate' : 'accepted', output: 'website/vendor-generated' });
+  await vendor({ repository: process.env.UPSTREAM_REPO_DIR, config, overlay, ref: process.env.UPSTREAM_HEAD || config.acceptedSha, role: process.env.UPSTREAM_HEAD ? 'candidate' : 'accepted', output: process.env.UPSTREAM_HEAD ? 'website/vendor-candidate' : 'website/vendor-generated' });
 }
