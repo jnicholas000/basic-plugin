@@ -29,3 +29,14 @@ The following components are vendored from commit-pinned upstream sources. Local
 - Project: <https://github.com/github/github-mcp-server>
 - Hosted endpoint: `https://api.githubcopilot.com/mcp/`
 - No GitHub MCP source code is vendored by this repository.
+
+## Awesome Copilot website vendoring seed
+
+- Source: <https://github.com/github/awesome-copilot/tree/6c4d33b9cfca967a28bb2962ef4d55e4a384c88c/website>
+- Upstream commit: `6c4d33b9cfca967a28bb2962ef4d55e4a384c88c`
+- Generated local path: `website/vendor-generated/website/`
+- License: MIT, included at `licenses/awesome-copilot-MIT.txt`
+- Copyright GitHub, Inc.
+- Local changes: `website/src/lib/site-data.ts` is wholly replaced by the asserted local
+  overlay. Other library files are pruned; only package/config seed files are retained.
+- This seed is not a production website. The existing local structural adapter remains active.

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "name": "local-catalog-authority",
+      "target": "website/src/lib/site-data.ts",
+      "intent": "Own the catalog adapter; upstream resource data must never become published input.",
+      "operation": "replaceFile",
+      "source": "website/overlay/local-site-data.ts",
+      "allowMissing": false
+    }
+  ]
+}

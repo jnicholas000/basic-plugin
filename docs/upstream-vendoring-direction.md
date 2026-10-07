@@ -1,6 +1,6 @@
 # Upstream Vendoring Direction
 
-> Status: planned follow-up to the current Awesome Copilot structural-adapter baseline  
+> Status: first bounded foundation implemented; full vendored-site migration remains planned
 > Last reviewed: 2026-09-26
 
 ## Decision
@@ -9,7 +9,7 @@ Basic Plugin should evolve from a hand-authored structural adapter toward a **ve
 
 The current adapter remains useful evidence: it proved the architecture boundary, generated-site contract, upstream pinning, and change-classification workflow. The next implementation should use the upstream website itself as generated input instead of continuing to reproduce upstream structure by hand.
 
-This document records the target architecture only. It does not claim the vendoring engine has been implemented yet.
+This document records the full target architecture. The [first bounded slice](vendor-slice.md) implements the generated seed, static preflight, overlay, and publication isolation; candidate validation and site parity remain pending.
 
 ## Target flow
 

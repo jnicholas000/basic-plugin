@@ -8,8 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with: { persist-credentials: false }
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
+      - name: Install workflow test parser
+        run: python -m pip install PyYAML==6.0.3
+      - name: Verify local workflow and plugin contracts
+        env: { PYTHONDONTWRITEBYTECODE: 1 }
+        run: python -m unittest discover -s tests -p 'test_*.py'
       - run: npm run build
       - name: Verify generated outputs are committed
         run: |
@@ -21,6 +27,12 @@ jobs:
           fi
       - name: Execute generated-output inventory contract
         run: npm run validate
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: quality-artifacts-${{ github.sha }}
+          path: |
+            marketplace/
+            site/
 
   aqc:
     name: Private AQC checks
@@ -32,6 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with: { persist-credentials: false }
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
       - name: Check AQC access
@@ -44,14 +57,16 @@ jobs:
           ref: a8a345b385d844e4857f97d86d43eac41b513732
           path: .aqc
           token: '${{ secrets.AQC_READ_TOKEN }}'
+          persist-credentials: false
       - name: Install pinned AQC dependencies
         run: npm ci --prefix .aqc --ignore-scripts
-      - run: npm run build
-      - name: Execute generated-output inventory contract
-        run: npm run validate
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: quality-artifacts-${{ github.sha }}
+          path: validated-artifacts
       - name: Validate source repository with AQC
         run: node .aqc/src/cli/aqc.mjs validate . --profile awesome-copilot-repository --format json
       - name: Validate generated catalog
-        run: node .aqc/src/cli/aqc.mjs validate marketplace --profile generic --format json
+        run: node .aqc/src/cli/aqc.mjs validate validated-artifacts/marketplace --profile generic --format json
       - name: Validate generated website
-        run: node .aqc/src/cli/aqc.mjs validate site --profile generic --format json
+        run: node .aqc/src/cli/aqc.mjs validate validated-artifacts/site --profile generic --format json

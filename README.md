@@ -66,7 +66,7 @@ Set the `AQC_READ_TOKEN` repository secret to a read-only token that can checkou
 - Fork and Dependabot pull requests run secret-free local checks. For each exact head, a maintainer must remove and reapply `aqc-trusted-validation` to authorize the separate `Trusted AQC checks` path before merge.
 - A push to `main` publishes the generated `marketplace` branch. Publication is serialized, and manual dispatches are restricted to `main`.
 - GitHub Pages deploys the generated `site/` artifact.
-- The **current structural-adapter** weekly/manual sync job compares the reviewed Awesome Copilot pin with current upstream website structure before advancing it. Routine changes can auto-merge after local and AQC validation, broader changes require a reviewed PR, and architecture rewrites stop the sync and open/refresh a manual migration issue. This current behavior does not authorize automatic merge once executable upstream code is vendored; the planned vendoring trust boundary is documented separately. Upstream resources are never imported automatically.
+- Weekly/manual upstream sync captures read-only four-state metadata preflight. Architecture and indeterminate evidence stop candidate execution; baseline advancement and auto-merge remain disabled pending the complete validation path. Upstream resource catalog data is excluded.
 
 See [UPSTREAM_POLICY.md](UPSTREAM_POLICY.md) for the immutable upstream and AQC pinning contract.
 
@@ -112,3 +112,11 @@ No personal access token or secret belongs in this repository.
 ## Diagnostic value
 
 This is a small, reviewable testbed for plugin behavior and marketplace automation. If the package works in a personal environment but not in a managed work environment, compare Copilot policy, MCP policy, authentication restrictions, allowed MCP servers, and plugin marketplace/source policy. It is intentionally not a mirror of Awesome Copilot's agents, skills, prompts, or instructions.
+
+## Vendoring foundation
+
+The first [bounded vendoring slice](docs/vendor-slice.md) adds a generated upstream seed and
+assertive overlay alongside the production structural adapter. Scheduled upstream sync now captures
+read-only four-state evidence; baseline advancement and auto-merge remain disabled. Publication
+separates secret-free generation, pinned AQC data-only validation, and promotion of the same artifacts.
+Vendored-site parity and browser smoke remain pending.
