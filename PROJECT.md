@@ -172,8 +172,10 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Review and verify the [first bounded vendoring slice](docs/vendor-slice.md), then add the credential-free
-candidate sandbox and final evidence gates before the vendored-site parity migration. Keep automatic
+The merged foundation and unchanged-SHA candidate generation are verified. The
+[candidate validation report](docs/candidate-validation-2026-10-07.md) records an attempted build
+and the exact missing runnable-seed prerequisites; vendored smoke/parity remain unproven.
+Prepare the bounded candidate-only materialization and credential-free runner before the vendored-site parity migration. Keep automatic
 baseline advancement disabled until browser smoke and the full trust boundary have run successfully.
 Personal-runtime smoke remains a parallel evidence need.
 
