@@ -1,0 +1,167 @@
+// Consumer integration harness only. All artifact validation belongs to pinned AQC.
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+const directory = path.dirname(fileURLToPath(import.meta.url));
+export const pilotPath = 'pilots/artifact-quality';
+export const agentPath = 'com.github.copilot/agents/custom-agent-foundry.agent.md';
+export const skillPath = 'skills/capability-collision-detection/SKILL.md';
+export const scannerPath = 'skills/capability-collision-detection/scripts/scan_capabilities.py';
+const agentDeclarations = `${pilotPath}/foundry.declarations.json`;
+const skillDeclarations = `${pilotPath}/collision.declarations.json`;
+const configNames = ['inventory.json', 'foundry.binding.json', 'collision.binding.json',
+  'foundry.declarations.json', 'collision.declarations.json', 'pin.json'];
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const json = value => `${JSON.stringify(value, null, 2)}\n`;
+const diagnostic = (rule, artifact, element, code, detail) =>
+  [rule, artifact, element, code, detail];
+const structure = (artifact, element) => diagnostic('AQC-BOUND-STRUCTURE', artifact,
+  element, 'AQC-BOUND-ELEMENT', 'missing');
+const value = keyword => diagnostic('AQC-BOUND-VALUES', agentPath,
+  'tools', 'AQC-BOUND-VALUE', keyword);
+const reference = code => diagnostic('AQC-BOUND-REFERENCES', skillPath,
+  'dependencies', code, 'found');
+export const expectations = {
+  baseline: [structure(agentPath, 'permissions'), structure(agentPath, 'failureEscalation'),
+    structure(skillPath, 'tools'), structure(skillPath, 'successCriteria')],
+  'fixture-valid': [],
+  'missing-agent-procedure': [structure(agentPath, 'procedure')],
+  'missing-skill-procedure': [structure(skillPath, 'procedure')],
+  'invalid-tools': [value('type')],
+  'duplicate-tools': [value('uniqueItems')],
+  'unknown-tool': [value('enum')],
+  'missing-resource': [reference('AQC-BOUND-REFERENCE')],
+  'escaping-resource': [reference('AQC-BOUND-REFERENCE')],
+  'malformed-reference': [reference('AQC-BOUND-REFERENCE-TYPE')],
+};
+
+function replaceOnce(text, expression, replacement) {
+  assert.equal([...text.matchAll(expression)].length, 1, `Mutation anchor changed: ${expression}`);
+  return text.replace(expression, replacement);
+}
+
+export async function prepare(repositoryRoot, destination) {
+  repositoryRoot = await realpath(path.resolve(repositoryRoot));
+  destination = path.resolve(destination);
+  destination = path.join(await realpath(path.dirname(destination)), path.basename(destination));
+  const relative = path.relative(repositoryRoot, destination);
+  assert.ok(relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative),
+    'Pilot output must be outside the source repository');
+  const git = (...args) => execFileSync('git', ['-C', repositoryRoot, ...args], { encoding: 'utf8' });
+  const consumerCommit = git('rev-parse', 'HEAD').trim();
+  const inputPaths = [agentPath, skillPath, scannerPath, ...configNames.map(n => `${pilotPath}/${n}`)];
+  // Read immutable Git blobs, not a changing or partly untracked filesystem snapshot.
+  const inputs = Object.fromEntries(inputPaths.map(p => [p, git('show', `${consumerCommit}:${p}`)]));
+  const pin = JSON.parse(inputs[`${pilotPath}/pin.json`]);
+  assert.match(pin.commit, /^[a-f0-9]{40}$/);
+  await mkdir(destination); // Refuse to overwrite an earlier run's evidence.
+  const manifest = {
+    schemaVersion: 1, consumerRepository: 'jnicholas000/basic-plugin', consumerCommit,
+    aqc: pin, profile: 'artifact-quality',
+    inputs: inputPaths.map(p => ({ path: p, sha256: sha256(inputs[p]) })),
+    cases: Object.keys(expectations),
+    limits: 'Baseline is real source. All other cases are synthetic overlays, not runtime or adoption evidence.',
+  };
+  for (const name of manifest.cases) {
+    const files = { ...inputs, 'aqc.artifacts.json': inputs[`${pilotPath}/inventory.json`],
+      'aqc.config.json': json({ schemaVersion: 1, profiles: ['artifact-quality'] }) };
+    if (name !== 'baseline') {
+      // Deliberately synthetic declarations isolate the downstream validators.
+      // These never modify either distributed artifact or the baseline report.
+      files[agentDeclarations] = json({ permissions: ['TEST-ONLY: workspace read/edit'],
+        failureEscalation: 'TEST-ONLY: Stop and escalate a failed operation.' });
+      files[skillDeclarations] = json({ dependencies: [scannerPath], tools: ['TEST-ONLY: python3'],
+        successCriteria: 'TEST-ONLY: Return the bounded collision report with coverage limits.' });
+    }
+    if (name === 'missing-agent-procedure') files[agentPath] = replaceOnce(files[agentPath],
+      /^## Your Process$/gm, '## Unmapped process');
+    if (name === 'missing-skill-procedure') files[skillPath] = replaceOnce(files[skillPath],
+      /^## Workflow$/gm, '## Unmapped workflow');
+    const toolMutations = { 'invalid-tools': 'tools: 42',
+      'duplicate-tools': "tools: ['read', 'read']", 'unknown-tool': "tools: ['not-in-consumer-contract']" };
+    if (Object.hasOwn(toolMutations, name)) files[agentPath] = replaceOnce(files[agentPath],
+      /^tools:.*$/gm, toolMutations[name]);
+    if (name === 'missing-resource') delete files[scannerPath];
+    if (name === 'escaping-resource') {
+      const declarations = JSON.parse(files[skillDeclarations]);
+      declarations.dependencies = ['../outside.py'];
+      files[skillDeclarations] = json(declarations);
+    }
+    if (name === 'malformed-reference') {
+      const declarations = JSON.parse(files[skillDeclarations]);
+      declarations.dependencies = scannerPath;
+      files[skillDeclarations] = json(declarations);
+    }
+    for (const [file, text] of Object.entries(files)) {
+      const output = path.join(destination, name, file);
+      await mkdir(path.dirname(output), { recursive: true });
+      await writeFile(output, text);
+    }
+  }
+  await writeFile(path.join(destination, 'manifest.json'), json(manifest));
+  return manifest;
+}
+
+export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.resolve(directory, '../..')) {
+  const manifest = JSON.parse(await readFile(path.join(inputsRoot, 'manifest.json'), 'utf8'));
+  const pinned = JSON.parse(await readFile(path.join(directory, 'pin.json'), 'utf8'));
+  assert.deepEqual(manifest.aqc, pinned, 'Prepared inputs use a different AQC pin');
+  assert.deepEqual(manifest.cases, Object.keys(expectations), 'Case inventory changed');
+  const git = (...args) => execFileSync('git', ['-C', repositoryRoot, ...args], { encoding: 'utf8' });
+  assert.equal(manifest.consumerCommit, git('rev-parse', 'HEAD').trim(), 'Consumer revision changed');
+  const inputPaths = [agentPath, skillPath, scannerPath, ...configNames.map(n => `${pilotPath}/${n}`)];
+  assert.deepEqual(manifest.inputs.map(item => item.path), inputPaths, 'Consumed-file inventory changed');
+  for (const item of manifest.inputs) {
+    assert.equal(sha256(git('show', `${manifest.consumerCommit}:${item.path}`)), item.sha256,
+      `Input is not the recorded consumer blob: ${item.path}`);
+    assert.equal(sha256(await readFile(path.join(inputsRoot, 'baseline', item.path))), item.sha256,
+      `Staged baseline changed: ${item.path}`);
+  }
+  const observedAqcCommit = (await readFile(path.join(resultsRoot, 'aqc-commit.txt'), 'utf8')).trim();
+  assert.equal(observedAqcCommit, pinned.commit, 'Executed AQC revision does not match the pin');
+  const results = [];
+  for (const name of manifest.cases) {
+    const rawBytes = await readFile(path.join(resultsRoot, `${name}.raw.json`));
+    const raw = JSON.parse(rawBytes);
+    const status = (await readFile(path.join(resultsRoot, `${name}.exit.txt`), 'utf8')).trim();
+    const expected = expectations[name];
+    assert.equal(status, expected.length ? '1' : '0', `${name}: unexpected CLI exit status`);
+    assert.ok(Array.isArray(raw.findings), `${name}: missing findings array`);
+    const observed = raw.findings.map(f => {
+      assert.equal(f.profile, 'artifact-quality');
+      assert.equal(f.enforcement, 'blocking'); // Rule semantics retained; not a required repository gate.
+      assert.equal(f.ruleVersion, '1.0.0');
+      assert.ok(f.evidence.source, `${name}: missing source attribution`);
+      assert.ok(f.evidence.contractIdentity && f.evidence.bindingIdentity, `${name}: missing exact identities`);
+      return diagnostic(f.ruleId, f.path, f.evidence.elementId, f.evidence.code,
+        f.evidence.keyword ?? f.evidence.status);
+    });
+    const sorted = items => items.map(item => JSON.stringify(item)).sort();
+    assert.deepEqual(sorted(observed), sorted(expected), `${name}: exact diagnostic mismatch`);
+    assert.equal(raw.summary.blocking, expected.length, `${name}: inconsistent blocking count`);
+    results.push({ name, evidenceKind: name === 'baseline' ? 'real-source' : 'synthetic-control',
+      exitCode: Number(status), findings: raw.findings.length, matched: true,
+      rawSha256: sha256(rawBytes), diagnostics: observed });
+  }
+  return { schemaVersion: 1, consumerCommit: manifest.consumerCommit,
+    aqcCommit: observedAqcCommit, inputs: manifest.inputs, results,
+    decision: 'Integration expectations matched. Baseline declaration gaps remain open. No runtime qualification or gate promotion.' };
+}
+
+async function main() {
+  const [command, first, second] = process.argv.slice(2);
+  if (command === 'prepare' && first && !second) {
+    console.log(json(await prepare(path.resolve(directory, '../..'), first)));
+  } else if (command === 'assess' && first && second) {
+    console.log(json(await assess(first, second)));
+  } else {
+    throw new Error('Usage: node pilots/artifact-quality/pilot.mjs prepare OUTPUT | assess INPUTS RESULTS');
+  }
+}
+if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
+  main().catch(error => { console.error(error); process.exitCode = 1; });
+}

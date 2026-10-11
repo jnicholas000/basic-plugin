@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "basic-plugin-collision-pilot",
+  "version": "1.0.0",
+  "artifactType": "skill",
+  "contract": { "id": "skill-base", "version": "1.0.0" },
+  "description": "Basic Plugin pilot mapping. Missing declarations remain missing; no runtime authority is inferred.",
+  "elements": {
+    "purpose": { "kind": "frontmatter", "path": ["description"] },
+    "triggerConditions": { "kind": "frontmatter", "path": ["description"] },
+    "inputsContext": { "kind": "markdown-section", "heading": "Scope and safety" },
+    "tools": { "kind": "declaration", "name": "tools" },
+    "dependencies": { "kind": "declaration", "name": "dependencies" },
+    "procedure": { "kind": "markdown-section", "heading": "Workflow" },
+    "failureEscalation": { "kind": "markdown-section", "heading": "Resolution rules" },
+    "outputContract": { "kind": "markdown-section", "heading": "Report format" },
+    "successCriteria": { "kind": "declaration", "name": "successCriteria" }
+  }
+}
