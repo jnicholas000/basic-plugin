@@ -1,24 +1,27 @@
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { prepare, assess, expectations, agentPath, skillPath, scannerPath, pilotPath } from './pilot.mjs';
+import { prepare, seal, assess, expectations, agentPath, skillPath, scannerPath, pilotPath } from './pilot.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-async function fixture(context) {
+async function fixture(context, { realFoundry = false } = {}) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'basic-artifact-pilot-'));
   context.after(() => rm(root, { recursive: true, force: true }));
   const repo = path.join(root, 'consumer');
   await mkdir(repo);
   await cp(here, path.join(repo, pilotPath), { recursive: true });
   const source = {
-    [agentPath]: "---\ntools: ['read']\n---\n## Your Process\nCreate a result.\n",
+    [agentPath]: "---\ntools: ['read']\n---\n## Your Process\nCreate a result.\n\n```yaml\ntools: ['example-not-an-input']\n```\n",
     [skillPath]: '## Workflow\nInspect approved roots.\n',
     [scannerPath]: "raise RuntimeError('This resource must never execute')\n",
   };
+  if (realFoundry) {
+    source[agentPath] = await readFile(path.resolve(here, '../..', agentPath), 'utf8');
+  }
   for (const [file, text] of Object.entries(source)) {
     await mkdir(path.dirname(path.join(repo, file)), { recursive: true });
     await writeFile(path.join(repo, file), text);
@@ -27,7 +30,15 @@ async function fixture(context) {
   git('init', '-q'); git('add', '.');
   git('-c', 'user.name=Pilot Test', '-c', 'user.email=pilot@example.invalid', 'commit', '-qm', 'Synthetic harness fixture');
   const inputs = path.join(root, 'inputs');
-  const manifest = await prepare(repo, inputs);
+  await prepare(repo, inputs);
+  // Mimic run.sh's contract copy, then seal every complete executed case.
+  for (const name of Object.keys(expectations)) {
+    const contracts = path.join(inputs, name, 'contracts');
+    await mkdir(contracts);
+    await writeFile(path.join(contracts, 'agent.json'), '{"id":"test-agent-contract"}\n');
+    await writeFile(path.join(contracts, 'skill.json'), '{"id":"test-skill-contract"}\n');
+  }
+  const manifest = await seal(inputs);
   return { root, repo, inputs, manifest, source };
 }
 
@@ -96,4 +107,59 @@ test('an AQC execution error cannot be mistaken for a successful defect detectio
   const f = await fixture(context), results = await mockResults(f);
   await writeFile(path.join(results, 'baseline.exit.txt'), '2\n');
   await assert.rejects(assess(f.inputs, results, f.repo), /unexpected CLI exit status/);
+});
+
+
+test('tool mutations affect only leading frontmatter, not fenced documentation in the real Foundry agent', async context => {
+  const f = await fixture(context, { realFoundry: true });
+  const frontmatterEnd = source => source.indexOf('\n---\n');
+  assert.ok(frontmatterEnd(f.source[agentPath]) > 0, 'Real Foundry frontmatter not found');
+  const originalBody = f.source[agentPath].slice(frontmatterEnd(f.source[agentPath]) + 5);
+  for (const [name, expected] of [
+    ['invalid-tools', 'tools: 42'],
+    ['duplicate-tools', "tools: ['read', 'read']"],
+    ['unknown-tool', "tools: ['not-in-consumer-contract']"],
+  ]) {
+    const mutated = await readFile(path.join(f.inputs, name, agentPath), 'utf8');
+    assert.ok(mutated.includes(expected), name);
+    assert.equal(mutated.slice(frontmatterEnd(mutated) + 5), originalBody,
+      name + ': a YAML example or body content was changed');
+  }
+});
+
+test('assessment rejects drift in any staged case including synthetic overlays and copied contracts', async context => {
+  const f = await fixture(context), results = await mockResults(f);
+  const positive = path.join(f.inputs, 'fixture-valid', pilotPath, 'foundry.declarations.json');
+  const original = await readFile(positive, 'utf8');
+  await writeFile(positive, '{"permissions":["tampered"]}\n');
+  await assert.rejects(assess(f.inputs, results, f.repo), /fixture-valid: staged case snapshot changed/);
+  await writeFile(positive, original);
+
+  const contract = path.join(f.inputs, 'missing-resource', 'contracts', 'skill.json');
+  const originalContract = await readFile(contract, 'utf8');
+  await writeFile(contract, '{"tampered":true}\n');
+  await assert.rejects(assess(f.inputs, results, f.repo), /missing-resource: staged case snapshot changed/);
+  await writeFile(contract, originalContract);
+
+  const injected = path.join(f.inputs, 'baseline', 'extra.ts');
+  await writeFile(injected, 'export const fake = 1;\n');
+  await assert.rejects(assess(f.inputs, results, f.repo), /baseline: staged case snapshot changed/);
+  await rm(injected);
+
+  const scan = path.join(f.inputs, 'fixture-valid', scannerPath);
+  await rm(scan);
+  await assert.rejects(assess(f.inputs, results, f.repo), /fixture-valid: staged case snapshot changed/);
+});
+
+test('runner rejects output inside a physical AQC checkout even through a symlink alias', async context => {
+  const f = await fixture(context);
+  const checkout = path.join(f.root, 'physical-aqc');
+  const alias = path.join(f.root, 'aqc-alias');
+  await mkdir(checkout);
+  await symlink(checkout, alias, 'dir');
+  const process = spawnSync('bash', [path.join(here, 'run.sh'), alias, path.join(checkout, 'evidence')], {
+    encoding: 'utf8',
+  });
+  assert.equal(process.status, 2);
+  assert.match(process.stderr, /Output must be outside both source checkouts/);
 });
