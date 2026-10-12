@@ -100,7 +100,7 @@ test('assessment rejects changed baseline data and AQC revision', async context 
   await assert.rejects(assess(f.inputs, results, f.repo), /AQC revision/);
   await writeFile(path.join(results, 'aqc-commit.txt'), f.manifest.aqc.commit);
   await writeFile(path.join(f.inputs, 'baseline', skillPath), 'altered input');
-  await assert.rejects(assess(f.inputs, results, f.repo), /Staged baseline changed/);
+  await assert.rejects(assess(f.inputs, results, f.repo), /baseline: staged case snapshot changed/);
 });
 
 test('an AQC execution error cannot be mistaken for a successful defect detection', async context => {
