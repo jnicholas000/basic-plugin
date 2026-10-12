@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-**Prepared, not accepted:** five local harness tests pass, but the ten real AQC CLI
+**Prepared, not accepted:** eight focused harness tests pass, but the ten real AQC CLI
 runs have not executed. The connector blocked the optional workflow write, so no workflow,
 required CI gate, or production pin was changed. `run.sh` is a standalone execution path.
 
@@ -80,13 +80,19 @@ bash pilots/artifact-quality/run.sh /absolute/path/to/pinned-aqc /new/absolute/p
 ```
 
 The output directory must be new, with an existing parent, and outside both source checkouts.
-The runner performs no checkout, authentication, installation, publication or scanner execution.
+The AQC checkout is canonicalized to its physical path before checking this boundary,
+including when the supplied checkout path is a symlink. The runner performs no checkout,
+authentication, installation, publication or scanner execution.
 It copies selected committed consumer blobs and the pinned contracts into isolated case roots.
+Before any CLI run, it seals a complete SHA-256 file inventory for each staged case,
+including all synthetic overlays and the copied contracts. It verifies that inventory
+before each execution and again during assessment; missing, added, changed or symlinked
+case inputs fail closed. The runner does not reconstruct validation results itself.
 An unmodified AQC checkout and locked dependency installation are prerequisites, not a
 cryptographic attestation of dependencies.
 
-The five unit tests use synthetic CLI records to test snapshot isolation, exact-result
-assessment, provenance drift and execution-error handling. They do not establish AQC's
+The eight unit tests use synthetic CLI records to test snapshot isolation, exact-result
+assessment, provenance drift and execution-error handling, plus the real imported Foundry YAML example, complete case/contract drift, and symlinked-checkout containment. They do not establish AQC's
 real detection behavior. Ten real CLI runs and evidence review are required for acceptance.
 
 Every run preserves input snapshots and hashes, unmodified CLI JSON, exit statuses, stderr,
