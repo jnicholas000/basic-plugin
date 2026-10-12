@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, realpath, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -44,6 +44,108 @@ function replaceOnce(text, expression, replacement) {
   return text.replace(expression, replacement);
 }
 
+// The imported agent has a fenced YAML example with a second "tools:" entry.
+// Mutations must never rewrite documentation or another YAML block.
+function replaceFrontmatterField(text, field, replacement) {
+  const envelope = /^(?:\uFEFF)?---[ \t]*\r?\n([\s\S]*?)^---[ \t]*(?:\r?\n|$)/m.exec(text);
+  assert.ok(envelope, 'Expected a complete leading YAML frontmatter envelope');
+  const frontmatter = envelope[1];
+  const fieldLine = new RegExp(`^${field}:[^\\r\\n]*// Consumer integration harness only. All artifact validation belongs to pinned AQC.
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { mkdir, readFile, readdir, realpath, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+const directory = path.dirname(fileURLToPath(import.meta.url));
+export const pilotPath = 'pilots/artifact-quality';
+export const agentPath = 'com.github.copilot/agents/custom-agent-foundry.agent.md';
+export const skillPath = 'skills/capability-collision-detection/SKILL.md';
+export const scannerPath = 'skills/capability-collision-detection/scripts/scan_capabilities.py';
+const agentDeclarations = `${pilotPath}/foundry.declarations.json`;
+const skillDeclarations = `${pilotPath}/collision.declarations.json`;
+const configNames = ['inventory.json', 'foundry.binding.json', 'collision.binding.json',
+  'foundry.declarations.json', 'collision.declarations.json', 'pin.json'];
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const json = value => `${JSON.stringify(value, null, 2)}\n`;
+const diagnostic = (rule, artifact, element, code, detail) =>
+  [rule, artifact, element, code, detail];
+const structure = (artifact, element) => diagnostic('AQC-BOUND-STRUCTURE', artifact,
+  element, 'AQC-BOUND-ELEMENT', 'missing');
+const value = keyword => diagnostic('AQC-BOUND-VALUES', agentPath,
+  'tools', 'AQC-BOUND-VALUE', keyword);
+const reference = code => diagnostic('AQC-BOUND-REFERENCES', skillPath,
+  'dependencies', code, 'found');
+export const expectations = {
+  baseline: [structure(agentPath, 'permissions'), structure(agentPath, 'failureEscalation'),
+    structure(skillPath, 'tools'), structure(skillPath, 'successCriteria')],
+  'fixture-valid': [],
+  'missing-agent-procedure': [structure(agentPath, 'procedure')],
+  'missing-skill-procedure': [structure(skillPath, 'procedure')],
+  'invalid-tools': [value('type')],
+  'duplicate-tools': [value('uniqueItems')],
+  'unknown-tool': [value('enum')],
+  'missing-resource': [reference('AQC-BOUND-REFERENCE')],
+  'escaping-resource': [reference('AQC-BOUND-REFERENCE')],
+  'malformed-reference': [reference('AQC-BOUND-REFERENCE-TYPE')],
+};
+
+, 'gm');
+  assert.equal([...frontmatter.matchAll(fieldLine)].length, 1,
+    `Expected exactly one frontmatter ${field} declaration`);
+  const first = envelope.index + envelope[0].indexOf(frontmatter);
+  const last = first + frontmatter.length;
+  return text.slice(0, first) + frontmatter.replace(fieldLine, replacement) + text.slice(last);
+}
+
+// Capture the exact complete file set of each staged case, including contracts
+// copied from pinned AQC after prepare. A missing/added/changed file is drift.
+async function snapshotCase(caseRoot) {
+  const records = [];
+  async function visit(relative = '') {
+    for (const entry of await readdir(path.join(caseRoot, relative), { withFileTypes: true })) {
+      const file = path.posix.join(relative, entry.name);
+      assert.ok(!entry.isSymbolicLink(), `Synthetic case contains a symlink: ${file}`);
+      if (entry.isDirectory()) await visit(file);
+      else {
+        assert.ok(entry.isFile(), `Synthetic case contains a non-file: ${file}`);
+        records.push({ path: file, sha256: sha256(await readFile(path.join(caseRoot, file))) });
+      }
+    }
+  }
+  await visit();
+  return records.sort((a, b) => a.path.localeCompare(b.path));
+}
+
+export async function verifySnapshots(inputsRoot, manifest) {
+  assert.deepEqual(Object.keys(manifest.caseSnapshots ?? {}).sort(),
+    [...manifest.cases].sort(), 'Case snapshot inventory is missing or incomplete');
+  for (const name of manifest.cases) {
+    const actual = await snapshotCase(path.join(inputsRoot, name));
+    assert.deepEqual(actual, manifest.caseSnapshots[name], `${name}: staged case snapshot changed`);
+  }
+}
+
+export async function seal(inputsRoot) {
+  const file = path.join(inputsRoot, 'manifest.json');
+  const manifest = JSON.parse(await readFile(file, 'utf8'));
+  assert.deepEqual(manifest.cases, Object.keys(expectations), 'Case inventory changed');
+  assert.ok(!Object.hasOwn(manifest, 'caseSnapshots'), 'Case snapshots are already sealed');
+  const caseSnapshots = {};
+  for (const name of manifest.cases) {
+    const snapshot = await snapshotCase(path.join(inputsRoot, name));
+    for (const contract of ['contracts/agent.json', 'contracts/skill.json']) {
+      assert.ok(snapshot.some(item => item.path === contract),
+        `${name}: missing pinned contract ${contract}`);
+    }
+    caseSnapshots[name] = snapshot;
+  }
+  manifest.caseSnapshots = caseSnapshots;
+  await writeFile(file, json(manifest));
+  return manifest;
+}
+
 export async function prepare(repositoryRoot, destination) {
   repositoryRoot = await realpath(path.resolve(repositoryRoot));
   destination = path.resolve(destination);
@@ -83,8 +185,8 @@ export async function prepare(repositoryRoot, destination) {
       /^## Workflow$/gm, '## Unmapped workflow');
     const toolMutations = { 'invalid-tools': 'tools: 42',
       'duplicate-tools': "tools: ['read', 'read']", 'unknown-tool': "tools: ['not-in-consumer-contract']" };
-    if (Object.hasOwn(toolMutations, name)) files[agentPath] = replaceOnce(files[agentPath],
-      /^tools:.*$/gm, toolMutations[name]);
+    if (Object.hasOwn(toolMutations, name)) files[agentPath] = replaceFrontmatterField(
+      files[agentPath], 'tools', toolMutations[name]);
     if (name === 'missing-resource') delete files[scannerPath];
     if (name === 'escaping-resource') {
       const declarations = JSON.parse(files[skillDeclarations]);
@@ -111,6 +213,7 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
   const pinned = JSON.parse(await readFile(path.join(directory, 'pin.json'), 'utf8'));
   assert.deepEqual(manifest.aqc, pinned, 'Prepared inputs use a different AQC pin');
   assert.deepEqual(manifest.cases, Object.keys(expectations), 'Case inventory changed');
+  await verifySnapshots(inputsRoot, manifest);
   const git = (...args) => execFileSync('git', ['-C', repositoryRoot, ...args], { encoding: 'utf8' });
   assert.equal(manifest.consumerCommit, git('rev-parse', 'HEAD').trim(), 'Consumer revision changed');
   const inputPaths = [agentPath, skillPath, scannerPath, ...configNames.map(n => `${pilotPath}/${n}`)];
@@ -156,10 +259,16 @@ async function main() {
   const [command, first, second] = process.argv.slice(2);
   if (command === 'prepare' && first && !second) {
     console.log(json(await prepare(path.resolve(directory, '../..'), first)));
+  } else if (command === 'seal' && first && !second) {
+    console.log(json(await seal(first)));
+  } else if (command === 'verify' && first && !second) {
+    const manifest = JSON.parse(await readFile(path.join(first, 'manifest.json'), 'utf8'));
+    await verifySnapshots(first, manifest);
+    console.log('All staged case snapshots match sealed SHA-256 records.');
   } else if (command === 'assess' && first && second) {
     console.log(json(await assess(first, second)));
   } else {
-    throw new Error('Usage: node pilots/artifact-quality/pilot.mjs prepare OUTPUT | assess INPUTS RESULTS');
+    throw new Error('Usage: node pilots/artifact-quality/pilot.mjs prepare OUTPUT | seal INPUTS | verify INPUTS | assess INPUTS RESULTS');
   }
 }
 if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
