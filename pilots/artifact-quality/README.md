@@ -2,11 +2,11 @@
 
 ## Status and scope
 
-**Bounded pilot verified, not artifact conformance:** Thirteen focused harness tests and
+**Bounded pilot verified, not artifact conformance:** Fourteen focused harness tests and
 all ten actual pinned-AQC CLI scans passed on 2026-10-13. The test run used a temporary
 read-only GitHub Actions job with no persistent private checkout credentials. The
 accepted evidence is recorded in [verification-2026-10-13.json](verification-2026-10-13.json)
-and [GitHub Actions final execution](https://github.com/jnicholas000/basic-plugin/actions/runs/38498162467).
+and [GitHub Actions final execution](https://github.com/jnicholas000/basic-plugin/actions/runs/38498540878).
 The imported agent/skill still have four recorded declaration gaps. No production
 AQC pin, required CI gate, publication or runtime behavior was changed.
 
@@ -100,12 +100,12 @@ results itself.
 An unmodified AQC checkout and locked dependency installation are prerequisites, not a
 cryptographic attestation of dependencies.
 
-Thirteen unit tests exercise the synthetic result harness, exact-result assessment, immutable
+Fourteen unit tests exercise the synthetic result harness, exact-result assessment, immutable
 snapshots, real Foundry frontmatter with fenced YAML, leading-frontmatter rejection, and
 symlinked root/output containment, dirty-harness rejection, and exact artifact-specific contract/binding identity verification. Those tests are separate from actual AQC rule behavior.
 The independent ten-case AQC run used exactly pinned revision
 `ccad08bf9e3b90456d4f3b138707d5131c49a70b` against Basic Plugin
-`63cd15b4f060141fabe8e047019d9b9dcdc7ceab`. All ten cases matched their
+`068e82d554479a92d82a4db84b6c734a01786ad6`. All ten cases matched their
 expected exact diagnostics; the known-good synthetic control returned zero findings,
 the baseline returned four structural findings, and each of eight mutations returned
 the single intended finding. The GitHub Actions evidence ZIP retains input snapshots,
