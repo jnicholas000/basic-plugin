@@ -280,3 +280,25 @@ test('assessment rejects forged element sources, locator provenance and artifact
   const verified = await assess(f.inputs, results, f.repo);
   assert.equal(verified.results.length, 10);
 });
+
+
+test('durable report retains every independently checked provenance field for each finding', async context => {
+  const f = await fixture(context), results = await mockResults(f);
+  const report = await assess(f.inputs, results, f.repo);
+  const baseline = report.results.find(entry => entry.name === 'baseline');
+  assert.equal(baseline.checkedFindingProvenance.length, 4);
+  for (const finding of baseline.checkedFindingProvenance) {
+    assert.match(finding.contractIdentity, /^(agent|skill)-base@1\.0\.0$/);
+    assert.match(finding.bindingIdentity, /^basic-plugin-(foundry|collision)-pilot@1\.0\.0$/);
+    assert.ok(finding.source, 'Missing durable source path');
+    assert.ok(finding.locator?.kind, 'Missing durable locator');
+    assert.ok(['agent','skill'].includes(finding.artifactType));
+    assert.equal(finding.ruleVersion, '1.0.0');
+    assert.equal(finding.code, 'AQC-BOUND-ELEMENT');
+  }
+  assert.equal(report.results.find(entry => entry.name === 'fixture-valid')
+    .checkedFindingProvenance.length, 0);
+  const serialized = JSON.parse(JSON.stringify(report));
+  assert.deepEqual(serialized.results[0].checkedFindingProvenance,
+    baseline.checkedFindingProvenance);
+});
