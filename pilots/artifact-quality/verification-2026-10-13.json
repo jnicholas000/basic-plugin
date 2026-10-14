@@ -3,23 +3,23 @@
   "verificationDate": "2026-10-13",
   "type": "bounded-first-consumer-pilot",
   "producer": "GitHub Actions pinned AQC artifact-quality",
-  "runUrl": "https://github.com/jnicholas000/basic-plugin/actions/runs/38498540878",
-  "runId": 38498540878,
+  "runUrl": "https://github.com/jnicholas000/basic-plugin/actions/runs/38498913731",
+  "runId": 38498913731,
   "artifact": {
-    "id": 11864709398,
-    "name": "aqc-two-artifact-pilot-068e82d554479a92d82a4db84b6c734a01786ad6",
-    "digest": "sha256:e470376c7159030de1eb0fda29457a8338d6c4c373f51de6a1d0349bec1f685a",
-    "expiresAt": "2026-11-13T01:58:25Z"
+    "id": 11864942277,
+    "name": "aqc-two-artifact-pilot-a5d3472a7f457d5a071118367124d0bb59837f6e",
+    "digest": "sha256:2fd0b6c8578a95696cd36dd25ced6fcbb4837a896f46096219efe64c1d8f141b",
+    "expiresAt": "2026-11-13T02:02:27Z"
   },
   "regressionTests": {
-    "passed": 14,
+    "passed": 15,
     "failed": 0,
     "runner": "Node 22",
     "scope": "pilot harness only"
   },
   "pilot": {
     "schemaVersion": 1,
-    "consumerCommit": "068e82d554479a92d82a4db84b6c734a01786ad6",
+    "consumerCommit": "a5d3472a7f457d5a071118367124d0bb59837f6e",
     "aqcCommit": "ccad08bf9e3b90456d4f3b138707d5131c49a70b",
     "inputs": [
       {
@@ -66,7 +66,7 @@
         "exitCode": 1,
         "findings": 4,
         "matched": true,
-        "rawSha256": "24a6aa365300bec482df0efeede391a43788eb134ae7e40c540c973c9e657cd2",
+        "rawSha256": "d6854ba4cf2d46bb1fed5f6ca82c230bd001c2870f72fa381c40d1c783058f58",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -96,6 +96,76 @@
             "AQC-BOUND-ELEMENT",
             "missing"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-STRUCTURE",
+            "ruleVersion": "1.0.0",
+            "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "artifactType": "agent",
+            "elementId": "failureEscalation",
+            "contractIdentity": "agent-base@1.0.0",
+            "bindingIdentity": "basic-plugin-foundry-pilot@1.0.0",
+            "source": "pilots/artifact-quality/foundry.declarations.json",
+            "locator": {
+              "kind": "declaration",
+              "name": "failureEscalation"
+            },
+            "code": "AQC-BOUND-ELEMENT",
+            "status": "missing",
+            "location": null
+          },
+          {
+            "ruleId": "AQC-BOUND-STRUCTURE",
+            "ruleVersion": "1.0.0",
+            "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "artifactType": "agent",
+            "elementId": "permissions",
+            "contractIdentity": "agent-base@1.0.0",
+            "bindingIdentity": "basic-plugin-foundry-pilot@1.0.0",
+            "source": "pilots/artifact-quality/foundry.declarations.json",
+            "locator": {
+              "kind": "declaration",
+              "name": "permissions"
+            },
+            "code": "AQC-BOUND-ELEMENT",
+            "status": "missing",
+            "location": null
+          },
+          {
+            "ruleId": "AQC-BOUND-STRUCTURE",
+            "ruleVersion": "1.0.0",
+            "path": "skills/capability-collision-detection/SKILL.md",
+            "artifactType": "skill",
+            "elementId": "successCriteria",
+            "contractIdentity": "skill-base@1.0.0",
+            "bindingIdentity": "basic-plugin-collision-pilot@1.0.0",
+            "source": "pilots/artifact-quality/collision.declarations.json",
+            "locator": {
+              "kind": "declaration",
+              "name": "successCriteria"
+            },
+            "code": "AQC-BOUND-ELEMENT",
+            "status": "missing",
+            "location": null
+          },
+          {
+            "ruleId": "AQC-BOUND-STRUCTURE",
+            "ruleVersion": "1.0.0",
+            "path": "skills/capability-collision-detection/SKILL.md",
+            "artifactType": "skill",
+            "elementId": "tools",
+            "contractIdentity": "skill-base@1.0.0",
+            "bindingIdentity": "basic-plugin-collision-pilot@1.0.0",
+            "source": "pilots/artifact-quality/collision.declarations.json",
+            "locator": {
+              "kind": "declaration",
+              "name": "tools"
+            },
+            "code": "AQC-BOUND-ELEMENT",
+            "status": "missing",
+            "location": null
+          }
         ]
       },
       {
@@ -104,8 +174,9 @@
         "exitCode": 0,
         "findings": 0,
         "matched": true,
-        "rawSha256": "5e7495c5c89865278eed7897d3f5c10a23700702dc3a0af48cba14f880d423a0",
-        "diagnostics": []
+        "rawSha256": "b2beec7ab03dec86efafb094ee7eb38b8c7dc77d04dc9c40757655efc42d51ea",
+        "diagnostics": [],
+        "checkedFindingProvenance": []
       },
       {
         "name": "missing-agent-procedure",
@@ -113,7 +184,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "a3fd2efb73c9603d9dc70151941299c03c2a4c4457bfaadc6efc749d340b29c2",
+        "rawSha256": "b1e36aef2be09bd52e08c29ab6a4fbe3d741d29564e2f0bf348d12aa2e41aa12",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -122,6 +193,25 @@
             "AQC-BOUND-ELEMENT",
             "missing"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-STRUCTURE",
+            "ruleVersion": "1.0.0",
+            "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "artifactType": "agent",
+            "elementId": "procedure",
+            "contractIdentity": "agent-base@1.0.0",
+            "bindingIdentity": "basic-plugin-foundry-pilot@1.0.0",
+            "source": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "locator": {
+              "kind": "markdown-section",
+              "heading": "Your Process"
+            },
+            "code": "AQC-BOUND-ELEMENT",
+            "status": "missing",
+            "location": null
+          }
         ]
       },
       {
@@ -130,7 +220,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "ecdaf7605e42e343f39aea7ce2e9bf57a11e6f5bc1a5b179352c08e50367e2fd",
+        "rawSha256": "729dcaf598da04c096373ccfa236e318737ae9e9c84b6fbfeb23d2f2234e0f18",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -139,6 +229,25 @@
             "AQC-BOUND-ELEMENT",
             "missing"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-STRUCTURE",
+            "ruleVersion": "1.0.0",
+            "path": "skills/capability-collision-detection/SKILL.md",
+            "artifactType": "skill",
+            "elementId": "procedure",
+            "contractIdentity": "skill-base@1.0.0",
+            "bindingIdentity": "basic-plugin-collision-pilot@1.0.0",
+            "source": "skills/capability-collision-detection/SKILL.md",
+            "locator": {
+              "kind": "markdown-section",
+              "heading": "Workflow"
+            },
+            "code": "AQC-BOUND-ELEMENT",
+            "status": "missing",
+            "location": null
+          }
         ]
       },
       {
@@ -147,7 +256,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "2ea9fa5376dae606936df5c045319943454da5edc00a2d8717a0752d7d71bc6d",
+        "rawSha256": "96a5efc908895be30425a05a7d227890933474694475f3a508acd6152b9e3a50",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -156,6 +265,28 @@
             "AQC-BOUND-VALUE",
             "type"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-VALUES",
+            "ruleVersion": "1.0.0",
+            "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "artifactType": "agent",
+            "elementId": "tools",
+            "contractIdentity": "agent-base@1.0.0",
+            "bindingIdentity": "basic-plugin-foundry-pilot@1.0.0",
+            "source": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "locator": {
+              "kind": "frontmatter",
+              "path": [
+                "tools"
+              ]
+            },
+            "code": "AQC-BOUND-VALUE",
+            "keyword": "type",
+            "status": "found",
+            "location": null
+          }
         ]
       },
       {
@@ -164,7 +295,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "2668c186020968cf4d0e5a542606b05e630fb22de765e884f236a7e22fa00337",
+        "rawSha256": "6f1e25c4212be82058427f6f3c8abdc55ce08ef40c1a1d21cab841406d26324e",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -173,6 +304,28 @@
             "AQC-BOUND-VALUE",
             "uniqueItems"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-VALUES",
+            "ruleVersion": "1.0.0",
+            "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "artifactType": "agent",
+            "elementId": "tools",
+            "contractIdentity": "agent-base@1.0.0",
+            "bindingIdentity": "basic-plugin-foundry-pilot@1.0.0",
+            "source": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "locator": {
+              "kind": "frontmatter",
+              "path": [
+                "tools"
+              ]
+            },
+            "code": "AQC-BOUND-VALUE",
+            "keyword": "uniqueItems",
+            "status": "found",
+            "location": null
+          }
         ]
       },
       {
@@ -181,7 +334,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "4214e99cc1eca96d6058b2443320bfae6e8c7db18f9cb919288dc7a5e8252e48",
+        "rawSha256": "8e1b5d5cf24efae7fa458d90995e60e028613cd40d4e95d44c77c6d75109f0bc",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -190,6 +343,28 @@
             "AQC-BOUND-VALUE",
             "enum"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-VALUES",
+            "ruleVersion": "1.0.0",
+            "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "artifactType": "agent",
+            "elementId": "tools",
+            "contractIdentity": "agent-base@1.0.0",
+            "bindingIdentity": "basic-plugin-foundry-pilot@1.0.0",
+            "source": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+            "locator": {
+              "kind": "frontmatter",
+              "path": [
+                "tools"
+              ]
+            },
+            "code": "AQC-BOUND-VALUE",
+            "keyword": "enum",
+            "status": "found",
+            "location": null
+          }
         ]
       },
       {
@@ -198,7 +373,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "f9faba1f69486c56c2d2b5d4817dbeda05059fe79ff42bcf5284b7ca1b7c0a36",
+        "rawSha256": "9e10d5a013ca80786c673306f4a9faf4b208a2240250df0fc7368e258d3cdb2d",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -207,6 +382,25 @@
             "AQC-BOUND-REFERENCE",
             "found"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-REFERENCES",
+            "ruleVersion": "1.0.0",
+            "path": "skills/capability-collision-detection/SKILL.md",
+            "artifactType": "skill",
+            "elementId": "dependencies",
+            "contractIdentity": "skill-base@1.0.0",
+            "bindingIdentity": "basic-plugin-collision-pilot@1.0.0",
+            "source": "pilots/artifact-quality/collision.declarations.json",
+            "locator": {
+              "kind": "declaration",
+              "name": "dependencies"
+            },
+            "code": "AQC-BOUND-REFERENCE",
+            "status": "found",
+            "location": null
+          }
         ]
       },
       {
@@ -215,7 +409,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "9747155740a50a550168e447bb30a06a8739a10a5249182fcaaccd5338e4afc1",
+        "rawSha256": "e11547a3e7da111f7c8b5e242579ee151049ce1af89a65c2a5e949dd1c1102bc",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -224,6 +418,25 @@
             "AQC-BOUND-REFERENCE",
             "found"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-REFERENCES",
+            "ruleVersion": "1.0.0",
+            "path": "skills/capability-collision-detection/SKILL.md",
+            "artifactType": "skill",
+            "elementId": "dependencies",
+            "contractIdentity": "skill-base@1.0.0",
+            "bindingIdentity": "basic-plugin-collision-pilot@1.0.0",
+            "source": "pilots/artifact-quality/collision.declarations.json",
+            "locator": {
+              "kind": "declaration",
+              "name": "dependencies"
+            },
+            "code": "AQC-BOUND-REFERENCE",
+            "status": "found",
+            "location": null
+          }
         ]
       },
       {
@@ -232,7 +445,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "4188ded4de08c370a59eb2bbb002de28c113baad32ab655071d4ae60522d0efe",
+        "rawSha256": "ecc23400b1f4458e62faeda8fb366370df6d0cbf17ed5985a16a868cc2adfa74",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -241,6 +454,25 @@
             "AQC-BOUND-REFERENCE-TYPE",
             "found"
           ]
+        ],
+        "checkedFindingProvenance": [
+          {
+            "ruleId": "AQC-BOUND-REFERENCES",
+            "ruleVersion": "1.0.0",
+            "path": "skills/capability-collision-detection/SKILL.md",
+            "artifactType": "skill",
+            "elementId": "dependencies",
+            "contractIdentity": "skill-base@1.0.0",
+            "bindingIdentity": "basic-plugin-collision-pilot@1.0.0",
+            "source": "pilots/artifact-quality/collision.declarations.json",
+            "locator": {
+              "kind": "declaration",
+              "name": "dependencies"
+            },
+            "code": "AQC-BOUND-REFERENCE-TYPE",
+            "status": "found",
+            "location": null
+          }
         ]
       }
     ],
@@ -256,6 +488,7 @@
     "Case-root symlinks rejected before traversal",
     "Executing consumer harness must match committed HEAD",
     "Every finding contract/binding identity must match sealed version-pinned declarations",
-    "Finding source, locator and artifact type verified against exact sealed bindings"
+    "Finding source, locator and artifact type verified against exact sealed bindings",
+    "Every checked finding's exact provenance survives in the durable JSON summary after raw artifact expiration"
   ]
 }
