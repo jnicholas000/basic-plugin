@@ -35,8 +35,8 @@ async function fixture(context, { realFoundry = false } = {}) {
   for (const name of Object.keys(expectations)) {
     const contracts = path.join(inputs, name, 'contracts');
     await mkdir(contracts);
-    await writeFile(path.join(contracts, 'agent.json'), '{"id":"test-agent-contract"}\n');
-    await writeFile(path.join(contracts, 'skill.json'), '{"id":"test-skill-contract"}\n');
+    await writeFile(path.join(contracts, 'agent.json'), '{"id":"agent-base","version":"1.0.0","artifactType":"agent"}\n');
+    await writeFile(path.join(contracts, 'skill.json'), '{"id":"skill-base","version":"1.0.0","artifactType":"skill"}\n');
   }
   const manifest = await seal(inputs);
   return { root, repo, inputs, manifest, source };
@@ -49,7 +49,8 @@ async function mockResults(f) {
   for (const [name, expected] of Object.entries(expectations)) {
     const findings = expected.map(([ruleId, artifact, elementId, code, detail]) => ({
       ruleId, ruleVersion: '1.0.0', path: artifact, profile: 'artifact-quality', enforcement: 'blocking',
-      evidence: { elementId, code, source: artifact, contractIdentity: 'test-contract', bindingIdentity: 'test-binding',
+      evidence: { elementId, code, source: artifact, contractIdentity: artifact === agentPath ? 'agent-base@1.0.0' : 'skill-base@1.0.0',
+        bindingIdentity: artifact === agentPath ? 'basic-plugin-foundry-pilot@1.0.0' : 'basic-plugin-collision-pilot@1.0.0',
         ...(ruleId === 'AQC-BOUND-VALUES' ? { keyword: detail } : { status: detail }) },
     }));
     await writeFile(path.join(results, `${name}.raw.json`), JSON.stringify({ findings, summary: { blocking: findings.length } }));
@@ -188,8 +189,8 @@ test('sealing rejects symlinked case roots instead of hashing target files', asy
   for (const name of Object.keys(expectations)) {
     const contracts = path.join(input, name, 'contracts');
     await mkdir(contracts);
-    await writeFile(path.join(contracts, 'agent.json'), '{"id":"test-agent-contract"}\n');
-    await writeFile(path.join(contracts, 'skill.json'), '{"id":"test-skill-contract"}\n');
+    await writeFile(path.join(contracts, 'agent.json'), '{"id":"agent-base","version":"1.0.0","artifactType":"agent"}\n');
+    await writeFile(path.join(contracts, 'skill.json'), '{"id":"skill-base","version":"1.0.0","artifactType":"skill"}\n');
   }
   const original = path.join(input, 'fixture-valid');
   const moved = path.join(f.root, 'redirected-case');
@@ -207,4 +208,35 @@ test('tool mutation rejects a YAML envelope after non-frontmatter introductory t
     'commit', '-qm', 'Move frontmatter away from beginning');
   await assert.rejects(prepare(f.repo, path.join(f.root, 'nonleading')),
     /Expected a complete leading YAML frontmatter envelope/);
+});
+
+
+test('assessment rejects incorrect exact contract or binding identities even when diagnostics match', async context => {
+  const f = await fixture(context), results = await mockResults(f);
+  const baselineRaw = path.join(results, 'baseline.raw.json');
+  const original = JSON.parse(await readFile(baselineRaw, 'utf8'));
+  for (const [key, value, expected] of [
+    ['contractIdentity', 'agent-base@9.9.9', /wrong exact contract identity/],
+    ['bindingIdentity', 'other-foundry@1.0.0', /wrong exact consumer binding identity/],
+  ]) {
+    const forged = structuredClone(original);
+    forged.findings[0].evidence[key] = value;
+    await writeFile(baselineRaw, JSON.stringify(forged));
+    await assert.rejects(assess(f.inputs, results, f.repo), expected);
+  }
+  await writeFile(baselineRaw, JSON.stringify(original));
+  const valid = await assess(f.inputs, results, f.repo);
+  assert.equal(valid.results.length, 10);
+});
+
+test('runner refuses a dirty committed harness before pinning execution evidence', async context => {
+  const f = await fixture(context);
+  await writeFile(path.join(f.repo, pilotPath, 'pilot.mjs'), '// altered executable code\n');
+  const fakeAqc = path.join(f.root, 'aqc');
+  await mkdir(fakeAqc);
+  const attempted = spawnSync('bash', [
+    path.join(f.repo, pilotPath, 'run.sh'), fakeAqc, path.join(f.root, 'new-evidence'),
+  ], { encoding: 'utf8' });
+  assert.equal(attempted.status, 2);
+  assert.match(attempted.stderr, /Consumer pilot harness differs from committed HEAD/);
 });
