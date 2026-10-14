@@ -13,6 +13,13 @@ consumer_root=$(cd -P "$pilot_root/../.." && pwd -P)
 case "$output/" in
   "$consumer_root/"*|"$implementation_root/"*) echo 'Output must be outside both source checkouts.' >&2; exit 2 ;;
 esac
+# The runner and assessor are executable source. Refuse locally modified,
+# staged or untracked pilot files before attributing evidence to consumer HEAD.
+# Git blobs alone cannot prove which working-tree scripts were actually invoked.
+if [[ -n "$(git -C "$consumer_root" status --porcelain --untracked-files=all -- pilots/artifact-quality)" ]]; then
+  echo 'Consumer pilot harness differs from committed HEAD; use a clean checkout.' >&2
+  exit 2
+fi
 expected_sha=ccad08bf9e3b90456d4f3b138707d5131c49a70b
 [[ $(git -C "$implementation_root" rev-parse HEAD) == "$expected_sha" ]]
 git -C "$implementation_root" diff --exit-code HEAD
