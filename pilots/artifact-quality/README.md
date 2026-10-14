@@ -2,9 +2,13 @@
 
 ## Status and scope
 
-**Prepared, not accepted:** eight focused harness tests pass, but the ten real AQC CLI
-runs have not executed. The connector blocked the optional workflow write, so no workflow,
-required CI gate, or production pin was changed. `run.sh` is a standalone execution path.
+**Bounded pilot verified, not artifact conformance:** Eleven focused harness tests and
+all ten actual pinned-AQC CLI scans passed on 2026-10-13. The test run used a temporary
+read-only GitHub Actions job with no persistent private checkout credentials. The
+accepted evidence is recorded in [verification-2026-10-13.json](verification-2026-10-13.json)
+and [GitHub Actions run #4](https://github.com/jnicholas000/basic-plugin/actions/runs/38497609907).
+The imported agent/skill still have four recorded declaration gaps. No production
+AQC pin, required CI gate, publication or runtime behavior was changed.
 
 The pilot covers Custom Agent Foundry and Capability Collision Detection using AQC's
 existing structure, value, and reference rules. Imported agent/skill/scanner bytes,
@@ -32,15 +36,15 @@ workflow, report format and resolution rules. Presence does not establish prose 
 ## Real baseline and synthetic controls
 
 The baseline reads committed Git blobs, never uncommitted working-tree changes. The
-following four missing mapped declarations are expected, pending actual AQC execution:
+following four missing mapped declarations were observed in the real AQC run:
 
 | Artifact | Expected missing declarations |
 | --- | --- |
 | Custom Agent Foundry | `permissions`, `failureEscalation` |
 | Capability Collision Detection | `tools`, `successCriteria` |
 
-This is a representation-gap hypothesis, not a claim that related guidance is absent from
-all surrounding prose. Any baseline findings are preserved rather than converted into a
+These are detected missing **mapped declarations**, not proof that related guidance is absent
+from surrounding prose. The baseline findings were preserved rather than converted into a
 passing artifact. Production policy must not be invented to fill those gaps.
 
 Only temporary synthetic controls add `TEST-ONLY` declaration values to isolate downstream
@@ -91,9 +95,18 @@ case inputs fail closed. The runner does not reconstruct validation results itse
 An unmodified AQC checkout and locked dependency installation are prerequisites, not a
 cryptographic attestation of dependencies.
 
-The eight unit tests use synthetic CLI records to test snapshot isolation, exact-result
-assessment, provenance drift and execution-error handling, plus the real imported Foundry YAML example, complete case/contract drift, and symlinked-checkout containment. They do not establish AQC's
-real detection behavior. Ten real CLI runs and evidence review are required for acceptance.
+Eleven unit tests exercise the synthetic result harness, exact-result assessment, immutable
+snapshots, real Foundry frontmatter with fenced YAML, leading-frontmatter rejection, and
+symlinked root/output containment. Those tests are separate from actual AQC rule behavior.
+The independent ten-case AQC run used exactly pinned revision
+`ccad08bf9e3b90456d4f3b138707d5131c49a70b` against Basic Plugin
+`8bb1968b6c86ed17e64361e0b267646c7627e6ae`. All ten cases matched their
+expected exact diagnostics; the known-good synthetic control returned zero findings,
+the baseline returned four structural findings, and each of eight mutations returned
+the single intended finding. The GitHub Actions evidence ZIP retains input snapshots,
+per-case raw JSON, exit codes, stderr, sealed hash manifest and evaluated summary.
+The committed JSON verification record preserves source identities, exact diagnostic
+tuples and raw SHA-256s after the ZIP's retention period ends.
 
 Every run preserves input snapshots and hashes, unmodified CLI JSON, exit statuses, stderr,
 and a summary with exact diagnostic tuples and raw-output SHA-256s. Existing output is never
@@ -102,7 +115,11 @@ integration behavior; it supplies no representative precision, recall or runtime
 
 ## Acceptance boundary
 
-Keep this pilot unverified until the real run succeeds and baseline gaps are reviewed.
+This bounded integration pilot has passed the ten-case acceptance check; the four real
+baseline gaps remain open for separate owner policy review. The result proves reusable AQC
+rules can read these two consumer artifacts through explicit bindings and report precise
+structural defects. It **does not** certify the underlying agent or skill, prove representative
+precision/recall, establish runtime or model behavior, or authorize blocking required CI.
 Review any proposed permissions or success policy separately; preserve imported upstream
 text unless an explicit patch is approved. Reusable detector defects belong in AQC.
 No broader artifact selection, graph/authority validation, required CI adoption, automatic
