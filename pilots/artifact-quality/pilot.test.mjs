@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -162,4 +162,32 @@ test('runner rejects output inside a physical AQC checkout even through a symlin
   });
   assert.equal(process.status, 2);
   assert.match(process.stderr, /Output must be outside both source checkouts/);
+});
+
+test('snapshot validation rejects an identical symlinked case root and input root', async context => {
+  const f = await fixture(context), results = await mockResults(f);
+  const baseline = path.join(f.inputs, 'baseline');
+  const outside = path.join(f.root, 'moved-baseline');
+  await rename(baseline, outside);
+  await symlink(outside, baseline, 'dir');
+  await assert.rejects(assess(f.inputs, results, f.repo),
+    /baseline: symlinked or non-directory case root/);
+  await rm(baseline);
+  await rename(outside, baseline);
+  const alias = path.join(f.root, 'inputs-alias');
+  await symlink(f.inputs, alias, 'dir');
+  await assert.rejects(assess(alias, results, f.repo), /Symlinked or non-directory input root/);
+  const approved = await assess(f.inputs, results, f.repo);
+  assert.equal(approved.results.length, Object.keys(expectations).length);
+});
+
+test('sealing rejects symlinked case roots instead of hashing target files', async context => {
+  const f = await fixture(context);
+  const input = path.join(f.root, 'inputs-unsealed');
+  await prepare(f.repo, input);
+  const original = path.join(input, 'fixture-valid');
+  const moved = path.join(f.root, 'redirected-case');
+  await rename(original, moved);
+  await symlink(moved, original, 'dir');
+  await assert.rejects(seal(input), /Symlinked or non-directory case root/);
 });
