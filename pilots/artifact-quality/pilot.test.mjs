@@ -197,3 +197,14 @@ test('sealing rejects symlinked case roots instead of hashing target files', asy
   await symlink(moved, original, 'dir');
   await assert.rejects(seal(input), /Symlinked or non-directory case root/);
 });
+
+test('tool mutation rejects a YAML envelope after non-frontmatter introductory text', async context => {
+  const f = await fixture(context);
+  const git = (...args) => execFileSync('git', ['-C', f.repo, ...args], { stdio: 'pipe' });
+  await writeFile(path.join(f.repo, agentPath), 'Some introductory text.\n' + f.source[agentPath]);
+  git('add', agentPath);
+  git('-c', 'user.name=Pilot Test', '-c', 'user.email=pilot@example.invalid',
+    'commit', '-qm', 'Move frontmatter away from beginning');
+  await assert.rejects(prepare(f.repo, path.join(f.root, 'nonleading')),
+    /Expected a complete leading YAML frontmatter envelope/);
+});
