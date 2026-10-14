@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdir, readFile, readdir, realpath, writeFile } from 'node:fs/promises';
+import { lstat, mkdir, readFile, readdir, realpath, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -61,6 +61,11 @@ function replaceFrontmatterField(text, field, replacement) {
 
 // Snapshot the complete file set for each case, including copied AQC contracts.
 async function snapshotCase(caseRoot) {
+  // readdir() follows a symlink passed as the root even though nested entries
+  // are rejected below. Verify the root itself before inspecting any files.
+  const rootStat = await lstat(caseRoot);
+  assert.ok(rootStat.isDirectory() && !rootStat.isSymbolicLink(),
+    'Symlinked or non-directory case root is not allowed');
   const records = [];
   async function visit(relative = '') {
     for (const entry of await readdir(path.join(caseRoot, relative), { withFileTypes: true })) {
@@ -78,10 +83,22 @@ async function snapshotCase(caseRoot) {
 }
 
 export async function verifySnapshots(inputsRoot, manifest) {
+  const rootStat = await lstat(inputsRoot);
+  assert.ok(rootStat.isDirectory() && !rootStat.isSymbolicLink(),
+    'Symlinked or non-directory input root is not allowed');
+  const physicalInputsRoot = await realpath(inputsRoot);
   assert.deepEqual(Object.keys(manifest.caseSnapshots ?? {}).sort(),
     [...manifest.cases].sort(), 'Case snapshot inventory missing or incomplete');
   for (const name of manifest.cases) {
-    const actual = await snapshotCase(path.join(inputsRoot, name));
+    const caseRoot = path.join(inputsRoot, name);
+    // Root symlinks and intermediary symlink paths must not redirect execution
+    // to an identical out-of-tree copy of the sealed snapshot.
+    const caseStat = await lstat(caseRoot);
+    assert.ok(caseStat.isDirectory() && !caseStat.isSymbolicLink(),
+      `${name}: symlinked or non-directory case root is not allowed`);
+    assert.equal(await realpath(caseRoot), path.join(physicalInputsRoot, name),
+      `${name}: case root escapes sealed input tree`);
+    const actual = await snapshotCase(caseRoot);
     assert.deepEqual(actual, manifest.caseSnapshots[name], `${name}: staged case snapshot changed`);
   }
 }
