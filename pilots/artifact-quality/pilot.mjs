@@ -242,6 +242,7 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
     const expected = expectations[name];
     assert.equal(status, expected.length ? '1' : '0', `${name}: unexpected CLI exit status`);
     assert.ok(Array.isArray(raw.findings), `${name}: missing findings array`);
+    const checkedFindingProvenance = [];
     const observed = raw.findings.map(f => {
       assert.equal(f.profile, 'artifact-quality');
       assert.equal(f.enforcement, 'blocking'); // Rule semantics retained; not a required repository gate.
@@ -261,6 +262,19 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
         `${name}: wrong bound element source attribution on ${f.path}`);
       assert.deepEqual(f.evidence.locator, expectedIdentity.locators[f.evidence.elementId],
         `${name}: wrong bound element locator on ${f.path}`);
+      // Persist exactly what was checked, not just a bare hash that becomes
+      // opaque when the short-lived Actions raw-output artifact expires.
+      checkedFindingProvenance.push({
+        ruleId: f.ruleId, ruleVersion: f.ruleVersion, path: f.path,
+        artifactType: f.artifactType, elementId: f.evidence.elementId,
+        contractIdentity: f.evidence.contractIdentity,
+        bindingIdentity: f.evidence.bindingIdentity,
+        source: f.evidence.source, locator: f.evidence.locator,
+        code: f.evidence.code,
+        ...(f.evidence.keyword !== undefined ? { keyword: f.evidence.keyword } : {}),
+        ...(f.evidence.status !== undefined ? { status: f.evidence.status } : {}),
+        ...(f.location !== undefined ? { location: f.location } : {}),
+      });
       return diagnostic(f.ruleId, f.path, f.evidence.elementId, f.evidence.code,
         f.evidence.keyword ?? f.evidence.status);
     });
@@ -269,7 +283,8 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
     assert.equal(raw.summary.blocking, expected.length, `${name}: inconsistent blocking count`);
     results.push({ name, evidenceKind: name === 'baseline' ? 'real-source' : 'synthetic-control',
       exitCode: Number(status), findings: raw.findings.length, matched: true,
-      rawSha256: sha256(rawBytes), diagnostics: observed });
+      rawSha256: sha256(rawBytes), diagnostics: observed,
+      checkedFindingProvenance });
   }
   return { schemaVersion: 1, consumerCommit: manifest.consumerCommit,
     aqcCommit: observedAqcCommit, inputs: manifest.inputs, results,
