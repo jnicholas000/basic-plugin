@@ -302,3 +302,29 @@ test('durable report retains every independently checked provenance field for ea
   assert.deepEqual(serialized.results[0].checkedFindingProvenance,
     baseline.checkedFindingProvenance);
 });
+
+
+test('assessment refuses swapped keyword and status fields even if the detail text matches', async context => {
+  const f = await fixture(context), results = await mockResults(f);
+  for (const [name, change, detail, requiredField] of [
+    ['baseline', finding => {
+      delete finding.evidence.status;
+      finding.evidence.keyword = 'missing';
+    }, 'missing', 'status'],
+    ['invalid-tools', finding => {
+      delete finding.evidence.keyword;
+      finding.evidence.status = 'type';
+    }, 'type', 'keyword'],
+  ]) {
+    const file = path.join(results, name + '.raw.json');
+    const original = JSON.parse(await readFile(file, 'utf8'));
+    const modified = structuredClone(original);
+    change(modified.findings[0]);
+    await writeFile(file, JSON.stringify(modified));
+    await assert.rejects(assess(f.inputs, results, f.repo),
+      new RegExp('missing required ' + requiredField + ' detail'));
+    await writeFile(file, JSON.stringify(original));
+  }
+  const accepted = await assess(f.inputs, results, f.repo);
+  assert.equal(accepted.results.length, 10);
+});
