@@ -185,6 +185,12 @@ test('sealing rejects symlinked case roots instead of hashing target files', asy
   const f = await fixture(context);
   const input = path.join(f.root, 'inputs-unsealed');
   await prepare(f.repo, input);
+  for (const name of Object.keys(expectations)) {
+    const contracts = path.join(input, name, 'contracts');
+    await mkdir(contracts);
+    await writeFile(path.join(contracts, 'agent.json'), '{"id":"test-agent-contract"}\n');
+    await writeFile(path.join(contracts, 'skill.json'), '{"id":"test-skill-contract"}\n');
+  }
   const original = path.join(input, 'fixture-valid');
   const moved = path.join(f.root, 'redirected-case');
   await rename(original, moved);
