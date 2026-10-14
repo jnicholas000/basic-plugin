@@ -49,7 +49,7 @@ function replaceFrontmatterField(text, field, replacement) {
   // The imported Foundry agent contains a second tools: inside a fenced YAML example.
   // Only a fully bounded leading frontmatter envelope can be mutated.
   const envelope = /^(?:\uFEFF)?---[ \t]*\r?\n([\s\S]*?)^---[ \t]*(?:\r?\n|$)/m.exec(text);
-  assert.ok(envelope, 'Expected a complete leading YAML frontmatter envelope');
+  assert.ok(envelope && envelope.index === 0, 'Expected a complete leading YAML frontmatter envelope');
   const frontmatter = envelope[1];
   const fieldLine = new RegExp('^' + field + ':[^\\r\\n]*$', 'gm');
   assert.equal([...frontmatter.matchAll(fieldLine)].length, 1,
