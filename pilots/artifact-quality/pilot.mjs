@@ -275,8 +275,13 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
         ...(f.evidence.status !== undefined ? { status: f.evidence.status } : {}),
         ...(f.location !== undefined ? { location: f.location } : {}),
       });
+      // The two evidence fields are not interchangeable: value-schema findings
+      // use Ajv's keyword; structural/reference findings use locator status.
+      const detailField = f.ruleId === 'AQC-BOUND-VALUES' ? 'keyword' : 'status';
+      assert.equal(typeof f.evidence[detailField], 'string',
+        `${name}: missing required ${detailField} detail on ${f.path}`);
       return diagnostic(f.ruleId, f.path, f.evidence.elementId, f.evidence.code,
-        f.evidence.keyword ?? f.evidence.status);
+        f.evidence[detailField]);
     });
     const sorted = items => items.map(item => JSON.stringify(item)).sort();
     assert.deepEqual(sorted(observed), sorted(expected), `${name}: exact diagnostic mismatch`);
