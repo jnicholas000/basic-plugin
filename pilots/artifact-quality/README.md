@@ -2,11 +2,11 @@
 
 ## Status and scope
 
-**Bounded pilot verified, not artifact conformance:** Fifteen focused harness tests and
+**Bounded pilot verified, not artifact conformance:** Sixteen focused harness tests and
 all ten actual pinned-AQC CLI scans passed on 2026-10-13. The test run used a temporary
 read-only GitHub Actions job with no persistent private checkout credentials. The
 accepted evidence is recorded in [verification-2026-10-13.json](verification-2026-10-13.json)
-and [GitHub Actions final execution](https://github.com/jnicholas000/basic-plugin/actions/runs/38498913731).
+and [GitHub Actions final execution](https://github.com/jnicholas000/basic-plugin/actions/runs/38499190803).
 The imported agent/skill still have four recorded declaration gaps. No production
 AQC pin, required CI gate, publication or runtime behavior was changed.
 
@@ -100,19 +100,19 @@ results itself.
 An unmodified AQC checkout and locked dependency installation are prerequisites, not a
 cryptographic attestation of dependencies.
 
-Fifteen unit tests exercise the synthetic result harness, exact-result assessment, immutable
+Sixteen unit tests exercise the synthetic result harness, exact-result assessment, immutable
 snapshots, real Foundry frontmatter with fenced YAML, leading-frontmatter rejection, and
 symlinked root/output containment, dirty-harness rejection, and exact artifact-specific contract/binding identity verification. Those tests are separate from actual AQC rule behavior.
 The independent ten-case AQC run used exactly pinned revision
 `ccad08bf9e3b90456d4f3b138707d5131c49a70b` against Basic Plugin
-`a5d3472a7f457d5a071118367124d0bb59837f6e`. All ten cases matched their
+`1d23af4a8d8688d3a2ba46f5bbb31ce16058560f`. All ten cases matched their
 expected exact diagnostics; the known-good synthetic control returned zero findings,
 the baseline returned four structural findings, and each of eight mutations returned
 the single intended finding. The GitHub Actions evidence ZIP retains input snapshots,
 per-case raw JSON, exit codes, stderr, sealed hash manifest and evaluated summary.
 The committed JSON verification record preserves source identities, exact diagnostic
 tuples, checked per-finding contract/binding IDs, artifact type, source path, locator,
-diagnostic code, and raw SHA-256s after the ZIP's retention period ends.
+diagnostic code, rule-specific status/schema keyword, and raw SHA-256s after the ZIP's retention period ends.
 
 Every run preserves input snapshots and hashes, unmodified CLI JSON, exit statuses, stderr,
 and a summary with exact diagnostic tuples and raw-output SHA-256s. Existing output is never
