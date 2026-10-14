@@ -2,11 +2,11 @@
 
 ## Status and scope
 
-**Bounded pilot verified, not artifact conformance:** Eleven focused harness tests and
+**Bounded pilot verified, not artifact conformance:** Thirteen focused harness tests and
 all ten actual pinned-AQC CLI scans passed on 2026-10-13. The test run used a temporary
 read-only GitHub Actions job with no persistent private checkout credentials. The
 accepted evidence is recorded in [verification-2026-10-13.json](verification-2026-10-13.json)
-and [GitHub Actions run #4](https://github.com/jnicholas000/basic-plugin/actions/runs/38497609907).
+and [GitHub Actions final execution](https://github.com/jnicholas000/basic-plugin/actions/runs/38498162467).
 The imported agent/skill still have four recorded declaration gaps. No production
 AQC pin, required CI gate, publication or runtime behavior was changed.
 
@@ -88,19 +88,24 @@ The AQC checkout is canonicalized to its physical path before checking this boun
 including when the supplied checkout path is a symlink. The runner performs no checkout,
 authentication, installation, publication or scanner execution.
 It copies selected committed consumer blobs and the pinned contracts into isolated case roots.
-Before any CLI run, it seals a complete SHA-256 file inventory for each staged case,
+Before any CLI run, it rejects staged, unstaged or untracked changes to the executing
+pilot harness so evidence cannot be attributed to an unexecuted clean commit.
+It seals a complete SHA-256 file inventory for each staged case,
 including all synthetic overlays and the copied contracts. It verifies that inventory
 before each execution and again during assessment; missing, added, changed or symlinked
-case inputs fail closed. The runner does not reconstruct validation results itself.
+case inputs fail closed. The final assessor also verifies each finding's exact
+contract and binding identity against the sealed consumer declarations; it never
+accepts merely nonempty identity fields. The runner does not reconstruct validation
+results itself.
 An unmodified AQC checkout and locked dependency installation are prerequisites, not a
 cryptographic attestation of dependencies.
 
-Eleven unit tests exercise the synthetic result harness, exact-result assessment, immutable
+Thirteen unit tests exercise the synthetic result harness, exact-result assessment, immutable
 snapshots, real Foundry frontmatter with fenced YAML, leading-frontmatter rejection, and
-symlinked root/output containment. Those tests are separate from actual AQC rule behavior.
+symlinked root/output containment, dirty-harness rejection, and exact artifact-specific contract/binding identity verification. Those tests are separate from actual AQC rule behavior.
 The independent ten-case AQC run used exactly pinned revision
 `ccad08bf9e3b90456d4f3b138707d5131c49a70b` against Basic Plugin
-`8bb1968b6c86ed17e64361e0b267646c7627e6ae`. All ten cases matched their
+`63cd15b4f060141fabe8e047019d9b9dcdc7ceab`. All ten cases matched their
 expected exact diagnostics; the known-good synthetic control returned zero findings,
 the baseline returned four structural findings, and each of eight mutations returned
 the single intended finding. The GitHub Actions evidence ZIP retains input snapshots,
