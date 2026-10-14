@@ -201,6 +201,32 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
     assert.equal(sha256(await readFile(path.join(inputsRoot, 'baseline', item.path))), item.sha256,
       `Staged baseline changed: ${item.path}`);
   }
+  // Validate the *identity* of each finding against the exact sealed consumer
+  // inventory, binding, and pinned contract. Mere non-empty identities can
+  // silently accept findings from a different contract version or agent.
+  const stagedBaseline = path.join(inputsRoot, 'baseline');
+  const inventory = JSON.parse(await readFile(path.join(stagedBaseline, pilotPath, 'inventory.json'), 'utf8'));
+  const registryBindings = await Promise.all(inventory.bindings.map(async file =>
+    JSON.parse(await readFile(path.join(stagedBaseline, file), 'utf8'))));
+  const registryContracts = await Promise.all(inventory.contracts.map(async file =>
+    JSON.parse(await readFile(path.join(stagedBaseline, file), 'utf8'))));
+  const identity = ({ id, version }) => `${id}@${version}`;
+  const bindings = new Map(registryBindings.map(binding => [identity(binding), binding]));
+  const contracts = new Map(registryContracts.map(contract => [identity(contract), contract]));
+  const expectedIdentityByPath = new Map();
+  for (const artifact of inventory.artifacts) {
+    const binding = bindings.get(identity(artifact.binding));
+    assert.ok(binding, `Unresolved exact consumer binding: ${artifact.path}`);
+    const contract = contracts.get(identity(binding.contract));
+    assert.ok(contract, `Unresolved exact contract: ${artifact.path}`);
+    assert.equal(binding.artifactType, artifact.artifactType);
+    assert.equal(contract.artifactType, artifact.artifactType);
+    assert.ok(!expectedIdentityByPath.has(artifact.path),
+      `Duplicate explicitly bound artifact: ${artifact.path}`);
+    expectedIdentityByPath.set(artifact.path, {
+      contractIdentity: identity(contract), bindingIdentity: identity(binding),
+    });
+  }
   const observedAqcCommit = (await readFile(path.join(resultsRoot, 'aqc-commit.txt'), 'utf8')).trim();
   assert.equal(observedAqcCommit, pinned.commit, 'Executed AQC revision does not match the pin');
   const results = [];
@@ -216,7 +242,12 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
       assert.equal(f.enforcement, 'blocking'); // Rule semantics retained; not a required repository gate.
       assert.equal(f.ruleVersion, '1.0.0');
       assert.ok(f.evidence.source, `${name}: missing source attribution`);
-      assert.ok(f.evidence.contractIdentity && f.evidence.bindingIdentity, `${name}: missing exact identities`);
+      const expectedIdentity = expectedIdentityByPath.get(f.path);
+      assert.ok(expectedIdentity, `${name}: finding attributed to unbound artifact: ${f.path}`);
+      assert.equal(f.evidence.contractIdentity, expectedIdentity.contractIdentity,
+        `${name}: wrong exact contract identity on ${f.path}`);
+      assert.equal(f.evidence.bindingIdentity, expectedIdentity.bindingIdentity,
+        `${name}: wrong exact consumer binding identity on ${f.path}`);
       return diagnostic(f.ruleId, f.path, f.evidence.elementId, f.evidence.code,
         f.evidence.keyword ?? f.evidence.status);
     });
