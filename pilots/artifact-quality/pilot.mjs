@@ -225,6 +225,11 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
       `Duplicate explicitly bound artifact: ${artifact.path}`);
     expectedIdentityByPath.set(artifact.path, {
       contractIdentity: identity(contract), bindingIdentity: identity(binding),
+      artifactType: artifact.artifactType,
+      locators: binding.elements,
+      sources: Object.fromEntries(Object.entries(binding.elements).map(([elementId, locator]) => [
+        elementId, locator.kind === 'declaration' ? artifact.declarations ?? null : artifact.path,
+      ])),
     });
   }
   const observedAqcCommit = (await readFile(path.join(resultsRoot, 'aqc-commit.txt'), 'utf8')).trim();
@@ -248,6 +253,14 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
         `${name}: wrong exact contract identity on ${f.path}`);
       assert.equal(f.evidence.bindingIdentity, expectedIdentity.bindingIdentity,
         `${name}: wrong exact consumer binding identity on ${f.path}`);
+      assert.equal(f.artifactType, expectedIdentity.artifactType,
+        `${name}: wrong artifact type on ${f.path}`);
+      assert.ok(Object.hasOwn(expectedIdentity.locators, f.evidence.elementId),
+        `${name}: undeclared bound element on ${f.path}`);
+      assert.equal(f.evidence.source, expectedIdentity.sources[f.evidence.elementId],
+        `${name}: wrong bound element source attribution on ${f.path}`);
+      assert.deepEqual(f.evidence.locator, expectedIdentity.locators[f.evidence.elementId],
+        `${name}: wrong bound element locator on ${f.path}`);
       return diagnostic(f.ruleId, f.path, f.evidence.elementId, f.evidence.code,
         f.evidence.keyword ?? f.evidence.status);
     });
