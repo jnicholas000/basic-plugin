@@ -3,23 +3,23 @@
   "verificationDate": "2026-10-13",
   "type": "bounded-first-consumer-pilot",
   "producer": "GitHub Actions pinned AQC artifact-quality",
-  "runUrl": "https://github.com/jnicholas000/basic-plugin/actions/runs/38497609907",
-  "runId": 38497609907,
+  "runUrl": "https://github.com/jnicholas000/basic-plugin/actions/runs/38498162467",
+  "runId": 38498162467,
   "artifact": {
-    "id": 11864617927,
-    "name": "aqc-two-artifact-pilot-8bb1968b6c86ed17e64361e0b267646c7627e6ae",
-    "digest": "sha256:81969e67f32f2d965bae4e7c300f69f1bb7500d4bf8eb823e2cedbbf932eea3d",
-    "expiresAt": "2026-11-13T01:47:54Z"
+    "id": 11863904585,
+    "name": "aqc-two-artifact-pilot-63cd15b4f060141fabe8e047019d9b9dcdc7ceab",
+    "digest": "sha256:bff657edf4a5e792e3dd59e91edb4c65159f8eaecb0f82856bdcbf90cdf15ed8",
+    "expiresAt": "2026-11-13T01:54:02Z"
   },
   "regressionTests": {
-    "passed": 11,
+    "passed": 13,
     "failed": 0,
     "runner": "Node 22",
     "scope": "pilot harness only"
   },
   "pilot": {
     "schemaVersion": 1,
-    "consumerCommit": "8bb1968b6c86ed17e64361e0b267646c7627e6ae",
+    "consumerCommit": "63cd15b4f060141fabe8e047019d9b9dcdc7ceab",
     "aqcCommit": "ccad08bf9e3b90456d4f3b138707d5131c49a70b",
     "inputs": [
       {
@@ -66,7 +66,7 @@
         "exitCode": 1,
         "findings": 4,
         "matched": true,
-        "rawSha256": "2bb236cb83c3481a130de2f5c47133d59e5f685986a7eef254b2a25e8b041066",
+        "rawSha256": "06c6d7b2774b280b61176deb643a86e7f5e1beb41c26b902455c1b15c2c300d5",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -104,7 +104,7 @@
         "exitCode": 0,
         "findings": 0,
         "matched": true,
-        "rawSha256": "f03c02629aa208f592732747472d6bd2e2f85fd086a3253e9ee5b8ab1709bf22",
+        "rawSha256": "8f4a46ee8aa3cb91b4cd900156c0fd0be36b484e136f92592645923b13a7b15a",
         "diagnostics": []
       },
       {
@@ -113,7 +113,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "686f6bfbff65b92654362dd13b02934d1692990cf0a5ed847b71dee84cdb8236",
+        "rawSha256": "1a81d3ee3460394823207d6e22823d56a5ffb87a4d8c1f7ca47bdc8e988d0215",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -130,7 +130,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "d11782430595d0ee446c60d7123cee0c9f5c279659aee80eb2e15747e2428e65",
+        "rawSha256": "513a9bfb83ff5b9d63b157f2811a7c76b3614cff1b21cac45288b78f80dd73c5",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -147,7 +147,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "ad492b959c1ac09b747d101d3a648b98287bff08d736598d4cb3c18107c114c4",
+        "rawSha256": "89fb4c0d202080da4f3fe51efda7c86016da678e202067b3ab3666b7b064013f",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -164,7 +164,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "df24e4b8e818e1c36a593d1b4284dffe382810f80ca584c45b6f2f146250d8ea",
+        "rawSha256": "2ff11fe4b816030a9334deef2aa40e14c91ed20996685eaf075ed7fa31407a56",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -181,7 +181,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "667bdcfd15075f09c268ae1cb1e51348f4ad0c2dcf59c847c0073c818d6f5c55",
+        "rawSha256": "9dbbfe0fc2969d50b739932d2cfd09619ac1711af32afaa1907d89fab25d138c",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -198,7 +198,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "ecc2f131ef69f048fd6d2b7a8c2a028fa591590e9773485925b8df26b37e7608",
+        "rawSha256": "3e6805be137d7fb7c511ae027201ff6422cec041ab071749532317235d4a24a1",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -215,7 +215,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "3ee91190bba100cf70d9e9963a775150f790d71ad0ba2485f5178d727dd311f7",
+        "rawSha256": "9563e593aba05a51d4213b5299c667e0d83822a2cfa00684a6d0fbcd7c8d8bc2",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -232,7 +232,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "fe18ab2c9f5cb3a2bbe961f372f2df881785ab8f6149db6dd1b8a3d4c5c21d6f",
+        "rawSha256": "440271df8196ddad726a4584b63a6388667022b7aa3701a4c7314c7a8514635f",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -251,5 +251,10 @@
     "The four baseline missing declarations remain open",
     "Synthetic positives demonstrate bounded structural predicates only",
     "This is not model behavior qualification, general precision, broader adoption, or authorization to enforce new required CI gates"
+  ],
+  "reviewRepair": [
+    "Case-root symlinks rejected before traversal",
+    "Executing consumer harness must match committed HEAD",
+    "Every finding contract/binding identity must match sealed version-pinned declarations"
   ]
 }
