@@ -46,13 +46,31 @@ async function mockResults(f) {
   const results = path.join(f.root, 'results');
   await mkdir(results);
   await writeFile(path.join(results, 'aqc-commit.txt'), f.manifest.aqc.commit);
+  const bindingByArtifact = {
+    [agentPath]: JSON.parse(await readFile(path.join(f.inputs, 'baseline', pilotPath, 'foundry.binding.json'))),
+    [skillPath]: JSON.parse(await readFile(path.join(f.inputs, 'baseline', pilotPath, 'collision.binding.json'))),
+  };
+  const declarationByArtifact = {
+    [agentPath]: pilotPath + '/foundry.declarations.json',
+    [skillPath]: pilotPath + '/collision.declarations.json',
+  };
   for (const [name, expected] of Object.entries(expectations)) {
-    const findings = expected.map(([ruleId, artifact, elementId, code, detail]) => ({
-      ruleId, ruleVersion: '1.0.0', path: artifact, profile: 'artifact-quality', enforcement: 'blocking',
-      evidence: { elementId, code, source: artifact, contractIdentity: artifact === agentPath ? 'agent-base@1.0.0' : 'skill-base@1.0.0',
-        bindingIdentity: artifact === agentPath ? 'basic-plugin-foundry-pilot@1.0.0' : 'basic-plugin-collision-pilot@1.0.0',
-        ...(ruleId === 'AQC-BOUND-VALUES' ? { keyword: detail } : { status: detail }) },
-    }));
+    const findings = expected.map(([ruleId, artifact, elementId, code, detail]) => {
+      const binding = bindingByArtifact[artifact];
+      const locator = binding.elements[elementId];
+      return {
+        ruleId, ruleVersion: '1.0.0', path: artifact,
+        artifactType: artifact === agentPath ? 'agent' : 'skill',
+        profile: 'artifact-quality', enforcement: 'blocking',
+        evidence: {
+          elementId, code, locator,
+          source: locator.kind === 'declaration' ? declarationByArtifact[artifact] : artifact,
+          contractIdentity: binding.contract.id + '@' + binding.contract.version,
+          bindingIdentity: binding.id + '@' + binding.version,
+          ...(ruleId === 'AQC-BOUND-VALUES' ? { keyword: detail } : { status: detail }),
+        },
+      };
+    });
     await writeFile(path.join(results, `${name}.raw.json`), JSON.stringify({ findings, summary: { blocking: findings.length } }));
     await writeFile(path.join(results, `${name}.exit.txt`), findings.length ? '1\n' : '0\n');
   }
@@ -239,4 +257,26 @@ test('runner refuses a dirty committed harness before pinning execution evidence
   ], { encoding: 'utf8' });
   assert.equal(attempted.status, 2);
   assert.match(attempted.stderr, /Consumer pilot harness differs from committed HEAD/);
+});
+
+
+test('assessment rejects forged element sources, locator provenance and artifact type', async context => {
+  const f = await fixture(context), results = await mockResults(f);
+  const baselineRaw = path.join(results, 'baseline.raw.json');
+  const original = JSON.parse(await readFile(baselineRaw, 'utf8'));
+  for (const [mutate, expected] of [
+    [finding => { finding.evidence.source = 'some-other-declarations.json'; },
+      /wrong bound element source attribution/],
+    [finding => { finding.evidence.locator = { kind: 'declaration', name: 'other' }; },
+      /wrong bound element locator/],
+    [finding => { finding.artifactType = 'skill'; }, /wrong artifact type/],
+  ]) {
+    const forged = structuredClone(original);
+    mutate(forged.findings[0]);
+    await writeFile(baselineRaw, JSON.stringify(forged));
+    await assert.rejects(assess(f.inputs, results, f.repo), expected);
+  }
+  await writeFile(baselineRaw, JSON.stringify(original));
+  const verified = await assess(f.inputs, results, f.repo);
+  assert.equal(verified.results.length, 10);
 });
