@@ -1,6 +1,6 @@
 {
   "recordVersion": 1,
-  "verificationDate": "2026-10-13",
+  "verificationDate": "2026-10-14",
   "type": "bounded-first-consumer-pilot",
   "producer": "GitHub Actions pinned AQC artifact-quality",
   "runUrl": "https://github.com/jnicholas000/basic-plugin/actions/runs/38666203654",
