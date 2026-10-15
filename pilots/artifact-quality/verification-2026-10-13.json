@@ -3,23 +3,23 @@
   "verificationDate": "2026-10-13",
   "type": "bounded-first-consumer-pilot",
   "producer": "GitHub Actions pinned AQC artifact-quality",
-  "runUrl": "https://github.com/jnicholas000/basic-plugin/actions/runs/38499190803",
-  "runId": 38499190803,
+  "runUrl": "https://github.com/jnicholas000/basic-plugin/actions/runs/38666203654",
+  "runId": 38666203654,
   "artifact": {
-    "id": 11864334105,
-    "name": "aqc-two-artifact-pilot-1d23af4a8d8688d3a2ba46f5bbb31ce16058560f",
-    "digest": "sha256:7c6da50400c9d4bc620cf87d893a176d32fbd7ed6b276d9038f6ddc235a3d1a6",
-    "expiresAt": "2026-11-13T02:05:37Z"
+    "id": 11940014983,
+    "name": "aqc-two-artifact-pilot-b84ff01199116a05dbe66cd1f381a97337e0c7d2",
+    "digest": "sha256:6d56288b9b5c6bfb1068ac2c4584c16b6d89dcf03372f09b44a0b4dd0d3a379f",
+    "expiresAt": "2026-11-14T01:32:45Z"
   },
   "regressionTests": {
-    "passed": 16,
+    "passed": 17,
     "failed": 0,
     "runner": "Node 22",
     "scope": "pilot harness only"
   },
   "pilot": {
     "schemaVersion": 1,
-    "consumerCommit": "1d23af4a8d8688d3a2ba46f5bbb31ce16058560f",
+    "consumerCommit": "b84ff01199116a05dbe66cd1f381a97337e0c7d2",
     "aqcCommit": "ccad08bf9e3b90456d4f3b138707d5131c49a70b",
     "inputs": [
       {
@@ -59,6 +59,544 @@
         "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
       }
     ],
+    "caseSnapshots": {
+      "baseline": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "a44a820b88f00c8a57422f834fb3c82844f5995b28340f1892015db73f79a281"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "52f09862a21ac4de15b287e35be8a64a6b09353d291d2bdcfcab3402dd14752a"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ],
+      "fixture-valid": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "a44a820b88f00c8a57422f834fb3c82844f5995b28340f1892015db73f79a281"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "54ab3b70a4eb04656ecfa254d891a4bd780d2f5cbfe05d81be36da1048d8d9ed"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ],
+      "missing-agent-procedure": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "f9da19f032d4a90ccaa0ffcc791edbf0ba05fce71968879bb93df24dab05f275"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "54ab3b70a4eb04656ecfa254d891a4bd780d2f5cbfe05d81be36da1048d8d9ed"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ],
+      "missing-skill-procedure": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "a44a820b88f00c8a57422f834fb3c82844f5995b28340f1892015db73f79a281"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "54ab3b70a4eb04656ecfa254d891a4bd780d2f5cbfe05d81be36da1048d8d9ed"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "976b9a225de907871501d1e9e04d3a6305e581bf61c3d473a6f6f2e02bc03ff9"
+        }
+      ],
+      "invalid-tools": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "471061b9fa4eb4ef44520dffe3d3ce707fbf63bbe76b79fdc1cc8c72481d4fd9"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "54ab3b70a4eb04656ecfa254d891a4bd780d2f5cbfe05d81be36da1048d8d9ed"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ],
+      "duplicate-tools": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "aa880493e515c89d8c1b8c7188f7981fcda879050943b60f4c15b7fe85e08fd9"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "54ab3b70a4eb04656ecfa254d891a4bd780d2f5cbfe05d81be36da1048d8d9ed"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ],
+      "unknown-tool": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "20e5010845ea879c0e911a089dae2e1a8f0ad1fbb9c81cb7052ac16eb4a1d29f"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "54ab3b70a4eb04656ecfa254d891a4bd780d2f5cbfe05d81be36da1048d8d9ed"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ],
+      "missing-resource": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "a44a820b88f00c8a57422f834fb3c82844f5995b28340f1892015db73f79a281"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "54ab3b70a4eb04656ecfa254d891a4bd780d2f5cbfe05d81be36da1048d8d9ed"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ],
+      "escaping-resource": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "a44a820b88f00c8a57422f834fb3c82844f5995b28340f1892015db73f79a281"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "b9806dd026251e3c001cfa16a58c276ea5d352c4cd4e432d6b8402c740dcde55"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ],
+      "malformed-reference": [
+        {
+          "path": "aqc.artifacts.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "aqc.config.json",
+          "sha256": "58e31d39f9ba38c31087186b0cc6830feff3e5b36c3240f5102a9b11dcf7ed04"
+        },
+        {
+          "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+          "sha256": "a44a820b88f00c8a57422f834fb3c82844f5995b28340f1892015db73f79a281"
+        },
+        {
+          "path": "contracts/agent.json",
+          "sha256": "20271b43a7566817dacaf2df682c24141c59e89e5af9ada305c3ee4b644e01df"
+        },
+        {
+          "path": "contracts/skill.json",
+          "sha256": "3830469910819026ec6ef2687f42177c511bf1afaaacd44c1aec02041949a454"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.binding.json",
+          "sha256": "8079173ddd15feaa1d11668bd91b52649c9080f87abbbdab318379567bf22cdc"
+        },
+        {
+          "path": "pilots/artifact-quality/collision.declarations.json",
+          "sha256": "3ad8d50e345c2813e516f0190d52ba45e678061d52bf98f34632ffc86b5650e9"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.binding.json",
+          "sha256": "10ad67eb670fd548a73c42ca0ee20854aa87f066fd6426f7e5b2ca2ee3cd8d27"
+        },
+        {
+          "path": "pilots/artifact-quality/foundry.declarations.json",
+          "sha256": "27a84c16527e3585a22ea1db73a383c197fcce03dbbf5d6a7c3cef6e146b6e6f"
+        },
+        {
+          "path": "pilots/artifact-quality/inventory.json",
+          "sha256": "145f5ee6e72338a058d6a896e86e2bd6498343d805971691ec74594f5dd35d29"
+        },
+        {
+          "path": "pilots/artifact-quality/pin.json",
+          "sha256": "aa1040b569335fed8ac591bc3fb4166ca07d660472d415b999092e4c62f67e7c"
+        },
+        {
+          "path": "skills/capability-collision-detection/scripts/scan_capabilities.py",
+          "sha256": "a11c94771a9a7ec0c3f354654f2efadc2ad02f707e78bbef1d9b15adfb1a1bf3"
+        },
+        {
+          "path": "skills/capability-collision-detection/SKILL.md",
+          "sha256": "29bb6243aec199413fe6d4d0178830d25f6adc2c9a447a519e3f2c295e738b02"
+        }
+      ]
+    },
     "results": [
       {
         "name": "baseline",
@@ -66,7 +604,7 @@
         "exitCode": 1,
         "findings": 4,
         "matched": true,
-        "rawSha256": "1ee69db9eee99303be7f7c1e51acd361864341667cf4ab95ca1b916f138ff7a0",
+        "rawSha256": "ae7f079a501d9016fa460d6b89f70acf0eea4b03c64b4ea8ed7abd78d050f28e",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -174,7 +712,7 @@
         "exitCode": 0,
         "findings": 0,
         "matched": true,
-        "rawSha256": "386764016584fb843eedcf58799d12f0c0529ebe4bfce1786089c66fc07cba14",
+        "rawSha256": "a7c3aea7a16299a278848ec0bc4e4197c0486ff0f51e3611b66afbf9517d904e",
         "diagnostics": [],
         "checkedFindingProvenance": []
       },
@@ -184,7 +722,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "97ec399800e45995cac6108f2e091c1925e25bea67737451b2cc8d8fddc9460b",
+        "rawSha256": "0563c963e75041da7a118ec757a30e1d264744733c3fd162423a23a11b320397",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -220,7 +758,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "55942e8cedae1e8743a1d62b6a91d973723658e20ef5bd70d467e3bcf13850e9",
+        "rawSha256": "3a45e36d28aeb6790d4376a5a34bfeea97ec982039966f0cf35b1314dc05b458",
         "diagnostics": [
           [
             "AQC-BOUND-STRUCTURE",
@@ -256,7 +794,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "cc6fe1ec928facba1d3260b691d16334af5335952b79d6668d610bd487a7549d",
+        "rawSha256": "247e5576994e4a2d16a7f42064f3960aaee1c9ac9aa722bc5b1a51023146bde5",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -295,7 +833,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "cafdd1c654e2c78e07d52b0567444efc0c7365cd0ffd38e9ba8bde881f92ea7d",
+        "rawSha256": "1c33b4af168005414e381970d86d86889ba74d7c95ef5cc9ad1968771cceb492",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -334,7 +872,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "c2d0f873cdafcc3010ce5ca1f6246a74a0b29e59587f438008dc16a3f9142d17",
+        "rawSha256": "538110af19942c51a7fd8da6d199134a125c20654338074e77e77231aeb9061a",
         "diagnostics": [
           [
             "AQC-BOUND-VALUES",
@@ -373,7 +911,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "3ebeb5b6566c42dd4c0b4f01dc8bdb966d8cbbc7dec85e946724d75a6583780c",
+        "rawSha256": "d490a08380752e8a36d0a74d0eaca19cdaf92fc09b7aeca1a3ca40cf4254caba",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -409,7 +947,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "a1571188841a4153821f0a45ee07c34fc0d7be0ae18e520c50c431f307e78585",
+        "rawSha256": "ee42d80e204a30090d0a758acdddbf5542cf3fd4ce13d1ee48d0c7af8774df80",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -445,7 +983,7 @@
         "exitCode": 1,
         "findings": 1,
         "matched": true,
-        "rawSha256": "e38dff8d9f2d840461bcf49bf436455c71f372af499cccdc16646a9a1d10580a",
+        "rawSha256": "8e07e54ae056a1136a168e0913ad342c53f53cd3515a79c5cdcde6ba00c383bb",
         "diagnostics": [
           [
             "AQC-BOUND-REFERENCES",
@@ -490,6 +1028,7 @@
     "Every finding contract/binding identity must match sealed version-pinned declarations",
     "Finding source, locator and artifact type verified against exact sealed bindings",
     "Every checked finding's exact provenance survives in the durable JSON summary after raw artifact expiration",
-    "Status and schema-keyword detail fields are not interchangeable in acceptance checks"
+    "Status and schema-keyword detail fields are not interchangeable in acceptance checks",
+    "Full sealed per-case file SHA-256 inventories, including synthetic overlays and pinned contract copies, retained in durable summary"
   ]
 }
