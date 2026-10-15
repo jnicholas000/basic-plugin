@@ -328,3 +328,30 @@ test('assessment refuses swapped keyword and status fields even if the detail te
   const accepted = await assess(f.inputs, results, f.repo);
   assert.equal(accepted.results.length, 10);
 });
+
+
+test('durable report retains hashes for every sealed synthetic input and copied contract', async context => {
+  const f = await fixture(context), results = await mockResults(f);
+  const report = await assess(f.inputs, results, f.repo);
+  assert.deepEqual(Object.keys(report.caseSnapshots).sort(), Object.keys(expectations).sort());
+  assert.deepEqual(report.caseSnapshots, f.manifest.caseSnapshots);
+  for (const name of Object.keys(expectations)) {
+    const snapshot = report.caseSnapshots[name];
+    assert.ok(Array.isArray(snapshot) && snapshot.length > 0, name);
+    assert.ok(snapshot.every(item => /^[a-f0-9]{64}$/.test(item.sha256)), name);
+    for (const contract of ['contracts/agent.json', 'contracts/skill.json']) {
+      assert.ok(snapshot.some(item => item.path === contract), name + ': lost copied contract hash');
+    }
+    assert.ok(snapshot.some(item => item.path === 'aqc.artifacts.json'),
+      name + ': lost staged inventory hash');
+  }
+  const baseline = new Map(report.caseSnapshots.baseline.map(entry => [entry.path, entry.sha256]));
+  const modified = new Map(report.caseSnapshots['invalid-tools'].map(entry => [entry.path, entry.sha256]));
+  assert.notEqual(baseline.get(agentPath), modified.get(agentPath),
+    'The tool mutation must preserve a distinct verifiable input hash');
+  assert.equal(baseline.get('contracts/agent.json'), modified.get('contracts/agent.json'),
+    'The pinned contract copies should have equivalent input bytes');
+  const escaped = JSON.parse(JSON.stringify(report));
+  assert.deepEqual(escaped.caseSnapshots, report.caseSnapshots,
+    'Serialized durable report must retain the complete case hash inventory');
+});
