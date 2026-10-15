@@ -1,0 +1,5 @@
+{
+  "dependencies": [
+    "skills/capability-collision-detection/scripts/scan_capabilities.py"
+  ]
+}
