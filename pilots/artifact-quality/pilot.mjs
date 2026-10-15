@@ -291,8 +291,12 @@ export async function assess(inputsRoot, resultsRoot, repositoryRoot = path.reso
       rawSha256: sha256(rawBytes), diagnostics: observed,
       checkedFindingProvenance });
   }
+  // Durable report must retain the complete verified input denominator. Raw
+  // evidence ZIPs expire; original Git blobs alone cannot reconstruct synthetic
+  // overlays or the exact pinned contract bytes staged for every case.
   return { schemaVersion: 1, consumerCommit: manifest.consumerCommit,
-    aqcCommit: observedAqcCommit, inputs: manifest.inputs, results,
+    aqcCommit: observedAqcCommit, inputs: manifest.inputs,
+    caseSnapshots: manifest.caseSnapshots, results,
     decision: 'Integration expectations matched. Baseline declaration gaps remain open. No runtime qualification or gate promotion.' };
 }
 
