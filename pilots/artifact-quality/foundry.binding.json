@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "basic-plugin-foundry-pilot",
+  "version": "1.0.0",
+  "artifactType": "agent",
+  "contract": { "id": "agent-base", "version": "1.0.0" },
+  "description": "Basic Plugin pilot mapping. Missing declarations remain missing; no runtime authority is inferred.",
+  "elements": {
+    "purpose": { "kind": "frontmatter", "path": ["description"] },
+    "responsibilities": { "kind": "markdown-section", "heading": "Core Competencies" },
+    "inputsContext": { "kind": "markdown-section", "heading": "1. Requirements Gathering" },
+    "tools": { "kind": "frontmatter", "path": ["tools"] },
+    "permissions": { "kind": "declaration", "name": "permissions" },
+    "procedure": { "kind": "markdown-section", "heading": "Your Process" },
+    "failureEscalation": { "kind": "declaration", "name": "failureEscalation" },
+    "outputContract": { "kind": "markdown-section", "heading": "Output Format" },
+    "successCriteria": { "kind": "markdown-section", "heading": "Quality Checklist" }
+  }
+}

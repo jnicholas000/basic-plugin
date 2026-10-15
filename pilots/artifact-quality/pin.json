@@ -1,0 +1,13 @@
+{
+  "repository": "jnicholas000/ai-quality-control",
+  "commit": "ccad08bf9e3b90456d4f3b138707d5131c49a70b",
+  "profile": "artifact-quality",
+  "contracts": {
+    "agent": "fixtures/valid/artifact-validation/agent.contract.json",
+    "skill": "fixtures/valid/artifact-validation/skill.contract.json"
+  },
+  "contractVersions": {
+    "agent-base": "1.0.0",
+    "skill-base": "1.0.0"
+  }
+}

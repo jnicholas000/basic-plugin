@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "contracts": ["contracts/agent.json", "contracts/skill.json"],
+  "bindings": ["pilots/artifact-quality/foundry.binding.json", "pilots/artifact-quality/collision.binding.json"],
+  "artifacts": [
+    {
+      "path": "com.github.copilot/agents/custom-agent-foundry.agent.md",
+      "artifactType": "agent",
+      "format": "markdown",
+      "binding": { "id": "basic-plugin-foundry-pilot", "version": "1.0.0" },
+      "declarations": "pilots/artifact-quality/foundry.declarations.json",
+      "valueSchema": {
+        "type": "object",
+        "properties": {
+          "tools": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "enum": ["vscode", "execute", "read", "edit", "search", "web", "agent", "github/*", "todo"] }
+          }
+        }
+      }
+    },
+    {
+      "path": "skills/capability-collision-detection/SKILL.md",
+      "artifactType": "skill",
+      "format": "markdown",
+      "binding": { "id": "basic-plugin-collision-pilot", "version": "1.0.0" },
+      "declarations": "pilots/artifact-quality/collision.declarations.json",
+      "references": [{ "elementId": "dependencies" }]
+    }
+  ]
+}
