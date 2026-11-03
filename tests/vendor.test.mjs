@@ -82,12 +82,20 @@ test('real Git vendoring is deterministic, prunes, replaces stale roots, and exe
       const outsideSource = path.join(outsideRoot, 'local-site-data.ts');
       await writeFile(outsideSource, 'synthetic external overlay source');
       await symlink(outsideSource, path.join(root, 'website/overlay/escaped-site-data.ts'));
-      const beforeFiles = await readdir(output);
-      const beforeProvenance = await readFile(path.join(output, 'provenance.json'), 'utf8');
+      const snapshotOutput = async (directory, prefix = '') => {
+        const entries = [];
+        for (const entry of (await readdir(directory, { withFileTypes: true })).sort((left, right) => left.name.localeCompare(right.name))) {
+          const file = path.join(directory, entry.name);
+          const relative = prefix ? path.posix.join(prefix, entry.name) : entry.name;
+          if (entry.isDirectory()) entries.push(...await snapshotOutput(file, relative));
+          else entries.push([relative, (await readFile(file)).toString('hex')]);
+        }
+        return entries;
+      };
+      const beforeOutput = await snapshotOutput(output);
       const escapedOverlay = { ...overlay, rules: overlay.rules.map(rule => ({ ...rule, source: 'website/overlay/escaped-site-data.ts' })) };
       await assert.rejects(vendor({ repository, config: settings, overlay: escapedOverlay, output, localRoot: root }), /Overlay source escapes local root/);
-      assert.deepEqual(await readdir(output), beforeFiles);
-      assert.equal(await readFile(path.join(output, 'provenance.json'), 'utf8'), beforeProvenance);
+      assert.deepEqual(await snapshotOutput(output), beforeOutput);
     } finally {
       await rm(outsideRoot, { recursive: true, force: true });
     }
