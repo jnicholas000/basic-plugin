@@ -77,6 +77,28 @@ test('real Git vendoring is deterministic, prunes, replaces stale roots, and exe
     await assert.rejects(readFile(path.join(output, 'stale.txt')));
     assert.equal((await capturePreflight(repository, ref, ref)).complete, true);
     await assert.rejects(vendor({ repository, config: settings, overlay, role: 'accepted', ref: 'b'.repeat(40), output, localRoot: root }), /Invalid immutable/);
+    const outsideRoot = await mkdtemp(path.join(tmpdir(), 'vendor-outside-'));
+    try {
+      const outsideSource = path.join(outsideRoot, 'local-site-data.ts');
+      await writeFile(outsideSource, 'synthetic external overlay source');
+      await symlink(outsideSource, path.join(root, 'website/overlay/escaped-site-data.ts'));
+      const snapshotOutput = async (directory, prefix = '') => {
+        const entries = [];
+        for (const entry of (await readdir(directory, { withFileTypes: true })).sort((left, right) => left.name.localeCompare(right.name))) {
+          const file = path.join(directory, entry.name);
+          const relative = prefix ? path.posix.join(prefix, entry.name) : entry.name;
+          if (entry.isDirectory()) entries.push(...await snapshotOutput(file, relative));
+          else entries.push([relative, (await readFile(file)).toString('hex')]);
+        }
+        return entries;
+      };
+      const beforeOutput = await snapshotOutput(output);
+      const escapedOverlay = { ...overlay, rules: overlay.rules.map(rule => ({ ...rule, source: 'website/overlay/escaped-site-data.ts' })) };
+      await assert.rejects(vendor({ repository, config: settings, overlay: escapedOverlay, output, localRoot: root }), /Overlay source escapes local root/);
+      assert.deepEqual(await snapshotOutput(output), beforeOutput);
+    } finally {
+      await rm(outsideRoot, { recursive: true, force: true });
+    }
     git('mv', 'website/src/lib/site-data.ts', 'website/src/lib/moved.ts'); git('commit', '-qam', 'rename');
     const evidence = capturePreflight(repository, ref, git('rev-parse', 'HEAD'));
     assert.equal(classifyPreflight(evidence, settings, overlay).classification, 'architecture');
