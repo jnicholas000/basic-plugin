@@ -106,3 +106,67 @@ A source-bound JSON receipt and its hash are retained in the actual job log and 
 commands and cleanup uncertainty retain a failing step; receipt publication cannot turn them into
 passes. The hook is temporary and retired before final merge after evidence capture. The reference
 control has no user-supplied command or upstream execution interface.
+
+## Independent Pre-Execution Review
+
+Pre-execution readiness: FAIL — one bounded required correction. No actual-route compilation,
+Docker control, hosted confinement result or upstream execution is established by this review.
+Reviewed source candidate: `7783c835302eb5ea6f03827ac2b0a9532c061bd4`.
+
+### Required correction — uncertain daemon operation is not completed cleanup
+
+- Type: Risk / evidence correctness
+- Severity: P2
+- Basis: acceptance-criterion; cleanup uncertainty must remain explicit
+- Disposition: fix-now
+- Reopens Current Mission: yes
+- Location: `run-inert-confinement-control.mjs`, import/create calls and final cleanup accounting
+- Description: A timed-out import/create client can leave daemon-side completion unresolved.
+  Nonce-filter scans may then find no objects before that operation finishes. The current cleanup
+  block nevertheless sets `cleanup.completed: true` when those scans/removals return successfully.
+  Killing the CLI and observing an empty list do not establish that an in-flight daemon operation
+  cannot subsequently finish.
+- Impact: The overall receipt correctly remains `INDETERMINATE`, but its cleanup-completion field
+  can overstate object absence after an uncertain mutating operation.
+- Required fix: Track uncertain outcomes of import/create separately. Preserve that uncertainty
+  in cleanup evidence and keep the result failing even if bounded nonce scans find nothing.
+  Do not add retries, broad Docker discovery, unbounded waits or unrelated object cleanup.
+
+The reviewed C probe and independent offline controls match their pre-producer recorded hashes.
+The retained first/final producer offline runs each passed 4/4; no tests were rerun by this reviewer.
+Argument construction fixes the inert command/image, nonzero identity, exact owned mounts and
+resource/security settings. The wrapper checks selected effective policy before start and uses
+positive/read-only/absent-canary controls with exact errors, source/output binding and finite cleanup.
+The C source is consistent with the stated Linux probe; actual compiler/static-library support,
+Docker metadata behavior and runtime observations remain unproven until the admitted route runs.
+The temporary PR-only hook and failing receipt/artifact handling introduce no upstream executor.
+Retire that hook before final merge and retain all first outcomes. No broader host, kernel escape,
+secret-absence or production-runtime claim follows from source or offline validation.
+
+### Pre-execution cleanup delta and final readiness
+
+Final pre-execution readiness: PASS for `8fafa431f0f8e4a7dc619b65ab91c78a4100f0ea` only.
+The original FAIL/P2 above remains the initial finding. Intermediate candidate
+`8a398265507cb81f63189ee8006b9d5785b4ee11` fixed Node timeout/signal/buffer errors but left nonzero integer
+Docker exits outside its uncertainty flag. A lost daemon response/connection can also make the
+Docker client exit nonzero, so that candidate did not fully resolve the finding and is not passed.
+
+The final one-line correction conservatively marks every failed import/create call uncertain,
+except a positively known failure to start the client itself (`ENOENT`/`EACCES`). This flag survives
+empty nonce scans, adds the explicit unknown-outcome cleanup failure and keeps `cleanup.completed`
+false and the overall result `INDETERMINATE`. No retry, extra probe, unbounded wait or broader
+cleanup was added. The P2 is resolved in this final source.
+
+Reviewed wrapper SHA-256: `96641999b796c8d2cb14385b6db523747dc08291e5e3bc372a18a1d4abafa158`.
+The independently authored C probe and offline tests retain their original hashes. The retained
+post-correction offline run passed 4/4; these helper tests are not daemon-failure or Linux runtime
+observations. This reviewer inspected code and logs without rerunning them. The earlier source
+review remains applicable outside this narrow delta; no blocking pre-execution finding remains.
+
+This PASS covers preparation for the admitted owned inert control, not successful compilation,
+Docker policy behavior, actual confinement, credential absence or upstream execution. Actual-route
+results must retain their first failure/unknown and exact source/runtime bindings. Preserve the
+bounded admission and temporary-hook retirement requirements above; no production candidate
+runtime or upstream execution is authorized by this review. Before publication, bind the final
+source revision after adding this review and preserve the reviewed wrapper/probe/test/workflow
+hashes. All earlier candidate-specific judgments remain attributed to their named revisions.
