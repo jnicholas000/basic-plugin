@@ -188,10 +188,12 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Resolve the single credential-free execution question for the selected existing validation route
-with supported evidence and a bounded inert fixture before upstream package/config/build execution.
-Then prepare candidate-only asserted overlays using the completed local projection; do not treat the
-raw payload as an activated website. Keep the production adapter, throwing guard, accepted pins/output
+Review the single candidate-specific child-execution boundary identified by the
+[bounded assessment](docs/spikes/candidate-catalog-parity-credential-free-execution.md). Existing job
+separation and a local environment-only negative control are partial evidence; actual hosted
+confinement remains unproven. Test the reviewed boundary with inert controls on the selected route
+before upstream package/config/build execution. Then prepare candidate-only asserted overlays using
+the completed local projection; do not treat the raw payload as an activated website. Keep the production adapter, throwing guard, accepted pins/output
 and automatic-baseline stop intact. No new runtime, host, credentials, security change or baseline
 movement is selected by this local data implementation.
 
