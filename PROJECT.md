@@ -190,10 +190,11 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 The candidate-only public lock proposal is independently reviewed as a reference, with no adoption.
 All 55 public archive bodies serving its 56 changed paths now match the declared SHA-512/SHA-1
-digests; original-feed equivalence and the other 495 records remain unproven. Use the
-[bounded Node confinement control](docs/spikes/candidate-node-confinement.md) to qualify the fixed
-existing Node 24.22.1 and required runtime files inside the observed restricted child. npm remains
-manifest-only evidence and needs its own reviewed startup/preparation gate before
+digests; original-feed equivalence and the other 495 records remain unproven. The fixed Node 24.22.1
+and nine runtime destinations passed the [selected owned-probe confinement control](docs/spikes/candidate-node-confinement.md)
+on the existing CI route. Qualify npm startup and preparation using an owned inert fixture next;
+its 11.19.1 manifest remains data-only evidence. No npm or downloaded dependency code ran inside
+the Node control. Keep that separate reviewed gate before
 dependency preparation or upstream code. Production preparation, allowed outputs and both
 pre/post-merge candidate paths remain unqualified. Preserve the broader execution gate until those inputs and both
 pre/post-merge paths have supported evidence. Then prepare candidate-only asserted overlays using
