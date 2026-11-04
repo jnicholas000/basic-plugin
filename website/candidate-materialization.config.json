@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "repository": "github/awesome-copilot",
+  "acceptedSha": "6c4d33b9cfca967a28bb2962ef4d55e4a384c88c",
+  "copy": [".all-contributorsrc", "LICENSE", "website/package.json", "website/package-lock.json", "website/astro.config.mjs", "website/tsconfig.json", "website/src", "website/public/fonts", "website/public/images"],
+  "prune": ["website/public/data", "website/src/content", "website/src/pages/learning-hub", "website/public/images/learning-hub"],
+  "keep": [],
+  "overlay": "website/overlay.json",
+  "requiredPaths": [".all-contributorsrc", "LICENSE", "website/package.json", "website/package-lock.json", "website/astro.config.mjs", "website/tsconfig.json", "website/src/pages/index.astro", "website/src/lib/site-data.ts", "website/src/integrations/pagefind-resources.ts", "website/src/layouts/BaseLayout.astro", "website/src/components/brand/HomePage.tsx", "website/src/components/brand/PageShell.tsx"]
+}
