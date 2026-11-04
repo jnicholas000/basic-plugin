@@ -46,6 +46,8 @@ bounded marketplace shell can be built and published with:
 
 ## Current State
 
+The next bounded design checkpoint is the [candidate local-catalog parity plan](docs/candidate-catalog-parity-plan.md). It identifies direct catalog/detail imports, local source/install-link and retained-route work that a site-data swap alone cannot solve. The execution boundary remains SPIKE_REQUIRED; this is planning evidence, not an implemented adapter or runnable-site claim. Production, accepted pins and the throwing guard remain unchanged.
+
 The opt-in candidate-only materializer assembles the reviewed website source as inert Git data,
 using a separate fixed config and the existing vendor/provenance implementation. A pinned-source
 run produced 121 inventoried files with all twelve required inputs, while accepted inputs/outputs
@@ -182,12 +184,11 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Prepare the separately reviewed local-catalog parity migration and credential-free candidate
-validation route, using the new opt-in materializer and the existing immutable upstream ref. The
-throwing overlay deliberately remains in place; do not disable it or import upstream catalog data
-merely to build successfully. Dependency installation, upstream execution, browser validation and
-accepted-baseline movement need their actual gates before execution. Keep the structural adapter
-as production and automatic advancement disabled until those checks pass.
+Complete the bounded consumed-field/local-source contract in the reviewed candidate-catalog parity
+plan before implementing its local projection. Resolve the separate credential-free execution spike
+before any upstream package/config/build code runs. Keep the structural adapter as production, the
+throwing guard active, accepted pins/output unchanged and automatic advancement disabled. Current
+planning does not grant execution, installation, security, baseline-movement or publication authority.
 
 ## Evidence and Detailed Plans
 
