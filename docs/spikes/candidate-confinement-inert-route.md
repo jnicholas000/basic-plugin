@@ -271,3 +271,14 @@ UNRESOLVED: Node/dependency preparation, allowed-output handling, post-merge can
 and website parity are not qualified. No credential-absence, kernel-escape, measured-benefit or full
 Mission 9/10 claim follows. This reviewer launched no tests, compiler, containers, models or hosted
 jobs. Bind the final source revision after this review-only addition before publication.
+
+
+## Runtime-Metadata Attribution Note — 2026-11-04
+
+The image version in the retained receipt above is the job's `ImageVersion` environment value.
+The same job's bootstrap header reports `20261025.353.1` and its linked software-manifest tag;
+those differ from that environment value. Neither is an independent VM/image attestation or
+proof that Node 24 is cached. Preserve the exact receipt and reached inert-control observations;
+do not silently rewrite them or transfer qualification across images. The separate
+[Node/dependency review](candidate-node-dependency-preparation.md) obtains runtime availability
+from direct cache/header/binary observations instead of assuming it from those image labels.
