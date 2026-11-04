@@ -11,29 +11,6 @@ jobs:
         with: { persist-credentials: false }
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
-      - name: Inert candidate confinement control (temporary spike)
-        if: github.event_name == 'pull_request' && github.head_ref == 'spike/candidate-confinement-20261104' && github.run_attempt == 1
-        timeout-minutes: 2
-        env:
-          CONFINEMENT_HEAD_SHA: '${{ github.event.pull_request.head.sha }}'
-        run: |
-          node --test tests/inert-confinement-control.test.mjs
-          set +e
-          node docs/spikes/fixtures/run-inert-confinement-control.mjs > "$RUNNER_TEMP/basic-confinement-receipt.json"
-          control_status=$?
-          set -e
-          printf 'INERT_CONFINEMENT_RECEIPT_BEGIN\n'
-          cat "$RUNNER_TEMP/basic-confinement-receipt.json"
-          printf 'INERT_CONFINEMENT_RECEIPT_END\n'
-          sha256sum "$RUNNER_TEMP/basic-confinement-receipt.json"
-          exit "$control_status"
-      - name: Retain inert confinement receipt
-        if: always() && github.event_name == 'pull_request' && github.head_ref == 'spike/candidate-confinement-20261104' && github.run_attempt == 1
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: inert-confinement-${{ github.sha }}
-          path: ${{ runner.temp }}/basic-confinement-receipt.json
-          if-no-files-found: error
       - name: Install workflow test parser
         run: python -m pip install PyYAML==6.0.3
       - name: Verify local workflow and plugin contracts

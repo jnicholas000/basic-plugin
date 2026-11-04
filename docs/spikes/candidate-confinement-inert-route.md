@@ -1,6 +1,8 @@
 # Candidate Confinement — Inert Existing-Route Control
 
-Feature slug: `candidate-catalog-parity`. Status: **CONTRACT; NOT_EXECUTED**.
+Feature slug: `candidate-catalog-parity`. Current result: **PROVEN for the declared inert controls**.
+The original contract below preceded execution. The broader candidate-execution gate remains
+PARTIALLY_PROVEN / UNRESOLVED.
 This follows the partial [boundary assessment](candidate-catalog-parity-credential-free-execution.md).
 It grants no upstream package/config/build execution or production candidate-runtime authority.
 
@@ -170,3 +172,74 @@ bounded admission and temporary-hook retirement requirements above; no productio
 runtime or upstream execution is authorized by this review. Before publication, bind the final
 source revision after adding this review and preserve the reviewed wrapper/probe/test/workflow
 hashes. All earlier candidate-specific judgments remain attributed to their named revisions.
+
+
+## Actual Existing-Route Result — 2026-11-04
+
+Result: **PROVEN**, limited to the controls below on this observed runtime. Independent readiness
+review is separate from runtime evidence. No upstream package/config/build code was admitted.
+
+- Source head: `b8d42e0ea137cd8ef113b56ed2b705b0277ea258`; actual checkout/test-merge commit:
+  `f642b1b5719e9337416c3e8d8670c88f6eb1623f`.
+- Actual job: [41803007186 / Local quality checks](https://github.com/jnicholas000/basic-plugin/actions/runs/41803007186/job/126483108990),
+  first attempt. Its inert step and receipt upload passed. The same-head push run
+  [41802963122](https://github.com/jnicholas000/basic-plugin/actions/runs/41802963122) skipped both
+  fixture steps. One host-positive and one contained process ran; no corrective actual-route run.
+- Actual runtime: `ubuntu24`, image `20261026.354.1`, Node `v22.23.4`, Ubuntu GCC `13.3.0`,
+  Docker client/server `28.0.4`. This differs from the earlier orientation job's image version.
+  The contract admitted the existing selector and resolved actual metadata before the probe;
+  no same-image, cross-host or comparative-runtime qualification is claimed.
+
+| Observation | Host positive | Restricted child |
+| --- | --- | --- |
+| Allowed input read and output write/readback | Succeeded | Succeeded |
+| Input and root-control write | Succeeded before reset | Both `EROFS` (30) |
+| Owned host canary read and write | Succeeded before reset | Both `ENOENT` (2) |
+| UID/GID | 1001 / 1001 | 1001 / 1001 |
+| PID / capability sets | Host process; metadata retained | PID 1; effective/permitted/inheritable all zero |
+| No-new-privileges / seccomp mode | 0 / 0 | 1 / 2 |
+| Synthetic host environment key | Present | Absent; only four expected runtime key names |
+| Interfaces / non-loopback count | 4 / 3 | 1 / 0; no external connection attempted |
+
+Before start, selected effective metadata matched the immutable owned image, fixed inert command,
+nonzero identity, read-only root, exact input/output bind mounts, private namespaces, no network,
+all dropped capabilities, no-new-privileges and the fixed resource bounds. Three explicitly
+configured environment keys plus the inspected hostname's Docker default corresponded to the
+four keys actually observed by the child. No environment secret value was read or logged.
+
+Trusted host verification observed the exact output bytes, unchanged synthetic input/canary
+content and modes after reset, and all 110 tracked source files unchanged. The receipt reports
+owned container/image/files cleanup complete, no mutation uncertainty and no cleanup failure.
+The control took 1,965 ms; this is an operational duration, not a benefit/performance metric.
+The compiler, binary, tar, image ID, source and wrapper bindings are in the retained receipt.
+No image pull, software installation, new host, security-setting change or real credential probe
+was performed by the fixture.
+
+The exact log-carried JSON plus LF matches the CI file checksum:
+`33aad7eff991f79f998d7f1b27d06ddeeec4a4d465f61819fcf3e3dca3ef3f41`.
+It binds the frozen probe SHA-256
+`0e00828bc4a3c1424bba6fd512393b93bf5369526139766947bfc2e5b78cd592` and reviewed wrapper
+`96641999b796c8d2cb14385b6db523747dc08291e5e3bc372a18a1d4abafa158`.
+Artifact `inert-confinement-f642b1b5719e9337416c3e8d8670c88f6eb1623f` has ID `13308950515`;
+its archive digest is separately
+`08d257deced5f23139b6dae355751d0ccf0be7e1c0ed1fb81afde7453e0b5c23`.
+The archive was not downloaded for this assessment; receipt content came from the supported job
+log, checked against the separate raw-file checksum. These two digests are not interchangeable.
+
+### Disposition And Remaining Boundary
+
+Retain the control as `DO_NOT_COPY` evidence. The temporary hook is retired before further
+publication; final CI must validate that later revision without repeating the inert execution.
+The original cleanup-review FAIL and its pre-execution corrections remain retained.
+
+`SOURCE_SPECIFIED / ALIGNED`: the selected inert restrictions are supported by reached actual-route
+observations, with separate producer, test-author and reviewer attribution. The observations do not
+prove universal credential absence, shared-kernel escape resistance or adversarial host isolation.
+
+`IMPLEMENTATION_DETAIL / NEW_ARCHITECTURAL_DECISION`: a production candidate runtime and dependency
+preparation strategy remain unselected. Review the Node/dependency inputs, allowed outputs and
+post-merge use of the same boundary before any upstream execution. The static probe is not that
+runtime, and its successful control cannot authorize arbitrary commands or install scripts.
+The broader execution spike stays PARTIALLY_PROVEN / UNRESOLVED. Production, the throwing guard,
+accepted pins/output, inactive candidate integration and disabled baseline advancement remain intact.
+No website parity, measured benefit or whole Mission 9/10 acceptance follows.
