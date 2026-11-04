@@ -46,7 +46,9 @@ bounded marketplace shell can be built and published with:
 
 ## Current State
 
-The next bounded design checkpoint is the [candidate local-catalog parity plan](docs/candidate-catalog-parity-plan.md). It identifies direct catalog/detail imports, local source/install-link and retained-route work that a site-data swap alone cannot solve. The execution boundary remains SPIKE_REQUIRED; this is planning evidence, not an implemented adapter or runnable-site claim. Production, accepted pins and the throwing guard remain unchanged.
+The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
+
+The broader [catalog-parity design](docs/candidate-catalog-parity-plan.md) still requires asserted local source/install/nav overlays and actual build/browser parity. The separate execution boundary remains SPIKE_REQUIRED before upstream package/config/build code runs. Production, accepted pins/output, the throwing guard and workflows are unchanged.
 
 The opt-in candidate-only materializer assembles the reviewed website source as inert Git data,
 using a separate fixed config and the existing vendor/provenance implementation. A pinned-source
@@ -110,6 +112,8 @@ Keep reusable CI/evaluation/security checks in AQC and clone-specific synchroniz
 local to Basic Plugin. Continue personal-environment runtime evidence as a parallel track.
 
 ## Completed Capabilities
+
+- Read-only committed-HEAD local resource projection for candidate preparation, with integration inactive.
 
 - Agent Plugins 1.0 manifest and portable MCP configuration.
 - Pinned skill-creator and Custom Agent Foundry components with third-party notices.
@@ -184,11 +188,12 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Complete the bounded consumed-field/local-source contract in the reviewed candidate-catalog parity
-plan before implementing its local projection. Resolve the separate credential-free execution spike
-before any upstream package/config/build code runs. Keep the structural adapter as production, the
-throwing guard active, accepted pins/output unchanged and automatic advancement disabled. Current
-planning does not grant execution, installation, security, baseline-movement or publication authority.
+Resolve the single credential-free execution question for the selected existing validation route
+with supported evidence and a bounded inert fixture before upstream package/config/build execution.
+Then prepare candidate-only asserted overlays using the completed local projection; do not treat the
+raw payload as an activated website. Keep the production adapter, throwing guard, accepted pins/output
+and automatic-baseline stop intact. No new runtime, host, credentials, security change or baseline
+movement is selected by this local data implementation.
 
 ## Evidence and Detailed Plans
 

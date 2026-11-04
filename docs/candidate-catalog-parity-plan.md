@@ -29,9 +29,9 @@ registry or framework. Existing repository policy supplies the isolation require
 | Upstream `website/src/components/brand/searchIndex.ts` | Adds static Learning Hub/contributor destinations as well as resource results. | Search/navigation may advertise only retained valid routes. Pruned Learning Hub must not leave dead links or imported article data. |
 | `website/overlay.json`, `website/overlay/local-site-data.ts` | One required whole-file catalog replacement deliberately throws. | Keep it until the complete candidate-only integration and execution gate are reviewed. Add only bounded asserted overlay targets; never hand-edit generated source. |
 
-The remaining agent/skill/detail consumed-field coverage must be recorded from these same pinned
-upstream interfaces before an implementation handoff. This document does not pretend those schemas,
-empty-category presentation or all install actions have already been validated.
+The [consumed-field/local-source contract](candidate-catalog-field-contract.md) records the pinned
+list/detail/search fields and admits only an inert local projection. Overlay activation, empty-category
+presentation, install actions and upstream execution remain separate unvalidated integration gates.
 
 ## Local Data And Parity Contract
 
