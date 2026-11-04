@@ -176,3 +176,14 @@ only; bind its resulting revision before publication. This reviewer inspected re
 and source without executing the fixture, tests, models, upstream code or hosted jobs and without
 new credential probes or external requests. No blocking finding remains for this assessment;
 actual hosted-boundary proof remains the next gate.
+
+
+## Actual-Route Inert Follow-Through — 2026-11-04
+
+The [restricted-child control](candidate-confinement-inert-route.md) subsequently reached its
+limited filesystem/environment/process/network-namespace observations on the existing hosted route.
+This supersedes the earlier next-slice recommendation to obtain an inert proof; it does not turn
+the earlier environment-only control or failed first observer into passing confinement evidence.
+The broader question stays PARTIALLY_PROVEN / UNRESOLVED until the production Node/dependency
+runtime, allowed artifacts and post-merge candidate execution path are reviewed and supported.
+No upstream code was executed and no credential absence or universal host-isolation claim follows.
