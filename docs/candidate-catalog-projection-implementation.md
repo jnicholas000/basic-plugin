@@ -59,3 +59,22 @@ contributor total remains unknown, install actions remain unverified and integra
 No upstream build, dependency installation, browser parity, overlay activation or publication was
 performed. The unresolved execution spike and future candidate integration remain separate gates.
 Next handoff is independent source/projection review.
+
+## Ordinary PR history repair
+
+The earlier controlled phase remains stopped and not passed. The following ordinary PR repair
+does not reopen or reclassify that outcome; the earlier test and projection receipts remain retained.
+
+An appended independent regression first returned 4/5 successful: a shallow clone at the same HEAD
+reported an unchanged agent's date as the shallow boundary commit and the CLI incorrectly succeeded.
+The repair rejects any repository whose `rev-parse --is-shallow-repository` result is not `false`
+before deriving data or dates. Every projector Git read now uses global `--no-lazy-fetch`, so missing
+promisor objects cannot trigger implicit fetching. No fetching or Git configuration changes were added.
+
+One focused post-repair run completed with 5/5 successful. One real read-only projection used actual
+committed HEAD `465402e6889436df27d844be18fa381ac3eb3bc2`, with one agent, two skills, one plugin,
+four search records and 24 consumed inputs. Its commit-bound digest is
+`adc1b245ddc4d3fb3f02fcefa8d3a33f534cf54b89187260c3fdb624169058df`; this current result does not
+replace the earlier HEAD-bound evidence. All 97 protected files and the independent test source
+remained unchanged. Separate repair logs, raw output, verification and code hashes are retained.
+The projection remains unvalidated site data, with integration inactive and install actions unverified.

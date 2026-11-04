@@ -136,3 +136,33 @@ remain at the reviewed pre-fix hash. No fix, repeat run, package/PROJECT/contrac
 external contact, role assignment or commit occurred. Supported account allowance checks before and
 after this follow-up remained below the authorized stop; operational receipts remain private.
 The producer owns normalization and its subsequent focused verification.
+
+
+## Ordinary PR20 Repair Continuation — Shallow-History Regression
+
+This is a separately admitted ordinary review-comment repair for automatic-review P2 thread
+`PRRT_kwDOUNIPCs6zfe4K`. It does not reclassify the original frozen one-correction phase as passed;
+that phase's stop/disposition, original freeze and all earlier results remain unchanged. The
+independent Odo test owner appended only one fifth test, with the previous four tests unchanged.
+The coordinator privately preserved their pre-delta source/hash and the first follow-up output.
+
+### Full-history control and shallow-history rejection
+- Requirement: A projected resource's last-change date must come from complete committed Git history; reject a shallow boundary that cannot establish that date.
+- Test Case: Extend the owned committed fixture with a README-only commit dated `2024-06-07T08:09:10Z`, leaving the resource changes at their earlier date. Clone it with full history and then with depth one through temporary local `file://` transport. Confirm full-history output through the existing complete record/hash/date/provenance observer; confirm identical HEADs, full/shallow flags and Git's misleading shallow resource log date. Invoke both real API and CLI on the shallow clone. Compare non-Git source/full/shallow byte snapshots and check execution-marker absence before the rejection assertion.
+- Expected Result: Full-history projection succeeds with the true earlier resource date. The same-HEAD shallow API throws, and its CLI exits 1 with no stdout and exactly `Local catalog projection failed.` plus LF on stderr. All observed bytes remain unchanged and markers absent.
+- Observed Result: Both local clones succeeded without transport overrides. Full-history positive assertions passed; the depth-one clone reported shallow=true and the same HEAD. The shallow API incorrectly returned agent date `2024-06-07T08:09:10Z` and did not reject; the CLI exited 0, emitted stdout and had empty stderr. All byte-snapshot and marker checks passed before the combined rejection assertion failed. This is a reached behavioral defect, not credit for transport/import failure.
+- Status: FAIL
+
+### Single pre-guard focused run
+- Requirement: Preserve the first result against the reviewed, unfixed implementation.
+- Test Case: `node --test tests/local-catalog-projection.test.mjs`, once for this repair continuation, against unchanged projector SHA-256 `23b2d5d24df6b5091401e0c0d43373f3ed1c7cd975300d302fa83802e864f810`.
+- Expected Result: Prior four tests remain green and the new shallow-history control exposes the review finding.
+- Observed Result: Exit 1; 5 tests, 4 passed, 1 failed, 0 cancelled, 0 skipped, 0 todo; duration 7351.759833 ms. Tests 1–4 passed. Test 5 failed at its combined API/CLI rejection assertion with `ERR_ASSERTION`; every listed full/shallow control and snapshot/marker observation was reached first.
+- Status: PASS
+
+New test SHA-256: `df022b2f4c692df71da95e92d516af5655194d5ccb3c0f6f2c9188cb4e303f60`. The pre-delta source remains an unchanged
+prefix with SHA-256 `0bddc6f8840fb2cb7aa0531e9cfcb324fb3764bac720bb7a729ba6e3a7d0654f`.
+No production edit, repeated run, transport/security override, external network, dependency install,
+upstream execution, other test category, new role or commit occurred. The local Git fixtures are
+test-owned; source/assets remain data. Account-stop checks were completed privately and remain with
+the coordinator. The producer owns the shallow-history guard and subsequent verification.

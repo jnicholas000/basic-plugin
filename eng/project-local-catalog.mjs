@@ -72,7 +72,8 @@ export function projectLocalCatalog(options = {}) {
   if (!isObject(options) || Reflect.ownKeys(options).some(key => key !== 'root')) reject();
   const { root = process.cwd() } = options;
   if (!isString(root) || root.includes('\0')) reject();
-  const git = (...args) => execFileSync('git', ['--literal-pathspecs', '-C', root, ...args], { maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] });
+  const git = (...args) => execFileSync('git', ['--no-lazy-fetch', '--literal-pathspecs', '-C', root, ...args], { maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] });
+  if (git('rev-parse', '--is-shallow-repository').toString().trim() !== 'false') reject();
   const commit = git('rev-parse', '--verify', 'HEAD^{commit}').toString().trim();
   if (!/^[0-9a-f]{40}$/.test(commit)) reject();
   const entries = new Map();

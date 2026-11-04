@@ -100,3 +100,18 @@ and one delta rereview within the fixed allocation. Stop before new role work at
 source/owner drift, missing metadata, new dependency/runtime need or authority conflict. Keep first
 returns and partial outcomes. This is one useful single-path delivery, without a matched normal-path
 comparison, hidden input/model attestation, benefit measurement or full Mission 9/10 acceptance.
+
+## PR-Review Provenance Clarification
+
+After the original bounded implementation/review cycle, automatic PR review demonstrated that
+a shallow checkout can return a history-boundary date for unchanged resource blobs at the same HEAD.
+The original freeze and first results remain retained; this later repair is not backdated as a
+predeclared control or a passing original correction-limit result.
+
+The existing actual-date/determinism requirement therefore needs complete local Git history. Reject
+a shallow repository before deriving records; do not fetch/unshallow it or invent dates. Use Git's
+documented `--no-lazy-fetch` read mode so unavailable objects cannot trigger an implicit remote fetch.
+The installed Git must support these controls; unsupported controls fail closed, with no automatic
+upgrade or configuration change. This changes no site/host/security permission and grants no upstream
+execution authority. The additional requirement control and bounded PR repair are separately
+attributed in the test/implementation/review records.

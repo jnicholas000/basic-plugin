@@ -280,3 +280,64 @@ test('local projection preserves null/object authors and normalizes committed st
     }
   } finally { await rm(f.root, { recursive: true, force: true }); }
 });
+
+test('local projection rejects shallow history that would misdate unchanged resources at the same HEAD', async () => {
+  const { projectLocalCatalog } = await import('../eng/project-local-catalog.mjs');
+  const { pathToFileURL } = await import('node:url');
+  const f = await fixture();
+  const clones = await mkdtemp(path.join(tmpdir(), 'local-catalog-history-test-'));
+  try {
+    const readme = '# Later README-only commit\n';
+    await f.put('README.md', readme);
+    f.files.set('README.md', readme);
+    f.git('add', 'README.md');
+    execFileSync('git', ['-C', f.root, 'commit', '-qm', 'later README only'], { env: { ...process.env, GIT_AUTHOR_DATE: '2024-06-07T08:09:10+00:00', GIT_COMMITTER_DATE: '2024-06-07T08:09:10+00:00' }, stdio: 'pipe' });
+    f.head = f.git('rev-parse', 'HEAD');
+    const resourceDate = f.git('log', '-1', '--format=%cI', f.head, '--', agentPath);
+    const laterDate = f.git('log', '-1', '--format=%cI', f.head, '--', 'README.md');
+    assert.notEqual(resourceDate, laterDate, 'fixture must distinguish true resource change from clone boundary');
+    const full = path.join(clones, 'full');
+    const shallow = path.join(clones, 'shallow');
+    const url = pathToFileURL(f.root).href;
+    // Owned temporary file transport only; no transport-policy overrides or remote network.
+    execFileSync('git', ['clone', '--quiet', url, full], { stdio: 'pipe' });
+    const gitAt = (root, ...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: 'pipe' }).trim();
+    assert.equal(gitAt(full, 'rev-parse', '--is-shallow-repository'), 'false');
+    assert.equal(gitAt(full, 'rev-parse', 'HEAD'), f.head);
+    const fullBefore = await snapshot(full);
+    const fullResult = projectLocalCatalog({ root: full });
+    assertResult(fullResult, { ...f, root: full, git: (...args) => gitAt(full, ...args) });
+    assert.equal(fullResult.files['agents.json'].items[0].lastUpdated, resourceDate);
+    assert.deepEqual(await snapshot(full), fullBefore);
+    execFileSync('git', ['clone', '--quiet', '--depth=1', url, shallow], { stdio: 'pipe' });
+    assert.equal(gitAt(shallow, 'rev-parse', '--is-shallow-repository'), 'true');
+    assert.equal(gitAt(shallow, 'rev-parse', 'HEAD'), fullResult.source.commit);
+    assert.equal(gitAt(shallow, 'log', '-1', '--format=%cI', f.head, '--', agentPath), laterDate, 'ordinary shallow log demonstrates the false boundary date');
+    const sourceBefore = await snapshot(f.root);
+    const shallowBefore = await snapshot(shallow);
+    let apiResult;
+    let apiError;
+    try { apiResult = projectLocalCatalog({ root: shallow }); } catch (error) { apiError = error; }
+    const cli = spawnSync(process.execPath, [command], { cwd: shallow, encoding: 'utf8' });
+    assert.deepEqual(await snapshot(f.root), sourceBefore);
+    assert.deepEqual(await snapshot(full), fullBefore);
+    assert.deepEqual(await snapshot(shallow), shallowBefore);
+    for (const marker of [f.marker, path.join(full, 'EXECUTED-ASSET'), path.join(shallow, 'EXECUTED-ASSET')]) await assert.rejects(lstat(marker), { code: 'ENOENT' });
+    assert.deepEqual({
+      apiRejected: apiError instanceof Error,
+      apiAgentDate: apiResult?.files?.['agents.json']?.items?.[0]?.lastUpdated ?? null,
+      cliStatus: cli.status,
+      cliStdoutEmpty: cli.stdout === '',
+      cliStderr: cli.stderr,
+    }, {
+      apiRejected: true,
+      apiAgentDate: null,
+      cliStatus: 1,
+      cliStdoutEmpty: true,
+      cliStderr: 'Local catalog projection failed.\n',
+    });
+  } finally {
+    await rm(clones, { recursive: true, force: true });
+    await rm(f.root, { recursive: true, force: true });
+  }
+});
