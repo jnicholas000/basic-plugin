@@ -114,3 +114,51 @@ must bind the final source revision and preserve the reviewed code, tests, packa
 hashes; unseen logic is not covered by this judgment. The initial scope and remaining execution,
 overlay, build/browser parity and baseline/publication gates above remain unchanged. No website
 parity, measured benefit or whole Mission 9/10 acceptance follows from this PASS.
+
+## Ordinary PR Shallow-History Repair Review
+
+Ordinary PR repair readiness: PASS. The original controlled phase remains STOPPED / NOT PASSED.
+The earlier PASS above applies only to its named source/code hashes and is not an acceptance of
+this later repair or a claim that the stopped original phase passed. All prior findings, first
+results, bounded decisions and projection evidence remain retained.
+
+Reviewed source candidate: `5557181f73110b4c0ae800d7709edc8b6a50853d`, relative to
+`465402e6889436df27d844be18fa381ac3eb3bc2`. Automatic PR review exposed that shallow Git
+history can substitute a boundary commit date for a resource's actual last-change date. The
+independent test owner appended a full-history positive and same-HEAD shallow rejection control.
+Its first run retained four passes and one failure: the shallow API returned the wrong date and
+the CLI succeeded. Prior tests remain an unchanged prefix.
+
+The repair requires an exact `false` shallow-repository result before resolving records/dates and
+adds `--no-lazy-fetch` to the shared helper used by every Git read. It adds no fetching,
+configuration change or dependency. Unsupported controls fail closed. The only logic delta from
+the earlier reviewed projector is these two guards. The producer's one post-repair focused run
+passed 5/5; this reviewer inspected the source, assertions and retained logs without rerunning
+tests or the projector. The no-fetch property is established here by the explicit shared Git
+argument; no separate remote/promisor runtime experiment or broader host attestation is claimed.
+
+Reviewed projector SHA-256:
+`bdb3c388338c51d20c13264298c0bc0d4acbad415b804d8984fb90c23c9a841a`.
+Reviewed independent-test SHA-256:
+`df022b2f4c692df71da95e92d516af5655194d5ccb3c0f6f2c9188cb4e303f60`.
+The current saved real projection binds actual input HEAD
+`465402e6889436df27d844be18fa381ac3eb3bc2`, 24 consumed inputs, one agent, two skills,
+one plugin and four search records. Independently checked input blobs/modes/sizes/hashes and all
+resource dates match that commit. Recomputed content digest matches
+`adc1b245ddc4d3fb3f02fcefa8d3a33f534cf54b89187260c3fdb624169058df`.
+All 97 protected source files remain unchanged. Earlier HEAD-bound output is retained separately.
+
+No blocking finding remains in this ordinary repair. The appended contract and implementation
+records, Project State and source PR explanation accurately distinguish this repair from the
+stopped phase and preserve inactive integration and unknown contributor/install limits. Intended
+Ops candidate `7a6348890cdca10a83524c311ab66a11ea933cd7` is a faithful conditional mirror;
+its publication still requires an actual clean source merge, passing main checks and matching
+linked source facts. Existing history, inventory, Stable V1, priority and Active This Week remain
+preserved. Main links are intended publication pointers, not assertions that unpublished files
+already exist there. Bind the final source revision after adding this review only, and verify
+unchanged reviewed logic/test/package/Project State hashes before publication.
+
+The result remains inert local data, not upstream execution, activated overlays, website/browser
+parity, measured benefit or whole Mission 9/10 acceptance. No upstream code, tests or projector
+was executed, and no source/test implementation, network or approving-review action was performed
+by this reviewer.
