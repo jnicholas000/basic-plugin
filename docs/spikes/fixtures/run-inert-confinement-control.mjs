@@ -86,7 +86,7 @@ function main() {
     catch (error) {
       // Lost acknowledgement can race a late daemon completion even after an empty listing.
       // A known failure to start the client itself does not create a daemon operation.
-      if (!Number.isInteger(error.status) && !['ENOENT', 'EACCES'].includes(error.code))
+      if (!['ENOENT', 'EACCES'].includes(error.code))
         mutationOutcomeUncertain = true;
       throw error;
     }
