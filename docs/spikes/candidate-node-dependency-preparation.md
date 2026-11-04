@@ -58,7 +58,7 @@ may differ. Proposal SHA-256:
 It remains operational review evidence outside accepted source/configuration. Real archive
 verification and review are required before any acquisition/preparation authority follows.
 
-## Cache-Only Node 24 Inert Control — NOT_EXECUTED
+## Cache-Only Node 24 Inert Control — Contract And Reached Result
 
 Question: is an already-installed, recognized Node 24 available on the existing CI route, and can
 it perform an owned built-in filesystem/crypto operation without installation or package loading?
@@ -121,3 +121,42 @@ is not reclassified or used to infer cache contents. No blocking finding remains
 This reviewer ran no runtime, tests, package commands, network calls or actual-route control.
 Preserve the original metadata freeze, separate admission, active time/resource stops and first
 result. Bind the final source revision after this review-only addition before publication.
+
+
+## Actual Cached-Runtime Observation — 2026-11-04
+
+The first admitted [PR control run 41810915781](https://github.com/jnicholas000/basic-plugin/actions/runs/41810915781/job/126509636991)
+passed. Source head was `16b861a1becef7838aa77a1193125cf936c7484e`; the actual checkout/test-merge
+commit was `e8be4b875fd5a317003a25a33322397921516fde`. Push-event control steps were excluded
+by the hook's condition. No retry, alternate runtime or installation was used by the control.
+The hook is retired before further publication.
+
+- Existing cached Node: `24.22.1`, Linux x64; binary SHA-256
+  `e32e2d16081cf644f88392934288086e7662529d0d43277c34f7aad2207cfafb`.
+  Directory, complete marker, version header and x64 ELF metadata were checked before execution.
+- Read-only bundled npm manifest: version `11.19.1`, declared Node engine
+  `^20.17.0 || >=22.9.0`; npm itself was not invoked.
+- The fixed built-in-module probe ran as UID/GID 1001/1001 with only the four declared environment
+  keys. Its owned write/read/SHA-512/remove assertions passed; all 113 tracked source files stayed
+  unchanged and owned temporary-file cleanup completed.
+- Receipt raw-file checksum:
+  `18bf606f83d8920716c1ba73a326285d7e44042bbf49545e25048bc67d2632ae`.
+  The exact log-carried JSON plus LF matches it and binds probe
+  `25c8163316789c4501a85781d154c1152fbd284f885a3e3dfd4c371e92f30a3a` and wrapper
+  `9632b41b9a176c8bb49c0d84b40a0243f6c283430ea4c9c3f2f321fc0597ac2e`.
+
+This proves that an existing cached runtime meets the required direct dependency's stated major
+version floor and performs the owned built-in host operation. It is not complete engine/platform
+compatibility, artifact-byte verification, dependency installation, Node-in-container qualification
+or post-merge candidate execution evidence. The operational duration is not a benefit metric.
+The observed runtime identity does not depend on treating runner image labels as attestations.
+
+### Updated Next Boundary
+
+No new Node installation is indicated by this observation. Next stage the declared public package
+archives as inert data under explicit byte/time/source limits, verify their actual bytes, and review
+the candidate-only lock proposal. Separately qualify the recorded existing Node/npm and required
+runtime files inside the restricted child, with scripts disabled during dependency preparation.
+Do not merge those separate observations into a production-ready claim. Actual package/build
+execution, native/platform behavior and both pre/post-merge paths retain their own required review
+and per-action authority. No accepted lock, production output or baseline changed here.
