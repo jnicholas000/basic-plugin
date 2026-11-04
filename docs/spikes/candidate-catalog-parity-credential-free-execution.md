@@ -143,3 +143,36 @@ positive and denied-access controls on the actual selected route. Only a passing
 may admit upstream package/config/build code. Until then, preserve the throwing guard, production,
 accepted pins/output, inactive candidate integration and disabled automatic baseline movement.
 This assessment establishes neither website parity, measured benefit nor whole Mission 9/10 acceptance.
+
+### Independent readiness review
+
+Result: PASS for this bounded assessment and its stated limits. The execution property remains
+PARTIALLY_PROVEN / UNRESOLVED / SPIKE_REQUIRED; this is no candidate-execution admission.
+
+Reviewed source candidate `474a68a0e7e6a66c0f31b7133c8bddc031043ca7` and conditional Ops
+mirror `faf7934bfb96f2214ff694e440592e55bbdac235`. The fixture's actual code accesses only its
+newly created synthetic surfaces, checks permitted output/readback and canary/mode preservation,
+and removes its owned tree. It is a DO_NOT_COPY environment-only control, not confinement.
+The coordinator authored and executed it; independent test authorship is not established here.
+
+Checked original/corrected fixture hashes, freeze/admission/execution ordering, raw byte counts,
+first assertion diagnostics and corrective observations. The first attempt remains INDETERMINATE;
+no failed-control negative credit is inferred. The separately admitted observer correction retains
+the original zero-retry freeze and permits only the observed extra key name, without reading its
+value. One initial child and two corrective children are accounted for. Recorded execution-time
+comparisons preserve all 105 baseline files; current source changes are confined to the declared
+Project State, assessment and fixture. No production/workflow/credential change is introduced.
+
+Local workflow source supports declared permission/job separation. The documentation correctly
+marks GitHub token/runner facts as insufficient-proof reasoning, not an observed shell-token leak,
+privilege exploit or hosted result. Local same-user access does not qualify hosted confinement,
+network isolation, secret absence or a proposed container. The restricted-child mechanism remains
+an open design decision; no VM, service or risk acceptance is silently selected.
+
+The source/PR and intended Ops explanations preserve these limits, historical outcomes and
+portfolio settings. Ops publication remains conditional on actual clean source merge, passing
+main checks and consistency with the reviewed source facts. Final source may add this review
+only; bind its resulting revision before publication. This reviewer inspected retained evidence
+and source without executing the fixture, tests, models, upstream code or hosted jobs and without
+new credential probes or external requests. No blocking finding remains for this assessment;
+actual hosted-boundary proof remains the next gate.
