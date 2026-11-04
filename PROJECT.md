@@ -5,7 +5,7 @@ project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: active
 current_phase: Adaptive marketplace clone and customization incubation
-last_reviewed: 2026-10-07
+last_reviewed: 2026-11-04
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -45,6 +45,15 @@ bounded marketplace shell can be built and published with:
 - no stored secrets or implied enterprise-production support.
 
 ## Current State
+
+The opt-in candidate-only materializer assembles the reviewed website source as inert Git data,
+using a separate fixed config and the existing vendor/provenance implementation. A pinned-source
+run produced 121 inventoried files with all twelve required inputs, while accepted inputs/outputs
+and the throwing catalog guard remained unchanged. The focused vendor suite passes 11/11 after
+independent test-author work preceded implementation. Result is `MATERIALIZED_UNVALIDATED_SITE`;
+upstream installation/build, browser smoke, local-catalog integration and site parity remain open.
+The production site remains the structural adapter; accepted pins and automatic advancement do
+not change. See [candidate materialization](docs/candidate-materialization-plan.md).
 
 The repository is a small Agent Plugins 1.0 fixture with pinned upstream components, a portable
 GitHub MCP configuration, a Copilot-specific custom agent, read-only collision detection, and an
@@ -173,12 +182,12 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-The merged foundation and unchanged-SHA candidate generation are verified. The
-[candidate validation report](docs/candidate-validation-2026-10-07.md) records an attempted build
-and the exact missing runnable-seed prerequisites; vendored smoke/parity remain unproven.
-Prepare the bounded candidate-only materialization and credential-free runner before the vendored-site parity migration. Keep automatic
-baseline advancement disabled until browser smoke and the full trust boundary have run successfully.
-Personal-runtime smoke remains a parallel evidence need.
+Prepare the separately reviewed local-catalog parity migration and credential-free candidate
+validation route, using the new opt-in materializer and the existing immutable upstream ref. The
+throwing overlay deliberately remains in place; do not disable it or import upstream catalog data
+merely to build successfully. Dependency installation, upstream execution, browser validation and
+accepted-baseline movement need their actual gates before execution. Keep the structural adapter
+as production and automatic advancement disabled until those checks pass.
 
 ## Evidence and Detailed Plans
 
