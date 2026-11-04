@@ -11,6 +11,28 @@ jobs:
         with: { persist-credentials: false }
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
+      - name: Cache-only Node 24 inert host control (temporary)
+        if: github.event_name == 'pull_request' && github.head_ref == 'spike/node-dependency-preparation-20261104' && github.run_attempt == 1
+        timeout-minutes: 2
+        env:
+          NODE_PREP_HEAD_SHA: '${{ github.event.pull_request.head.sha }}'
+        run: |
+          set +e
+          node docs/spikes/fixtures/inspect-cached-node24.mjs > "$RUNNER_TEMP/cached-node24-receipt.json"
+          control_status=$?
+          set -e
+          printf 'CACHED_NODE24_RECEIPT_BEGIN\n'
+          cat "$RUNNER_TEMP/cached-node24-receipt.json"
+          printf 'CACHED_NODE24_RECEIPT_END\n'
+          sha256sum "$RUNNER_TEMP/cached-node24-receipt.json"
+          exit "$control_status"
+      - name: Retain cache-only Node 24 receipt
+        if: always() && github.event_name == 'pull_request' && github.head_ref == 'spike/node-dependency-preparation-20261104' && github.run_attempt == 1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cached-node24-${{ github.sha }}
+          path: ${{ runner.temp }}/cached-node24-receipt.json
+          if-no-files-found: error
       - name: Install workflow test parser
         run: python -m pip install PyYAML==6.0.3
       - name: Verify local workflow and plugin contracts
