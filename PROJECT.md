@@ -188,12 +188,13 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Stage and verify the declared public package archives as inert data, then review the candidate-only
-lock proposal from the [Node/dependency input review](docs/spikes/candidate-node-dependency-preparation.md).
-Public metadata witnesses cover 56 non-default lock entries, but actual archive bytes remain
-unverified and the proposal is unadopted. Existing cached Node 24.22.1 passed its owned host-only
-control without installation; qualify that recorded Node/npm and required runtime files inside the
-[observed restricted-child boundary](docs/spikes/candidate-confinement-inert-route.md) before
+The candidate-only public lock proposal is independently reviewed as a reference, with no adoption.
+All 55 public archive bodies serving its 56 changed paths now match the declared SHA-512/SHA-1
+digests; original-feed equivalence and the other 495 records remain unproven. The fixed Node 24.22.1
+and nine runtime destinations passed the [selected owned-probe confinement control](docs/spikes/candidate-node-confinement.md)
+on the existing CI route. Qualify npm startup and preparation using an owned inert fixture next;
+its 11.19.1 manifest remains data-only evidence. No npm or downloaded dependency code ran inside
+the Node control. Keep that separate reviewed gate before
 dependency preparation or upstream code. Production preparation, allowed outputs and both
 pre/post-merge candidate paths remain unqualified. Preserve the broader execution gate until those inputs and both
 pre/post-merge paths have supported evidence. Then prepare candidate-only asserted overlays using
