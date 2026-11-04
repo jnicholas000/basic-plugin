@@ -97,7 +97,8 @@ The original source, freeze, stderr and incomplete result remain retained as IND
 A separately recorded ordinary fixture correction, under the same task/resource/time boundary,
 allowed that one additional key name to be reported while rejecting any other extra key. It did
 not erase the key, inspect its value, amend the original freeze or declare the first attempt passed.
-One corrective run then completed both controls; no further retry was made. This is observer repair,
+One corrective run then completed both controls; no further retry was made. Across both invocations,
+three child processes ran: one before the initial assertion and two in the corrective run. This is observer repair,
 not a relaxation of the project's credential-free execution policy.
 
 | Observation | Positive observer control | Environment allowlist only |
