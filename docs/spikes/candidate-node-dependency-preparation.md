@@ -96,3 +96,28 @@ do not apply Windows optional constraints to Linux, and do not infer archive ide
 runtime/preparation method need review before adoption. A cached-runtime inert observation cannot
 grant that authority. No image pull, new VM, security-setting change, measured benefit or whole
 Mission 9/10 acceptance follows from this assessment.
+
+## Independent Prepublication Review
+
+Result: PASS for source candidate `94f0dc8c4bac4c576007079c2fc8510b1dc6f2bf` and the bounded cache-only inert
+host control. Actual cached Node 24 availability and operation remain NOT_EXECUTED at this review.
+
+Reviewed the wrapper, independently authored probe, temporary existing-job hook, input assessment,
+metadata-attribution note and PR explanation. Probe/wrapper/workflow hashes match the separate
+prospective control admission. The wrapper selects only a stable complete cache entry, bounds and
+checks resolved regular-file inputs, matches its version header and x64 ELF metadata, records hashes,
+and reads npm metadata as JSON without invoking npm. Its one child runs only the fixed built-in
+probe with an explicit environment, owned cwd and five-second timeout. Source snapshots and owned
+cleanup gate success; failures retain a nonzero receipt. There is no installer, acquisition,
+package/config import, Docker command or fallback. PR/branch/first-attempt selectors exclude push
+and main execution; retire the temporary hook after the admitted observation and before final merge.
+
+The metadata review correctly separates algorithm-aware SHA-1 witnesses from archive-byte proof
+and keeps the public-lock proposal unadopted. Node 24's availability control does not qualify a
+container, dependencies, scripts, build behavior or pre/post-merge production execution. Runner
+bootstrap labels and environment metadata remain separately attributed; the prior inert C result
+is not reclassified or used to infer cache contents. No blocking finding remains in this preparation.
+
+This reviewer ran no runtime, tests, package commands, network calls or actual-route control.
+Preserve the original metadata freeze, separate admission, active time/resource stops and first
+result. Bind the final source revision after this review-only addition before publication.
