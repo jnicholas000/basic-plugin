@@ -160,3 +160,29 @@ runtime files inside the restricted child, with scripts disabled during dependen
 Do not merge those separate observations into a production-ready claim. Actual package/build
 execution, native/platform behavior and both pre/post-merge paths retain their own required review
 and per-action authority. No accepted lock, production output or baseline changed here.
+
+## Independent Final Evidence Review
+
+Result: PASS for evidence candidate `86749b9fa185e19b41698db249d20fb4630d7c44` and its
+bounded interpretation. The saved raw receipt checksum matches the supplied supported-job-log
+checksum. Probe/wrapper hashes match the prior admission, execution head and current source;
+recorded synthetic I/O/hash/remove, identity/environment, source-preservation and cleanup results
+agree with the reviewed control. The temporary workflow hook matches its original base bytes.
+
+Actual job/attempt, push exclusion and single-execution attribution use the retained coordinator
+verification and trusted handoff; this reviewer made no new CI query or rerun. The initial failed
+Git publication attempt was reported as pre-ref/no-run and is not a runtime retry. Node 24.22.1
+availability and its owned built-in host operation are the supported result. npm metadata was read,
+not executed. Runner image labels remain separately attributed and the earlier C proof is preserved.
+
+The metadata findings, unadopted lock proposal, final source/PR explanation and conditional Ops
+mirror `e90e59c5fff36ef2cf03100c5277775bd6dd9c77` retain their actual limits. Prior independent
+review verified the 56 same-algorithm metadata witnesses and 112-field-only proposal; those facts
+are not tarball-byte proof or acquisition authority. Archive verification/adoption, Node-in-container,
+dependency/native preparation and pre/post-merge execution remain open under their actual gates.
+History, inventory, Stable V1, priorities and Active This Week remain preserved.
+
+No blocking finding remains. Ops publication requires actual clean source merge, passing main
+checks and matching linked source facts. Bind the final source revision after this review-only
+addition. No credential-absence, website-parity, measured-benefit or full Mission 9/10 acceptance
+is established. This reviewer launched no runtime, test, HTTP, package or hosted control.
