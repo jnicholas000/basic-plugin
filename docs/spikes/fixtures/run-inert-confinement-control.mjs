@@ -72,7 +72,8 @@ function main() {
   const started = Date.now(), deadline = started + 60000;
   const result = { schemaVersion: 1, status: 'INDETERMINATE', startedAt: new Date(started).toISOString(),
     upstreamExecuted: false, realCredentialsProbed: false, downloadsOrInstalls: false };
-  let root, env, nonce, stage = 'admission', cleaned = false, objectOpsAttempted = false, cleanupDeadline = Infinity;
+  let root, env, nonce, stage = 'admission', cleaned = false, objectOpsAttempted = false,
+    mutationOutcomeUncertain = false, cleanupDeadline = Infinity;
   const run = (file, args, timeout = 10000, cleanup = false) => {
     const remaining = Math.min(timeout, (cleanup ? cleanupDeadline : deadline) - Date.now());
     requireFact(remaining > 0);
@@ -80,6 +81,16 @@ function main() {
       stdio: ['ignore', 'pipe', 'pipe'] }).toString('utf8').trim();
   };
   const docker = (args, timeout, cleanup) => run('/usr/bin/docker', args, timeout, cleanup);
+  const mutateDocker = args => {
+    try { return docker(args); }
+    catch (error) {
+      // Lost acknowledgement can race a late daemon completion even after an empty listing.
+      // A known failure to start the client itself does not create a daemon operation.
+      if (!Number.isInteger(error.status) && !['ENOENT', 'EACCES'].includes(error.code))
+        mutationOutcomeUncertain = true;
+      throw error;
+    }
+  };
   const snapshot = repo => {
     const names = run('/usr/bin/git', ['--no-lazy-fetch', '-C', repo, 'ls-files', '-z']).split('\0').filter(Boolean);
     return Object.fromEntries(names.sort().map(name => {
@@ -145,7 +156,7 @@ function main() {
     run('/usr/bin/tar', ['--owner=0', '--group=0', '--numeric-owner', '-C', dirs.rootfs, '-cf', archive, 'probe', 'root-write-control']);
     result.rootfsTarSha256 = hash(fs.readFileSync(archive));
     objectOpsAttempted = true;
-    const imageId = docker(['image', 'import', '--change', 'ENTRYPOINT ["/probe"]', '--change',
+    const imageId = mutateDocker(['image', 'import', '--change', 'ENTRYPOINT ["/probe"]', '--change',
       `LABEL personal.basic.confinement=${nonce}`, '--change', 'USER 65532:65532', '--change', 'ENV PATH=/usr/bin:/bin', archive]);
     requireFact(/^sha256:[a-f0-9]{64}$/.test(imageId)); result.imageId = imageId;
     const image = JSON.parse(docker(['image', 'inspect', '--format',
@@ -154,7 +165,7 @@ function main() {
     same(image, { id: imageId, label: nonce, entrypoint: ['/probe'], envKeys: ['PATH'] });
     const options = { imageId, name: `basic-inert-${nonce}`, uid, gid, input: dirs.input, output: dirs.output, hostCanary, nonce };
     stage = 'create-and-inspect';
-    const containerId = docker(buildContainerArgs(options));
+    const containerId = mutateDocker(buildContainerArgs(options));
     requireFact(/^[a-f0-9]{64}$/.test(containerId)); result.containerId = containerId;
     const policy = JSON.parse(docker(['inspect', '--format', policyTemplate, containerId]));
     requireFact(policy.envKeys.pop() === null && policy.mounts.pop() === null);
@@ -184,7 +195,8 @@ function main() {
       diagnostic: error.stderr ? String(error.stderr).slice(0, 2048) : error.message };
     result.status = 'INDETERMINATE';
   } finally {
-    const failures = []; cleanupDeadline = Date.now() + 10000;
+    const failures = mutationOutcomeUncertain ? ['mutating-operation-outcome-unknown'] : [];
+    cleanupDeadline = Date.now() + 10000;
     // Discover only this nonce's objects, including a create/import whose client timed out.
     if (env && nonce && objectOpsAttempted) for (const [kind, listArgs, removeArgs] of [
       ['container', ['container', 'ls', '--all'], ['container', 'rm', '--force']],
@@ -199,7 +211,7 @@ function main() {
     }
     if (root) { try { fs.rmSync(root, { recursive: true, force: true }); requireFact(!fs.existsSync(root)); } catch { failures.push('files'); } }
     cleaned = failures.length === 0;
-    result.cleanup = { completed: cleaned, failures };
+    result.cleanup = { completed: cleaned, mutationOutcomeUncertain, failures };
     if (!cleaned) result.status = 'INDETERMINATE';
     result.completedAt = new Date().toISOString();
     result.elapsedMs = Date.now() - started;
