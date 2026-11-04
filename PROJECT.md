@@ -188,11 +188,14 @@ The detailed roadmap is maintained in [ROADMAP.md](ROADMAP.md).
 
 ## One Next Action
 
-Review the production candidate Node/dependency preparation and allowed-output design, including
-post-merge use of the [observed restricted-child boundary](docs/spikes/candidate-confinement-inert-route.md).
-The inert control reached its declared properties on the existing hosted route; its temporary hook
-is retired. That bounded proof does not qualify a Node/dependency runtime or admit upstream
-package/config/build execution. Preserve the broader execution gate until those inputs and both
+Stage and verify the declared public package archives as inert data, then review the candidate-only
+lock proposal from the [Node/dependency input review](docs/spikes/candidate-node-dependency-preparation.md).
+Public metadata witnesses cover 56 non-default lock entries, but actual archive bytes remain
+unverified and the proposal is unadopted. Existing cached Node 24.22.1 passed its owned host-only
+control without installation; qualify that recorded Node/npm and required runtime files inside the
+[observed restricted-child boundary](docs/spikes/candidate-confinement-inert-route.md) before
+dependency preparation or upstream code. Production preparation, allowed outputs and both
+pre/post-merge candidate paths remain unqualified. Preserve the broader execution gate until those inputs and both
 pre/post-merge paths have supported evidence. Then prepare candidate-only asserted overlays using
 the completed local projection; do not treat the raw payload as an activated website. Keep the production adapter, throwing guard, accepted pins/output
 and automatic-baseline stop intact. No new runtime, host, credentials, security change or baseline
