@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
+import { lstat, mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -135,4 +135,171 @@ test('committed provenance catches modified bytes and unexpected files', async (
     await writeFile(path.join(root, 'website/vendor-generated/stale'), 'stale');
     assert.throws(run, /Stale or missing/);
   } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+// Candidate contract fixtures intentionally use real Git objects and the same public
+// entry points as callers. A successful control precedes every rejection group.
+const candidateCopy = ['.all-contributorsrc', 'LICENSE', 'website/package.json', 'website/package-lock.json', 'website/astro.config.mjs', 'website/tsconfig.json', 'website/src', 'website/public/fonts', 'website/public/images'];
+const candidatePrune = ['website/public/data', 'website/src/content', 'website/src/pages/learning-hub', 'website/public/images/learning-hub'];
+const candidateRequired = ['.all-contributorsrc', 'LICENSE', 'website/package.json', 'website/package-lock.json', 'website/astro.config.mjs', 'website/tsconfig.json', 'website/src/pages/index.astro', 'website/src/lib/site-data.ts', 'website/src/integrations/pagefind-resources.ts', 'website/src/layouts/BaseLayout.astro', 'website/src/components/brand/HomePage.tsx', 'website/src/components/brand/PageShell.tsx'];
+const materializerCommand = path.resolve('eng/materialize-candidate.mjs');
+
+async function snapshotCandidateTree(directory, prefix = '') {
+  const entries = [];
+  for (const entry of (await readdir(directory, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name))) {
+    const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+    const file = path.join(directory, entry.name);
+    if (entry.isDirectory()) entries.push(...await snapshotCandidateTree(file, relative));
+    else entries.push([relative, (await readFile(file)).toString('hex')]);
+  }
+  return entries;
+}
+
+async function candidateFixture() {
+  const root = await mkdtemp(path.join(tmpdir(), 'materialize-candidate-test-'));
+  const repository = path.join(root, 'upstream');
+  const output = path.join(root, 'website/vendor-candidate');
+  const marker = path.join(root, 'UPSTREAM-EXECUTED');
+  const git = (...args) => execFileSync('git', ['-C', repository, ...args], { encoding: 'utf8' }).trim();
+  const put = async (relative, bytes) => {
+    const file = path.join(repository, relative);
+    await mkdir(path.dirname(file), { recursive: true });
+    await writeFile(file, bytes);
+  };
+  for (const file of candidateRequired) await put(file, `fixture: ${file}\n`);
+  // These would leave an observable marker if a manifest or config were executed.
+  await put('website/package.json', JSON.stringify({ ...pkg, scripts: { preinstall: `node -e 'require("node:fs").writeFileSync(${JSON.stringify(marker)},"executed")'`, build: `node -e 'require("node:fs").writeFileSync(${JSON.stringify(marker)},"executed")'` } }));
+  await put('website/package-lock.json', '{"lockfileVersion":3}\n');
+  await put('website/astro.config.mjs', `import { writeFileSync } from 'node:fs';\nwriteFileSync(${JSON.stringify(marker)}, 'executed');\nthrow new Error('fixture must remain inert');\n`);
+  for (const file of ['website/public/fonts/font.woff2', 'website/public/images/brand.png', 'website/public/data/catalog.json', 'website/src/content/resource.md', 'website/src/pages/learning-hub/index.astro', 'website/public/images/learning-hub/lesson.png', 'agents/upstream.agent.md', 'prompts/upstream.prompt.md', 'instructions/upstream.instructions.md', 'skills/upstream/SKILL.md']) await put(file, `excluded-or-asset: ${file}\n`);
+  git('init', '-q'); git('config', 'user.name', 'Fixture'); git('config', 'user.email', 'fixture@example.invalid'); git('add', '.'); git('commit', '-qm', 'candidate fixture');
+  const settings = { ...config, acceptedSha: git('rev-parse', 'HEAD'), copy: [...candidateCopy], prune: [...candidatePrune], keep: [], requiredPaths: [...candidateRequired] };
+  await mkdir(path.join(root, 'website/overlay'), { recursive: true });
+  await writeFile(path.join(root, 'website/vendor.config.json'), JSON.stringify({ ...config, acceptedSha: settings.acceptedSha }));
+  await writeFile(path.join(root, 'website/upstream-baseline.json'), JSON.stringify({ ref: settings.acceptedSha }));
+  await writeFile(path.join(root, 'website/overlay.json'), JSON.stringify(overlay));
+  await writeFile(path.join(root, 'website/overlay/local-site-data.ts'), await readFile('website/overlay/local-site-data.ts'));
+  await mkdir(path.join(root, 'website/vendor-generated'), { recursive: true });
+  await writeFile(path.join(root, 'website/vendor-generated/accepted.txt'), 'accepted output must remain byte-identical\n');
+  const writeSettings = value => writeFile(path.join(root, 'website/candidate-materialization.config.json'), JSON.stringify(value));
+  await writeSettings(settings);
+  const protectedBytes = async () => {
+    const files = ['website/vendor.config.json', 'website/upstream-baseline.json', 'website/overlay.json', 'website/overlay/local-site-data.ts'];
+    return [...await Promise.all(files.map(async file => [file, (await readFile(path.join(root, file))).toString('hex')])), ...await snapshotCandidateTree(path.join(root, 'website/vendor-generated'), 'website/vendor-generated')];
+  };
+  return { root, repository, output, marker, settings, git, writeSettings, protectedBytes };
+}
+
+async function assertCandidateControl(fixture, result) {
+  assert.equal(result.status, 'MATERIALIZED_UNVALIDATED_SITE');
+  assert.equal(result.provenance.role, 'candidate');
+  assert.equal(result.provenance.upstreamSha, fixture.settings.acceptedSha);
+  assert.equal(result.provenance.repository, config.repository);
+  assert.deepEqual(result.provenance, JSON.parse(await readFile(path.join(fixture.output, 'provenance.json'), 'utf8')));
+  for (const required of candidateRequired) assert.ok((await readFile(path.join(fixture.output, required))).length, required);
+  assert.deepEqual(await readFile(path.join(fixture.output, 'website/src/lib/site-data.ts')), await readFile('website/overlay/local-site-data.ts'));
+  for (const excluded of ['agents', 'prompts', 'instructions', 'skills', ...candidatePrune]) await assert.rejects(lstat(path.join(fixture.output, excluded)), { code: 'ENOENT' });
+  assert.ok(result.provenance.files.every(({ path: file }) => candidateCopy.some(root => file === root || file.startsWith(`${root}/`)) && !candidatePrune.some(root => file === root || file.startsWith(`${root}/`))));
+  await assert.rejects(readFile(fixture.marker), { code: 'ENOENT' });
+}
+
+test('candidate materializer API generates an inert deterministic bundle and replaces stale candidate state', async () => {
+  const { materializeCandidate } = await import('../eng/materialize-candidate.mjs');
+  const fixture = await candidateFixture();
+  try {
+    const before = await fixture.protectedBytes();
+    const first = await materializeCandidate({ repository: fixture.repository, localRoot: fixture.root });
+    await assertCandidateControl(fixture, first);
+    const firstTree = await snapshotCandidateTree(fixture.output);
+    await writeFile(path.join(fixture.output, 'stale.txt'), 'replace this stale candidate');
+    const second = await materializeCandidate({ repository: fixture.repository, localRoot: fixture.root });
+    assert.deepEqual(second, first);
+    assert.deepEqual(await snapshotCandidateTree(fixture.output), firstTree);
+    assert.deepEqual(await fixture.protectedBytes(), before);
+    await assert.rejects(readFile(fixture.marker), { code: 'ENOENT' });
+  } finally { await rm(fixture.root, { recursive: true, force: true }); }
+});
+
+test('candidate materializer API rejects unbound, incomplete and overridden inputs before output mutation', async () => {
+  const { materializeCandidate } = await import('../eng/materialize-candidate.mjs');
+  const fixture = await candidateFixture();
+  try {
+    // Without this positive control, a missing module or broken fixture could fake rejection coverage.
+    await assertCandidateControl(fixture, await materializeCandidate({ repository: fixture.repository, localRoot: fixture.root }));
+    await writeFile(path.join(fixture.output, 'preserve-on-rejection.txt'), 'candidate sentinel');
+    const beforeOutput = await snapshotCandidateTree(fixture.output);
+    const beforeProtected = await fixture.protectedBytes();
+    const unchanged = async () => {
+      assert.deepEqual(await snapshotCandidateTree(fixture.output), beforeOutput);
+      assert.deepEqual(await fixture.protectedBytes(), beforeProtected);
+      await assert.rejects(readFile(fixture.marker), { code: 'ENOENT' });
+    };
+    for (const [name, changed] of [
+      ['repository disagreement', { repository: 'other/unreviewed' }],
+      ['ref disagreement', { acceptedSha: 'b'.repeat(40) }],
+      ['overlay disagreement', { overlay: 'website/other-overlay.json' }],
+      ['root catalog copy', { copy: [...candidateCopy, 'agents'] }],
+      ['public catalog copy', { copy: [...candidateCopy, 'website/public/data'] }],
+      ['catalog keep', { keep: ['website/public/data/catalog.json'] }],
+      ['missing prune', { prune: candidatePrune.slice(1) }],
+      ['empty required inputs', { requiredPaths: [] }],
+    ]) {
+      await fixture.writeSettings({ ...fixture.settings, ...changed });
+      await assert.rejects(materializeCandidate({ repository: fixture.repository, localRoot: fixture.root }), undefined, name);
+      await unchanged();
+    }
+    await fixture.writeSettings(fixture.settings);
+    for (const options of [{ role: 'accepted' }, { output: path.join(fixture.root, 'website/vendor-generated') }, { ref: 'b'.repeat(40) }, { unexpected: true }]) {
+      await assert.rejects(materializeCandidate({ repository: fixture.repository, localRoot: fixture.root, ...options }));
+      await unchanged();
+    }
+    await assert.rejects(materializeCandidate({ localRoot: fixture.root }));
+    await unchanged();
+    // Match both configs to a real second commit: required-input loss, rather than ref mismatch, must stop publication.
+    await rm(path.join(fixture.repository, 'website/src/layouts/BaseLayout.astro'));
+    fixture.git('add', '.'); fixture.git('commit', '-qm', 'remove required retained input');
+    const missingRef = fixture.git('rev-parse', 'HEAD');
+    const acceptedFile = path.join(fixture.root, 'website/vendor.config.json');
+    const acceptedBytes = await readFile(acceptedFile);
+    await writeFile(acceptedFile, JSON.stringify({ ...config, acceptedSha: missingRef }));
+    await fixture.writeSettings({ ...fixture.settings, acceptedSha: missingRef });
+    const missingProtected = await fixture.protectedBytes();
+    await assert.rejects(materializeCandidate({ repository: fixture.repository, localRoot: fixture.root }));
+    assert.deepEqual(await snapshotCandidateTree(fixture.output), beforeOutput);
+    assert.deepEqual(await fixture.protectedBytes(), missingProtected);
+    await writeFile(acceptedFile, acceptedBytes);
+    await unchanged();
+  } finally { await rm(fixture.root, { recursive: true, force: true }); }
+});
+
+test('candidate materializer CLI has a working positive control and rejects overrides with sanitized errors', async () => {
+  const fixture = await candidateFixture();
+  try {
+    const env = { ...process.env, UPSTREAM_REPO_DIR: fixture.repository };
+    delete env.UPSTREAM_HEAD;
+    const run = (args = [], overrides = {}) => execFileSync(process.execPath, [materializerCommand, ...args], { cwd: fixture.root, env: { ...env, ...overrides }, encoding: 'utf8', stdio: 'pipe' });
+    const beforeProtected = await fixture.protectedBytes();
+    const stdout = run();
+    assert.equal(stdout.trim().split('\n').length, 1, 'CLI prints one JSON result');
+    await assertCandidateControl(fixture, JSON.parse(stdout));
+    const beforeOutput = await snapshotCandidateTree(fixture.output);
+    for (const [args, overrides] of [
+      [['--role=accepted'], {}],
+      [['--output=PRIVATE-MATERIALIZER-CANARY'], {}],
+      [[], { UPSTREAM_HEAD: fixture.settings.acceptedSha }],
+      [[], { UPSTREAM_REPO_DIR: '' }],
+      [[], { UPSTREAM_REPO_DIR: path.join(fixture.root, 'PRIVATE-MATERIALIZER-CANARY') }],
+    ]) {
+      assert.throws(() => run(args, overrides), error => {
+        assert.ok(Number.isInteger(error.status) && error.status !== 0);
+        const diagnostic = `${error.stdout || ''}${error.stderr || ''}`;
+        assert.ok(diagnostic.trim().length > 0 && diagnostic.length <= 1024, 'bounded generic diagnostic');
+        assert.doesNotMatch(diagnostic, /PRIVATE-MATERIALIZER-CANARY|node:internal|\n\s+at\s/);
+        return true;
+      });
+      assert.deepEqual(await snapshotCandidateTree(fixture.output), beforeOutput);
+      assert.deepEqual(await fixture.protectedBytes(), beforeProtected);
+      await assert.rejects(readFile(fixture.marker), { code: 'ENOENT' });
+    }
+  } finally { await rm(fixture.root, { recursive: true, force: true }); }
 });
