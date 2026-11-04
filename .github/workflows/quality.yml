@@ -16,6 +16,24 @@ jobs:
       - name: Verify local workflow and plugin contracts
         env: { PYTHONDONTWRITEBYTECODE: 1 }
         run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Observe fixed Node runtime in the inert restricted child
+        if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'spike/node-confinement-20261104' && github.run_attempt == 1
+        timeout-minutes: 3
+        env:
+          NODE_CONFINEMENT_HEAD_SHA: '${{ github.event.pull_request.head.sha }}'
+          NODE_CONFINEMENT_EVENT_ACTION: '${{ github.event.action }}'
+        run: |
+          set -o pipefail
+          node --test docs/spikes/fixtures/test-node24-confinement-control.mjs
+          node docs/spikes/fixtures/run-node24-confinement-control.mjs | tee "$RUNNER_TEMP/node24-confinement-receipt.json"
+      - name: Retain inert Node control receipt
+        if: always() && github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'spike/node-confinement-20261104' && github.run_attempt == 1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: node24-confinement-${{ github.run_id }}
+          path: '${{ runner.temp }}/node24-confinement-receipt.json'
+          if-no-files-found: error
+          retention-days: 7
       - run: npm run build
       - name: Verify generated outputs are committed
         run: |
