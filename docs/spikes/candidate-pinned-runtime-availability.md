@@ -1,7 +1,9 @@
 # Exact pinned runtime availability — approved execution handoff
 
 Mission slug: `candidate-catalog-parity`. Date: **2026-11-05**.
-Checkpoint: **APPROVED; ODO TEST OWNERSHIP NEXT; ACTUAL ACTION NOT_EXECUTED**.
+Current checkpoint: **READY FOR ONE ADMITTED OBSERVATION; ACTUAL ACTION NOT_EXECUTED**.
+The initial Data/Odo/Scotty handoff below is preserved as the prospective contract; subsequent
+implementation and offline verification are recorded at the end.
 Source basis: `677cb492b15ecc951510407d42247ee7b28ee738`;
 branch `feat/pinned-node-cache-availability-20261105`.
 
@@ -175,7 +177,59 @@ production edits or npm retry. Unknown archive/link behavior or unsupported host
 through LaForge/Data, without silent content pruning or widened extraction rules.
 
 Verification budget: frozen pure groups + source/operational review now; one separately admitted
-actual availability result and independent evidence/readiness review later. Current task completes
-at this coherent Odo handoff; no runtime/CI/readiness result is claimed. Approval is GRANTED within
+actual availability result and independent evidence/readiness review later. Data's planning exit completed
+at this coherent Odo handoff; no runtime/CI/readiness result was claimed at that checkpoint. Approval is GRANTED within
 this action; implementation may proceed after Odo, actual execution remains gated on code/tests/
 review and fresh source/resource admission. No unresolved planning drift or accepted-risk exception.
+
+## Implementation and offline verification
+
+Odo's original test ownership was committed as `16bf037d2175d9d9258c53eb3763da8f4189a6b5`
+before producer creation. Its first missing-module result executed no assertions. Scotty later
+passed all seven pure groups; a further static link-resolution correction was followed by a
+meaningful seven-test rerun. The final pure module rejects traversal through a regular file
+before `..`; no expected test values were weakened.
+
+Independent Bashir operational review then blocked the wrapper at
+`f3328007a67312d69c3286d0bac8807dc25b2928741803e513a8d0a1f27a0db2`: an interruption after
+exclusive creation but before registration could leave a path unrecorded while cleanup reported
+success. Odo added an independent inert regression before the correction, committed as
+`94edf0a1ad1b8fcdb8fddcd86f1bc23dbce6e0b6`. Three in-memory post-mutation timeout subcases
+actually reproduced the false-complete result. The unguarded temporary-root source check also
+failed; two controls passed. Only an AST-extracted ownership class with fake I/O ran, not the
+wrapper, network or real filesystem. The [Odo record](candidate-pinned-runtime-availability-odo-test.md)
+preserves those results separately from the seven pure groups.
+
+The corrected wrapper records pending creation before mutation, retains uncertainty until
+identity acknowledgement, and never deletes an unconfirmed or preexisting path. Its temporary
+root uses the same guarded creation path. The retained inert manifest's complete identity/hash
+is recorded before release from cleanup, and its allocated blocks remain accounted for. The
+final combined frozen suite passed **11 tests** (seven pure plus four ownership methods), zero
+failures, 0.090 seconds. Earlier passing and failing results remain historical evidence, not
+actual acquisition results. Both independently authored test files are unchanged by the implementer.
+
+| Final prepared artifact | SHA-256 |
+| --- | --- |
+| Pure module | `cd18361c2d6683b4ed7e3214938b5cd4e7c600d782b37b6fd1b429ce6f32aa02` |
+| Guarded installer | `9aecd6d7e40c969cc5fa61a53b9bd2c9af02f450fe8bd1d2ad625bc56da20cc0` |
+| Original pure tests | `17227f195521585826b485866773c4abb6568ad7efc2a6344b699b0762839af1` |
+| Ownership regression | `b0ebcd247d79ef218e6b3a55ee516ea59fab6a3c0a2673ef6509c47f446aa6a9` |
+| Temporary workflow | `c0878345e39b3b0fd7a1962f19caf78fe05d29619905823fb2cae4e0dbe0c490` |
+
+The temporary hook runs the two frozen suites, captures the one guarded installer under a
+four-minute step and 200-second outer process limit, retains only the bounded receipt/manifest
+for seven days, then enforces the original outcome. Its first-open same-repository branch fence
+prevents pushes, synchronize, reopen, main or manual reruns from repeating the action. Existing
+Node 22 project checks remain unchanged outside this availability action. No target Node 24 or
+bundled npm is placed on PATH or invoked.
+
+The original npm source and both previous raw receipts remain unchanged. Syntax parsing and
+whitespace checks passed without executing the installer. At that implementation checkpoint, renewed independent review of the
+corrected ownership logic, final source binding and prospective Project State was still required,
+followed by fresh coordinator admission. No download, cache installation or actual result has
+occurred at this checkpoint.
+
+Independent Bashir renewed pre-execution review returned **PASS** against the exact final code,
+tests, temporary workflow and prospective Project State. The earlier BLOCKED ownership finding
+and its red-to-green correction remain recorded. No required fixes remain before fresh admission.
+This is readiness for the sole approved action; no archive has been acquired, installed or run.

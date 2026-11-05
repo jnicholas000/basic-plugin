@@ -16,6 +16,52 @@ jobs:
       - name: Verify local workflow and plugin contracts
         env: { PYTHONDONTWRITEBYTECODE: 1 }
         run: python -m unittest discover -s tests -p 'test_*.py'
+      # TEMPORARY: one approved pinned-cache availability action; retire before merge.
+      - name: Verify pinned runtime availability contracts
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' && github.head_ref == 'feat/pinned-node-cache-availability-20261105' && github.event.pull_request.head.repo.full_name == github.repository && github.repository == 'jnicholas000/basic-plugin' && github.run_attempt == '1' }}
+        env: { PYTHONDONTWRITEBYTECODE: 1 }
+        run: python3 -B -m unittest discover -s docs/spikes/fixtures -p 'test_pinned_runtime_*.py'
+      - name: Capture pinned runtime availability
+        id: pinned-runtime-availability
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' && github.head_ref == 'feat/pinned-node-cache-availability-20261105' && github.event.pull_request.head.repo.full_name == github.repository && github.repository == 'jnicholas000/basic-plugin' && github.run_attempt == '1' }}
+        continue-on-error: true
+        timeout-minutes: 4
+        env:
+          PINNED_RUNTIME_EVENT_ACTION: ${{ github.event.action }}
+          PINNED_RUNTIME_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PINNED_RUNTIME_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PINNED_RUNTIME_SOURCE_SHA256: '9aecd6d7e40c969cc5fa61a53b9bd2c9af02f450fe8bd1d2ad625bc56da20cc0'
+        run: |
+          umask 077
+          set -o noclobber
+          availability_receipt="$RUNNER_TEMP/basic-pinned-runtime-availability.json"
+          exec 3>"$availability_receipt"
+          set +e
+          /usr/bin/timeout --signal=TERM --kill-after=5s 200s python3 -I -S -B docs/spikes/fixtures/run_pinned_runtime_availability.py >&3
+          availability_status=$?
+          set -e
+          exec 3>&-
+          test "$(wc -c < "$availability_receipt")" -le 65536
+          sha256sum "$availability_receipt"
+          printf '::stop-commands::pinned-runtime-receipt-data\n'
+          cat "$availability_receipt"
+          printf '\n::pinned-runtime-receipt-data::\n'
+          exit "$availability_status"
+      - name: Retain pinned runtime availability evidence
+        if: ${{ always() && github.event_name == 'pull_request' && github.event.action == 'opened' && github.head_ref == 'feat/pinned-node-cache-availability-20261105' && github.event.pull_request.head.repo.full_name == github.repository && github.repository == 'jnicholas000/basic-plugin' && github.run_attempt == '1' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pinned-runtime-availability-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/basic-pinned-runtime-availability.json
+            ${{ runner.temp }}/basic-pinned-runtime-availability-manifest.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Enforce pinned runtime availability outcome
+        if: ${{ always() && github.event_name == 'pull_request' && github.event.action == 'opened' && github.head_ref == 'feat/pinned-node-cache-availability-20261105' && github.event.pull_request.head.repo.full_name == github.repository && github.repository == 'jnicholas000/basic-plugin' && github.run_attempt == '1' }}
+        env:
+          PINNED_RUNTIME_OUTCOME: ${{ steps.pinned-runtime-availability.outcome }}
+        run: test "$PINNED_RUNTIME_OUTCOME" = success
       - run: npm run build
       - name: Verify generated outputs are committed
         run: |
