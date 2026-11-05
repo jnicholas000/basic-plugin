@@ -61,9 +61,18 @@ were present as metadata only; their approved byte identity was not checked. Sou
 bindings were corroborated, the original failed attempt was preserved and the diagnostic hook
 was retired. No target Node 24 or npm code ran, and no alternative runtime was selected.
 
+The [exact pinned-cache availability action](docs/spikes/candidate-pinned-runtime-availability.md)
+completed once on the existing CI route. One checksum-pinned official archive supplied the
+temporary Node 24.22.1/npm 11.19.1 cache; all three fixed cache-file hashes and nine runtime
+records matched, and 138 tracked source files stayed unchanged. Reported owned peak allocation
+was 495,149,056 bytes and total time 69.04 seconds. Source-bound cleanup completed without
+uncertainty, removing the archive, stage, installed cache, marker and created empty version parent;
+only bounded inert evidence remains. Independent result review passed. No target Node 24/npm
+ran, no cache persists to another job, and the original npm attempt remains INDETERMINATE.
+
 The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
 
-The broader [catalog-parity design](docs/candidate-catalog-parity-plan.md) still requires asserted local source/install/nav overlays and actual build/browser parity. The separate execution boundary remains SPIKE_REQUIRED before upstream package/config/build code runs. Production, accepted pins/output, the throwing guard and workflows are unchanged.
+The broader [catalog-parity design](docs/candidate-catalog-parity-plan.md) still requires asserted local source/install/nav overlays and actual build/browser parity. The separate execution boundary remains SPIKE_REQUIRED before upstream package/config/build code runs. Production configuration, accepted pins/output and the throwing guard are unchanged. The temporary availability hook is retired and the existing workflow restored.
 
 The opt-in candidate-only materializer assembles the reviewed website source as inert Git data,
 using a separate fixed config and the existing vendor/provenance implementation. A pinned-source
@@ -210,18 +219,20 @@ and nine runtime destinations passed the [selected owned-probe confinement contr
 on its recorded CI runner. The [first owned npm attempt](docs/spikes/candidate-npm-preparation-result.md)
 stopped at fixed-runtime admission with ENOENT; it does not qualify npm. The
 [metadata diagnostic](docs/spikes/candidate-npm-prerequisite-metadata.md) now identifies the exact
-24.22.1 cache and its selected child inputs as absent on the current runner. Prepare a separately
-reviewed way to make that pinned cache available on the existing CI route, then verify approved
-cache bytes and the full nine-file closure before considering a future npm gate. Installation
-or a different runtime needs authority outside the completed metadata-only diagnostic. Preserve
-the first result; no automatic retry, runtime substitution or installation is selected. No npm or
-downloaded dependency code ran in either control. Keep the separate reviewed npm gate before
+24.22.1 cache and its selected child inputs as absent on the observed runner. The
+[availability action](docs/spikes/candidate-pinned-runtime-availability.md) then supplied and
+verified those exact bytes temporarily, with complete cleanup and no target invocation. Prepare
+the separately reviewed owned-fixture npm startup/empty-offline-ci gate using fresh approved
+preparation in that same job; obtain separate authority before target Node 24/npm execution.
+The completed availability action grants no persistent cache or further acquisition. Preserve
+the original first result; no automatic retry or runtime substitution is selected. No target npm or
+downloaded dependency code ran in the earlier controls. Keep the separate reviewed npm gate before
 dependency preparation or upstream code. Production preparation, allowed outputs and both
 pre/post-merge candidate paths remain unqualified. Preserve the broader execution gate until those inputs and both
 pre/post-merge paths have supported evidence. Then prepare candidate-only asserted overlays using
 the completed local projection; do not treat the raw payload as an activated website. Keep the production adapter, throwing guard, accepted pins/output
-and automatic-baseline stop intact. No new runtime, host, credentials, security change or baseline
-movement is selected by this local data implementation.
+and automatic-baseline stop intact. No runtime-version change, new host, credentials, security
+change or baseline movement is selected by this bounded action.
 
 ## Evidence and Detailed Plans
 
