@@ -54,6 +54,13 @@ uncertainty. The missing path was not recorded; npm startup and preparation rema
 The one-use CI hook is retired, with no automatic retry or runtime fallback. The earlier Node
 control remains evidence for its recorded runner only.
 
+The subsequent [fixed prerequisite metadata diagnostic](docs/spikes/candidate-npm-prerequisite-metadata.md)
+completed on the current selected CI route. The exact Node 24.22.1 cache, completion marker,
+header, binary and npm directory/manifest returned ENOENT. The other system-library selectors
+were present as metadata only; their approved byte identity was not checked. Source/run/image
+bindings were corroborated, the original failed attempt was preserved and the diagnostic hook
+was retired. No target Node 24 or npm code ran, and no alternative runtime was selected.
+
 The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
 
 The broader [catalog-parity design](docs/candidate-catalog-parity-plan.md) still requires asserted local source/install/nav overlays and actual build/browser parity. The separate execution boundary remains SPIKE_REQUIRED before upstream package/config/build code runs. Production, accepted pins/output, the throwing guard and workflows are unchanged.
@@ -201,9 +208,12 @@ All 55 public archive bodies serving its 56 changed paths now match the declared
 digests; original-feed equivalence and the other 495 records remain unproven. The fixed Node 24.22.1
 and nine runtime destinations passed the [selected owned-probe confinement control](docs/spikes/candidate-node-confinement.md)
 on its recorded CI runner. The [first owned npm attempt](docs/spikes/candidate-npm-preparation-result.md)
-stopped at fixed-runtime admission with ENOENT; it does not qualify npm. Identify the absent
-fixed-runtime input and verify availability of the exact approved Node/npm cache and nine-file
-closure on the existing CI route before considering a separately reviewed future gate. Preserve
+stopped at fixed-runtime admission with ENOENT; it does not qualify npm. The
+[metadata diagnostic](docs/spikes/candidate-npm-prerequisite-metadata.md) now identifies the exact
+24.22.1 cache and its selected child inputs as absent on the current runner. Prepare a separately
+reviewed way to make that pinned cache available on the existing CI route, then verify approved
+cache bytes and the full nine-file closure before considering a future npm gate. Installation
+or a different runtime needs authority outside the completed metadata-only diagnostic. Preserve
 the first result; no automatic retry, runtime substitution or installation is selected. No npm or
 downloaded dependency code ran in either control. Keep the separate reviewed npm gate before
 dependency preparation or upstream code. Production preparation, allowed outputs and both
