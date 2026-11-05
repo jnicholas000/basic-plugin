@@ -87,3 +87,38 @@ conflict returns through Data/Odo. No runtime download/install, live cache-path 
 network, Docker, security probe, publication, Git mutation or production change occurred here.
 Tool classes: repo-reader for actual role/plan reads; artifact-writer for owned tests/evidence;
 test-runner for the single missing-module loader result. Actual action and readiness remain unproven.
+
+## Independent operational regression freeze — interrupted ownership acknowledgement
+
+Bashir identified a blocking ownership-registration gap in wrapper SHA-256
+`f3328007a67312d69c3286d0bac8807dc25b2928741803e513a8d0a1f27a0db2`.
+Odo independently authored [fixtures/test_pinned_runtime_ownership.py](fixtures/test_pinned_runtime_ownership.py)
+before Scotty's correction. Frozen test SHA-256:
+`b0ebcd247d79ef218e6b3a55ee516ea59fab6a3c0a2673ef6509c47f446aa6a9`.
+The original seven-group test remains unchanged at `17227f195521585826b485866773c4abb6568ad7efc2a6344b699b0762839af1`.
+
+- Requirement: interruption after exclusive mutation but before acknowledgement/identity registration
+  must leave cleanup incomplete and uncertain; it must never grant deletion authority over an
+  unacknowledged or preexisting foreign path.
+- Test Case: AST-extract only the `OwnedPaths` class into a restricted namespace with fake os,
+  stat masks, fixed time and constants. In-memory mkdir/open/symlink first create a fake entry,
+  then raise `TimeoutError` before registration. No wrapper import, network, real filesystem
+  mutation, archive, target execution or cache-path I/O occurs. Two controls verify preexisting
+  foreign entries survive and acknowledged owned entries can be removed. A separate focused AST
+  source check requires main to avoid the untracked `tempfile.mkdtemp` primitive; this source check
+  complements the behavioral seam and does not prove all main ownership semantics.
+- Expected Result: each lost-acknowledgement case reports `completed=False`, `uncertain=True`;
+  cleanup deletes neither the unacknowledged path nor the foreign entry. Temporary-root creation
+  must pass through guarded ownership tracking. Known successful creations remain cleanable.
+- Observed Result: one execution of `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s docs/spikes/fixtures -p test_pinned_runtime_ownership.py`
+  exited1. Four unittest methods ran in0.017s: two control methods passed; all three interrupted
+  operation subcases failed because cleanup returned `completed=True`; the main source check also
+  failed on its untracked `mkdtemp` call. These are three actual inert behavioral failures plus one
+  source-regression failure, not a loader failure. The interruption cases stop at their first
+  failed completion assertion; later uncertainty/deletion assertions remain required for the fix.
+- Status: FAIL
+
+This supplies a focused inert seam for part of operational review group8. It does not establish
+real signal delivery, actual installation/cleanup, network ordering, source preservation or the
+rest of the wrapper's operational correctness. Scotty owns the correction; Odo changed only this
+new test and appended evidence. No actual installer/requestor ran, and readiness remains with Bashir.
