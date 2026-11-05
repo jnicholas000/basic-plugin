@@ -1,7 +1,7 @@
 # Exact pinned runtime availability — approved execution handoff
 
 Mission slug: `candidate-catalog-parity`. Date: **2026-11-05**.
-Current checkpoint: **READY FOR ONE ADMITTED OBSERVATION; ACTUAL ACTION NOT_EXECUTED**.
+Current checkpoint: **OBSERVED; PINNED_CACHE_BYTES_VERIFIED; OWNED CLEANUP COMPLETE**.
 The initial Data/Odo/Scotty handoff below is preserved as the prospective contract; subsequent
 implementation and offline verification are recorded at the end.
 Source basis: `677cb492b15ecc951510407d42247ee7b28ee738`;
@@ -232,4 +232,72 @@ occurred at this checkpoint.
 Independent Bashir renewed pre-execution review returned **PASS** against the exact final code,
 tests, temporary workflow and prospective Project State. The earlier BLOCKED ownership finding
 and its red-to-green correction remain recorded. No required fixes remain before fresh admission.
-This is readiness for the sole approved action; no archive has been acquired, installed or run.
+That was readiness for the sole approved action; no archive had been acquired or installed at
+that checkpoint. The actual result below remains separate from the offline evidence.
+
+## First actual result — 2026-11-05
+
+The one approved action completed in [run 42116289259](https://github.com/jnicholas000/basic-plugin/actions/runs/42116289259),
+[local job 127556688745](https://github.com/jnicholas000/basic-plugin/actions/runs/42116289259/job/127556688745),
+attempt 1 for [PR #27](https://github.com/jnicholas000/basic-plugin/pull/27). Actual source was
+test-merge `76b521c0f5f262bd3c5e6ad67d54ab0e6424189f`, with ordered parents
+`677cb492b15ecc951510407d42247ee7b28ee738` and
+`911077285c4b7bbdf7e0a298ce62ac1166f995a1`. The pinned checkout's native Git log and supported
+GitHub Git-commit metadata corroborate that binding. The receipt pins the exact installer,
+pure module, both frozen tests and unchanged earlier evidence. Reported image was
+`ubuntu24/20261101.360.1`; this is metadata, not a full host attestation.
+
+| Observed value | Result |
+| --- | --- |
+| Status | `PINNED_CACHE_BYTES_VERIFIED` |
+| Anonymous GETs / retries | 1 / 0 |
+| Complete archive body | 58,290,700 bytes |
+| Archive SHA-256 | `eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c` |
+| Validated stripped entries | 5,887: 4,797 files, 1,087 directories, 3 symlinks |
+| File payload bytes | 201,757,420 |
+| Conservative peak admission | 601,448,448 bytes |
+| Measured peak owned allocation | 495,149,056 bytes, below 1.2 GiB |
+| Total action elapsed | 69,039.611976 ms |
+| Tracked source files unchanged | 138 |
+| Pending creations at cleanup | 0 |
+| Cleanup | complete, no uncertainty, no remaining owned paths |
+| Target execution | false |
+
+The complete archive matched the approved digest before extraction. The staged and installed
+Node binary (126,879,696 bytes), version header (4,247 bytes) and npm manifest (6,597 bytes)
+matched all three fixed hashes above. The installed manifest declares npm 11.19.1; it was read
+as data only. All nine runtime destination records matched their original sources, lengths
+and hashes, retaining both loader labels and the 133,239,032-byte destination total. The empty
+completion marker was created only after verification. No target Node 24, bundled npm or Docker
+invocation occurred. Existing Node 22 project checks ran separately after the action.
+
+The source-bound receipt acknowledges 11,780 exclusive paths and confirms removal of the
+created archive, stage, cache, marker and created empty version parent. Only the explicit
+inert manifest and receipt were retained; the installed runtime is not persistent or available
+to another job. The 60-second network deadline was enforced by the reviewed source; a separate
+network elapsed measurement was not retained, so the total action time is not network latency.
+
+Artifact `13455953589` contains exactly the two inert JSON files, with seven-day Actions retention.
+Its ZIP is 142,982 bytes, GitHub digest SHA-256
+`43b136df09e4895ecbb9cdf068b861fcfabb45e204deaff22698b26dd534d1fc`.
+Length/digest and named-member bounds were checked before reading either member as data.
+The [unchanged raw receipt](candidate-pinned-runtime-availability-receipt.json) is 6,624 bytes,
+SHA-256 `d8c14eab91e6486ae2cc9ff6e236024af8fd2a13fbee22d93d5fc63a27a74226`.
+The full manifest is 1,113,992 bytes, SHA-256
+`a51be53c3f8023e063e4cb34148a3392e9845f83e7cabb55679241f172161e62`;
+it remains inert artifact evidence rather than executable/cache distribution. Independent Bashir
+result review recomputed table/storage arithmetic and the three/nine identity checks, verified
+the ZIP, raw data and external source corroboration, and returned PASS for this narrow result.
+
+The existing 26 Python checks and 11 frozen pure/inert tests passed before capture. Capture,
+retention, enforcement and the later ordinary local/AQC checks all passed. No rerun occurred.
+The one-use hook is retired; `quality.yml` is byte-identical to the basis, SHA-256
+`47fd7fc8fde1ea65d4411528a82b8ba7b9038a44353a73c1435a4fc2f5c503d0`.
+Installer/module/test bytes and both previous raw receipts remain unchanged.
+
+This establishes only observed same-job byte/layout availability and source-bound cleanup.
+It does not identify the disposed original runner's ENOENT path or qualify npm execution,
+confinement on future inputs, nonempty dependencies, upstream builds, browser parity or full
+Missions 9–10 acceptance. The earlier npm attempt remains INDETERMINATE. A future npm gate
+requires its own reviewed same-job acquisition/preparation plus separate target-execution
+authority. No further acquisition or execution is authorized by this completed action.
