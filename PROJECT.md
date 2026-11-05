@@ -5,7 +5,7 @@ project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: active
 current_phase: Adaptive marketplace clone and customization incubation
-last_reviewed: 2026-11-04
+last_reviewed: 2026-11-05
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -45,6 +45,14 @@ bounded marketplace shell can be built and published with:
 - no stored secrets or implied enterprise-production support.
 
 ## Current State
+
+The [owned npm preparation gate](docs/spikes/candidate-npm-preparation-result.md) now has a
+source-bound controller, independently authored fixtures and nine passing pure contract tests.
+Its sole first observation stopped INDETERMINATE at fixed-runtime admission with ENOENT before
+npm inventory, Docker, the observer or npm execution. Cleanup completed without mutation
+uncertainty. The missing path was not recorded; npm startup and preparation remain unqualified.
+The one-use CI hook is retired, with no automatic retry or runtime fallback. The earlier Node
+control remains evidence for its recorded runner only.
 
 The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
 
@@ -192,9 +200,12 @@ The candidate-only public lock proposal is independently reviewed as a reference
 All 55 public archive bodies serving its 56 changed paths now match the declared SHA-512/SHA-1
 digests; original-feed equivalence and the other 495 records remain unproven. The fixed Node 24.22.1
 and nine runtime destinations passed the [selected owned-probe confinement control](docs/spikes/candidate-node-confinement.md)
-on the existing CI route. Qualify npm startup and preparation using an owned inert fixture next;
-its 11.19.1 manifest remains data-only evidence. No npm or downloaded dependency code ran inside
-the Node control. Keep that separate reviewed gate before
+on its recorded CI runner. The [first owned npm attempt](docs/spikes/candidate-npm-preparation-result.md)
+stopped at fixed-runtime admission with ENOENT; it does not qualify npm. Identify the absent
+fixed-runtime input and verify availability of the exact approved Node/npm cache and nine-file
+closure on the existing CI route before considering a separately reviewed future gate. Preserve
+the first result; no automatic retry, runtime substitution or installation is selected. No npm or
+downloaded dependency code ran in either control. Keep the separate reviewed npm gate before
 dependency preparation or upstream code. Production preparation, allowed outputs and both
 pre/post-merge candidate paths remain unqualified. Preserve the broader execution gate until those inputs and both
 pre/post-merge paths have supported evidence. Then prepare candidate-only asserted overlays using
