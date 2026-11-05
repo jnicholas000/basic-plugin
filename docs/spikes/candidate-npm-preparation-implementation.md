@@ -138,3 +138,30 @@ parent identifiers but lacks the head object needed for `HEAD_SHA:path` comparis
 remain disabled; the AQC checkout is unchanged. Retire this extra checkout input together with the
 temporary control hook before merge. The runner source and frozen fixtures are unchanged by this
 workflow prerequisite correction; its owned shallow-Git fixture evidence is coordinator-owned.
+
+## 2026-11-05 — Actual First-Open Outcome And Hook Retirement
+
+The pre-execution sections above remain historical implementation and pure-test evidence. The
+sole admitted first-open attempt has now completed:
+[Actions run 42097240276](https://github.com/jnicholas000/basic-plugin/actions/runs/42097240276),
+[local job 127490380453](https://github.com/jnicholas000/basic-plugin/actions/runs/42097240276/job/127490380453).
+The owned receipt reports `INDETERMINATE`, with the first failure at `fixed-runtime`, code `ENOENT`,
+58.06945 ms elapsed. Source admission and bindings were reached successfully before that stage.
+The receipt does not identify the missing path; it cannot establish which specific prerequisite
+was absent. It records no runtime-file inventory, npm inventory, Docker object or contained result.
+Docker, npm and the lifecycle observer were not reached. Cleanup completed, with no failures and
+`mutationOutcomeUncertain:false`. This early prerequisite failure supplies no runtime or npm
+qualification and does not authorize a retry, runtime substitution or budget change.
+
+The raw receipt SHA-256 is `eb9b1f3d493c79c55bcc0646507c84831f2797d7ee55def6fcbdc9a9f8602f0e`; the coordinator retains
+the data artifact and owns interpretation/reconciliation. The original 9-test pure-suite evidence
+above remains valid within its stated limits; it is separate from this actual runtime result.
+
+The temporary control steps and `local` checkout's extra `fetch-depth: 2` input are now retired.
+`.github/workflows/quality.yml` was restored byte-for-byte from base
+`62ab1e301f152eb38e268af919ef2c3bc69f4787`, SHA-256
+`47fd7fc8fde1ea65d4411528a82b8ba7b9038a44353a73c1435a4fc2f5c503d0`. The runner and frozen Odo
+probe/observer/test sources are unchanged. Scotty performed only this workflow restoration and
+append-only outcome record; no control, npm, Docker, CI invocation, Git mutation or publication
+was performed during retirement. Final review and project-state reconciliation remain with their
+assigned owners. No retry is scheduled.

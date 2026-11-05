@@ -8,8 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-        # TEMPORARY: retain merge parents for the owned npm source binding; retire with its hook.
-        with: { persist-credentials: false, fetch-depth: 2 }
+        with: { persist-credentials: false }
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
       - name: Install workflow test parser
@@ -17,49 +16,6 @@ jobs:
       - name: Verify local workflow and plugin contracts
         env: { PYTHONDONTWRITEBYTECODE: 1 }
         run: python -m unittest discover -s tests -p 'test_*.py'
-      # TEMPORARY: first-open owned empty npm control; retire this hook before merge.
-      - name: Verify owned npm control contracts
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' && github.head_ref == 'feat/owned-inert-npm-gate-20261105' && github.event.pull_request.head.repo.full_name == github.repository && github.repository == 'jnicholas000/basic-plugin' && github.run_attempt == '1' }}
-        run: node --test docs/spikes/fixtures/test-npm-preparation-control.mjs
-      - name: Capture owned npm preparation control
-        id: npm-preparation
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' && github.head_ref == 'feat/owned-inert-npm-gate-20261105' && github.event.pull_request.head.repo.full_name == github.repository && github.repository == 'jnicholas000/basic-plugin' && github.run_attempt == '1' }}
-        continue-on-error: true
-        timeout-minutes: 2
-        env:
-          NPM_PREPARATION_EVENT_ACTION: ${{ github.event.action }}
-          NPM_PREPARATION_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          NPM_PREPARATION_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          NPM_PREPARATION_SOURCE_SHA256: 'efeebb36b8768d1df8ec10cb786382f2b8301cd7d2eb519ff6afbbe322bc15c7'
-        run: |
-          umask 077
-          set -o noclobber
-          npm_receipt_path="$RUNNER_TEMP/basic-npm-preparation-receipt.json"
-          exec 3>"$npm_receipt_path"
-          set +e
-          node docs/spikes/fixtures/run-npm-preparation-control.mjs >&3
-          npm_control_status=$?
-          set -e
-          exec 3>&-
-          sha256sum "$npm_receipt_path"
-          printf '::stop-commands::owned-npm-receipt-data\n'
-          cat "$npm_receipt_path"
-          printf '\n::owned-npm-receipt-data::\n'
-          exit "$npm_control_status"
-      - name: Retain owned npm preparation evidence
-        if: ${{ always() && github.event_name == 'pull_request' && github.event.action == 'opened' && github.head_ref == 'feat/owned-inert-npm-gate-20261105' && github.event.pull_request.head.repo.full_name == github.repository && github.repository == 'jnicholas000/basic-plugin' && github.run_attempt == '1' }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: owned-npm-preparation-${{ github.sha }}
-          path: |
-            ${{ runner.temp }}/basic-npm-preparation-receipt.json
-            ${{ runner.temp }}/basic-npm-preparation-inventory.json
-          if-no-files-found: error
-      - name: Enforce owned npm preparation outcome
-        if: ${{ always() && github.event_name == 'pull_request' && github.event.action == 'opened' && github.head_ref == 'feat/owned-inert-npm-gate-20261105' && github.event.pull_request.head.repo.full_name == github.repository && github.repository == 'jnicholas000/basic-plugin' && github.run_attempt == '1' }}
-        env:
-          NPM_PREPARATION_OUTCOME: ${{ steps.npm-preparation.outcome }}
-        run: test "$NPM_PREPARATION_OUTCOME" = success
       - run: npm run build
       - name: Verify generated outputs are committed
         run: |

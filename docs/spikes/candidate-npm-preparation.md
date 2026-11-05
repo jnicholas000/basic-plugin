@@ -1,6 +1,9 @@
 # Candidate npm Startup And Owned Preparation Gate
 
-Feature slug: `candidate-catalog-parity`. State: **SPIKE_REQUIRED / NOT_EXECUTED**.
+Feature slug: `candidate-catalog-parity`. Current state: **PREREQUISITE_BLOCKED / INDETERMINATE**.
+The 2026-11-05 first attempt stopped at fixed-runtime admission before npm or Docker ran.
+See the [executed result](candidate-npm-preparation-result.md). The prospective contract below
+is retained unchanged as the basis of that attempt; it does not authorize a retry.
 Planning basis: main `62ab1e301f152eb38e268af919ef2c3bc69f4787` (PR #24),
 `PROJECT.md` One Next Action, [Node control](candidate-node-confinement.md),
 [restricted-child route](candidate-confinement-inert-route.md), and
@@ -224,4 +227,6 @@ Defer dependency archives/extraction/native tools, accepted/public lock adoption
 upstream scripts/config/build, general output promotion, overlays/browser parity, production and
 pre/post-merge candidate qualification. No npm safety audit, feed equivalence, universal credential
 absence, host/kernel escape resistance, performance benefit or full Mission 9/10 acceptance follows.
-Data's planning exit is a coherent plan plus Odo handoff; runtime/readiness are NOT_EXECUTED.
+Data's planning exit was a coherent plan plus Odo handoff. At that planning checkpoint,
+runtime/readiness were NOT_EXECUTED. The later attempt and its narrower blocked outcome are
+recorded separately above.
