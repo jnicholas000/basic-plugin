@@ -3,7 +3,7 @@ MIB = 1048576
 MAX_PEAK = 1288490188
 POLICY = dict(archive_url='https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-x64.tar.gz',
     archive_sha256='eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c',
-    branch='feat/owned-npm-same-job-20261106', download_bytes=96*MIB,
+    branch='feat/owned-npm-corrected-observation-20261106', download_bytes=96*MIB,
     network_seconds=60, preparation_seconds=120, child_seconds=90, child_cleanup_seconds=10,
     owner_cleanup_seconds=15, overall_seconds=235, step_seconds=240,
     max_peak_bytes=MAX_PEAK, retries=0, redirects=0, target_on_host=False, upstream_execution=False)

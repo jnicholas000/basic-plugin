@@ -88,6 +88,12 @@ acquisition, npm qualification or container action occurred; the prior exit-126 
 unproven. Normal CI runs only the new owned-filesystem unit test in its existing local check step;
 actual runtime-control hooks remain retired.
 
+One [fresh corrected owned npm observation](docs/spikes/candidate-npm-corrected-observation.md)
+is separately authorized and preregistered with a new exact branch and evidence namespace. Its
+literal-only binding version has eight passing affected policy tests; the reviewed mode helper
+is unchanged. Exact-source/workflow review and fresh admission are still pending. No new target
+runtime action is observed yet, and both historical INDETERMINATE outcomes remain unchanged.
+
 The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
 
 The broader [catalog-parity design](docs/candidate-catalog-parity-plan.md) still requires asserted local source/install/nav overlays and actual build/browser parity. The separate execution boundary remains SPIKE_REQUIRED before upstream package/config/build code runs. Production configuration, accepted pins/output and the throwing guard are unchanged. The temporary availability hook is retired and the existing workflow restored.
@@ -242,11 +248,11 @@ stopped at fixed-runtime admission with ENOENT; it does not qualify npm. The
 verified those exact bytes temporarily, with complete cleanup and no target invocation. The subsequent [same-job action](docs/spikes/candidate-npm-same-job-result.md) reached an owned
 container start but stopped INDETERMINATE at exit 126 without probe output. The
 [offline mode correction](docs/spikes/candidate-rootfs-mode-correction-implementation.md) now
-reproduces and corrects the owned directory/config modes with independent regressions. Prepare a
-separately reviewed fresh same-job observation using the corrected source and bounded mode/native
-error evidence. Before any new archive acquisition or target execution, obtain separate authority
-and freeze fresh source/event/resource admission under the retained limits. No actual runtime
-hook or automatic retry is selected. Actual tar modes and native start stderr were not retained
+reproduces and corrects the owned directory/config modes with independent regressions. Complete the
+separately authorized [fresh same-job observation](docs/spikes/candidate-npm-corrected-observation.md)
+using corrected source and bounded mode/native-error evidence, only after exact-source review and
+fresh source/event/resource admission under the retained limits. Its one-use hook must retire
+after the sole first outcome; no automatic retry or further acquisition/execution is selected. Actual tar modes and native start stderr were not retained
 for the old attempt, so its cause remains unproven. Preserve both original first outcomes, the
 availability proof and the retired guards. No runtime persists and no dependency or upstream
 execution is selected. Keep the separate reviewed npm gate before
