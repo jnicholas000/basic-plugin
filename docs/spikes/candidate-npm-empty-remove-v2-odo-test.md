@@ -56,7 +56,10 @@ ten groups in 67.449792 ms, one passed, the same two real legacy rejection failu
 v2-absent skips. No loader failure occurred. The new initializer/catch case remains NOT EXECUTED
 until v2 exists. The first-run bytes/outcome above are preserved, not relabeled as this final run.
 
-## Authored checks awaiting implementation
+## Checks authored at the initial freeze
+
+This table preserves the initial pending state. Independent executed outcomes after final source
+changes are recorded below; the earlier absence was not retrospectively called a pass.
 
 | Requirement | Test case | Expected result | Observed result | Status |
 | --- | --- | --- | --- | --- |
@@ -79,3 +82,54 @@ Scotty receives this freeze before implementation. Run affected synthetic checks
 source/pin changes; Bashir independently reviews controlled-copy parity, both actual consumers,
 full gates and provenance. Prior observations stay INDETERMINATE. A future controlled v2
 observation still needs its own finite authority and admission; this slice grants none.
+
+## Independent verification on final v2 source
+
+Odo independently verified the final source identities before its one affected synthetic run:
+
+| Source | SHA-256 |
+| --- | --- |
+| Controlled v2 probe | `2fe35ef9ae647b0cc506e615596a07dddc8b403a7900c4ba8c219aea4e8c0c68` |
+| Complete v2 observation validator | `f85c038d6d188a6fc3d03bc3f34beab99ad679bbf093e2793d24223b9c20d385` |
+| Actual derived host | `8eb8c1df036b5c762c9481f54bbb671bafb5049b65fbf77a290643dd0a4bffb6` |
+| Python owner/pin closure | `c498100727a2b7206ea82af4eac1ab3606ff1719e7551cc6cb87ee8f8f1c0126` |
+
+The frozen ten-group test remained 18,532 bytes at
+`be6b8f15560cd5716866573b4dd395e4448c9646d973fd98c470bb57c7155398`.
+Odo did not modify producer or test code during this verification.
+
+- Requirement: implement exactly the approved optional-empty-remove v2 delta, preserve other
+  predicates/full observation gates and protect both actual consumers before future execution.
+- Test Case: one independent final `node --test docs/spikes/fixtures/test-npm-empty-remove-v2.mjs`
+  on the exact sources above. No unrelated qualification or unchanged suite was repeated.
+- Expected Result: all ten groups execute and pass with no absent-module skip, while v1 still
+  rejects remove and all six historical raw receipts retain their original bytes.
+- Observed Result: ten passed, zero failed/cancelled/skipped/todo in 72.433667 ms, exit 0.
+  Both prior behavioral acceptance mismatches now pass only on the separately named v2 APIs;
+  the preserved v1/history control still passes. All seven previously pending groups executed.
+- Status: PASS
+
+Direct source comparison confirms the controlled probe copy adds only the version constant,
+optional remove allowlist/last-array predicate, ci-remove diagnostic and version 2 witness
+construction/sanitization. The unchanged fixture exports and source-selected new validator retain
+the original required field set; selected contract metadata remains outside successful observation.
+
+The actual derived host imports the v2 sanitizer/constant and v2 complete validator, copies the
+v2 source to the unchanged child `/npm-probe.mjs` destination, and invokes the v2 validator at
+finalization. Isolated actual finalizer/catch tests resolve those real imports: empty-remove is
+admitted, cleanup/uncertainty/output/prior-failure gates remain, v2 failure metadata is retained,
+and v1/invalid/oversize witnesses reject. The probe's actual initializer/catch likewise produce
+the declared v2 witness under synthetic input. These are narrow source-block observations,
+not a whole controller or native-process run.
+
+Static exact-hash checks confirm the Python owner retains v1/original pins and adds the v2
+probe/validator/independent-test identities before its future host-spawn call. Both outer receipt
+constructors select npmContractVersion owned-empty-ci/v2 before any target success. The guard,
+resource, cleanup and retired runtime-hook boundaries are unchanged; no runtime permission is
+created by a version field. Existing legacy witness tests with injected v1 sanitizer remain
+v1/body-unit evidence; this new suite separately verifies the actual selected v2 imports.
+
+All initial failure records above remain unchanged. The full original observation gate and past
+runtime outcomes are not retrospectively passed. Independent Bashir readiness and normal exact-head
+checks remain separate publication gates; a future actual v2 observation requires its own approval.
+No main, process spawn, target Node/npm, archive acquisition, container or CI action occurred here.
