@@ -3,7 +3,7 @@ MIB = 1048576
 MAX_PEAK = 1288490188
 POLICY = dict(archive_url='https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-x64.tar.gz',
     archive_sha256='eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c',
-    branch='feat/owned-npm-corrected-observation-20261106', download_bytes=96*MIB,
+    branch='feat/owned-npm-witness-observation-20261106', download_bytes=96*MIB,
     network_seconds=60, preparation_seconds=120, child_seconds=90, child_cleanup_seconds=10,
     owner_cleanup_seconds=15, overall_seconds=235, step_seconds=240,
     max_peak_bytes=MAX_PEAK, retries=0, redirects=0, target_on_host=False, upstream_execution=False)
@@ -26,6 +26,16 @@ def validate_same_job_policy(policy):
     shape(policy, POLICY)
     require(all(type(policy[k]) is type(v) and policy[k] == v for k, v in POLICY.items()))
     return True
+
+
+def validate_ci_capacity(record):
+    """Validate one numeric free-capacity snapshot; this makes no reservation."""
+    shape(record, ('fragmentBytes', 'availableBlocks'))
+    require(integer(record['fragmentBytes'], 4096) and record['fragmentBytes'] >= 1
+        and integer(record['availableBlocks'], 9223372036854775807))
+    available_bytes = record['fragmentBytes'] * record['availableBlocks']
+    require(available_bytes >= MAX_PEAK)
+    return available_bytes
 
 
 def validate_phase_admission(phase):
