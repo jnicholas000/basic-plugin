@@ -90,7 +90,8 @@ export function sanitizeOwnedNpmFailure(value) {
       || Buffer.byteLength(JSON.stringify(value)) > 2048) return null;
     const w = value.witness;
     if (!closed(w, ['version', 'passed', 'ci']) || w.version !== 1 || !Array.isArray(w.passed)
-      || w.passed.length > 4 || !w.passed.every((item, index) => item === passedCheckpoints[index])) return null;
+      || w.passed.length > 4 || !passedCheckpoints.slice(0, w.passed.length)
+        .every((item, index) => Object.hasOwn(w.passed, index) && w.passed[index] === item)) return null;
     let ci = null;
     if (w.ci !== null) {
       if (!closed(w.ci, ['checkpoint', 'jsonKind', 'detail']) || !ciCheckpoints.includes(w.ci.checkpoint)
@@ -100,8 +101,9 @@ export function sanitizeOwnedNpmFailure(value) {
         : d.checkpoint === 'ci-stderr' ? d.jsonKind === 'not-parsed' && d.detail === 'nonempty-stderr'
         : d.checkpoint === 'ci-json' ? d.jsonKind === 'not-parsed' && d.detail === 'parse-error'
         : d.checkpoint === 'ci-added' && d.jsonKind === 'null' ? d.detail === 'wrong-type'
+        : d.checkpoint === 'ci-added' && ['array', 'string', 'number', 'boolean'].includes(d.jsonKind) ? d.detail === 'missing'
         : ['ci-added', 'ci-changed', 'ci-audited', 'ci-funding'].includes(d.checkpoint)
-          ? ['object', 'array', 'string', 'number', 'boolean'].includes(d.jsonKind) && ['missing', 'wrong-type', 'nonzero'].includes(d.detail)
+          ? d.jsonKind === 'object' && ['missing', 'wrong-type', 'nonzero'].includes(d.detail)
         : d.checkpoint === 'ci-removed' ? d.jsonKind === 'object' && d.detail === 'not-safe-nonnegative-integer'
         : d.checkpoint === 'ci-keys' ? d.jsonKind === 'object' && d.detail === 'unexpected-keys'
         : ['ci-add', 'ci-change'].includes(d.checkpoint) ? d.jsonKind === 'object' && ['not-array', 'nonempty-array'].includes(d.detail)

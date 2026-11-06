@@ -20,11 +20,11 @@ TEST_SHA = '17227f195521585826b485866773c4abb6568ad7efc2a6344b699b0762839af1'
 OWNERSHIP_TEST_SHA = 'b0ebcd247d79ef218e6b3a55ee516ea59fab6a3c0a2673ef6509c47f446aa6a9'
 CLEANUP_TEST_SHA = '1d754c29bb19fad671c953d8ead2c9f227bd0bd20b5d7575a3159cdc574a9399'
 PINS = {
-    'docs/spikes/fixtures/test-npm-failure-witness.mjs': 'a97ad364d6e2560f8fd20dce8218c9f15c9b11b909971afe5c7d78af27cbcc18',
+    'docs/spikes/fixtures/test-npm-failure-witness.mjs': '0eb22750fa7f09e0a1928981c177e3383575db2fcf1b107fa0b0dd2e468f3e4c',
     'docs/spikes/fixtures/owned-rootfs-modes.mjs': '47b544208400dcf72ab38a74f8b335061c7e51e3f17aa51b88dc5aaa9362dc4b',
     'docs/spikes/fixtures/test-rootfs-directory-modes.mjs': '7fb1e1be8f5f67c2f7a3b1fa241593e4ab24678bc64c0c1dced67249ae7efe5d',
     'docs/spikes/fixtures/run-npm-preparation-control.mjs': 'efeebb36b8768d1df8ec10cb786382f2b8301cd7d2eb519ff6afbbe322bc15c7',
-    'docs/spikes/fixtures/npm-preparation-probe.mjs': '9a412d237ec662a1fb5671ba121afcb14b3bfeec6f4dd4e7093aafece599dda5',
+    'docs/spikes/fixtures/npm-preparation-probe.mjs': 'fd905605bd8d9b80c1f493d1726f9aad9e876eadb6ee57b41f8b93bbe1298cb3',
     'docs/spikes/fixtures/npm-lifecycle-observer.mjs': 'a3059404cb6f0cfcc861d00a53a471e8f7dc90632d5e8b9b02f68d88b7f9fcb9',
     'docs/spikes/fixtures/test-npm-preparation-control.mjs': '5e0ba660f7214ed5613b757f86df9eaf53c33cd7480988b2681718003d8ed972',
     'docs/spikes/candidate-npm-preparation-first-receipt.json': 'eb9b1f3d493c79c55bcc0646507c84831f2797d7ee55def6fcbdc9a9f8602f0e',

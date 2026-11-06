@@ -21,8 +21,8 @@ const inside = (parent, child) => child === parent || child.startsWith(`${parent
 const cache = '/opt/hostedtoolcache/node/24.22.1/x64';
 const npmRoot = `${cache}/lib/node_modules/npm`;
 const manifestDigest = 'f6478d5600180a23f73e4217610c7709a71cedb4ae13f6c3e15ecb457f5d4fd6';
-const probeDigest = '9a412d237ec662a1fb5671ba121afcb14b3bfeec6f4dd4e7093aafece599dda5';
-const witnessTestDigest = 'a97ad364d6e2560f8fd20dce8218c9f15c9b11b909971afe5c7d78af27cbcc18';
+const probeDigest = 'fd905605bd8d9b80c1f493d1726f9aad9e876eadb6ee57b41f8b93bbe1298cb3';
+const witnessTestDigest = '0eb22750fa7f09e0a1928981c177e3383575db2fcf1b107fa0b0dd2e468f3e4c';
 const observerDigest = 'a3059404cb6f0cfcc861d00a53a471e8f7dc90632d5e8b9b02f68d88b7f9fcb9';
 const testDigest = '5e0ba660f7214ed5613b757f86df9eaf53c33cd7480988b2681718003d8ed972';
 const modeHelperDigest = '47b544208400dcf72ab38a74f8b335061c7e51e3f17aa51b88dc5aaa9362dc4b';

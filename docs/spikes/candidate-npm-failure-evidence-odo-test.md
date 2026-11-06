@@ -10,9 +10,10 @@ Odo reread the installed Starfleet Crew 0.2.0 behavioral-integrity role and insp
 probe, current host relay and original success validator. Only this note and the new test are
 Odo-owned changes. The coordinator's spike destination supersedes the role's generic artifact path.
 
-## Frozen fixture and actual pre-fix result
+## Initial frozen fixture and actual pre-fix result
 
-[fixtures/test-npm-failure-witness.mjs](fixtures/test-npm-failure-witness.mjs) is 15,218 bytes,
+[Initial nine-group fixture](https://github.com/jnicholas000/basic-plugin/blob/957a0d91112298edab70741780cf7cbb2709f208/docs/spikes/fixtures/test-npm-failure-witness.mjs)
+was frozen at 15,218 bytes,
 SHA-256 `a97ad364d6e2560f8fd20dce8218c9f15c9b11b909971afe5c7d78af27cbcc18`.
 It uses existing host Node22, synthetic records, a literal copy of the original ci oracle and
 isolated actual catch bodies. Guarded module imports expose pure definitions only; no main or
@@ -117,7 +118,9 @@ identified that Array.every skips holes in a direct sparse passed-prefix array. 
 encode array holes; that second case concerns the exported direct API, not a new host-input claim.
 
 Odo appended exactly one finite regression group to the frozen test before producer repair.
-The original nine groups remain unchanged. Updated test: 16,603 bytes, SHA-256
+The original nine groups remain unchanged. The
+[expanded fixture frozen before repair](https://github.com/jnicholas000/basic-plugin/blob/7aeeb5dcf69fbf9d0aff33cf8baa9e9e37341a43/docs/spikes/fixtures/test-npm-failure-witness.mjs)
+is 16,603 bytes, SHA-256
 `0eb22750fa7f09e0a1928981c177e3383575db2fcf1b107fa0b0dd2e468f3e4c`.
 The prior frozen nine-group identity and its actual outcomes remain historical above.
 
@@ -141,3 +144,30 @@ Scotty owns the narrow witness-kind/prefix repair. The original ci acceptance or
 explicitly permitted ci-accepted witness remain unchanged. Recheck only affected pure tests after
 the final repair and refresh the exact current-probe pin as separately authorized. No actual
 probe/main, npm, process spawn, target runtime, container, archive or network action occurred.
+
+## Final affected verification after consistency repair
+
+Odo independently verified final probe SHA-256
+`fd905605bd8d9b80c1f493d1726f9aad9e876eadb6ee57b41f8b93bbe1298cb3`
+and confirmed that the expanded ten-group regression remained unchanged at
+`0eb22750fa7f09e0a1928981c177e3383575db2fcf1b107fa0b0dd2e468f3e4c`.
+Under the same explicit source-version authority, only the current-probe expected hash was
+refreshed again in the separate eight-method suite. Its method label and four historical pin
+assertions remain intact. Final eight-method test SHA-256:
+`0c6839d21cf722eb4a15aa218630b0b058c2ec83bf1e4adc81e02529da780d6d`.
+
+- Requirement: reject the demonstrated impossible witness combinations and sparse direct prefixes
+  while retaining every original valid-oracle and failure-relay case.
+- Test Case: one final frozen ten-group Node suite and one affected eight-method pure Python suite
+  after the exact final-probe pin refresh. Actual host catch source at this verification was
+  `97b3b84788fde67fbe5b5c03050e61c43b661891ed40683403d41daff492e418`.
+- Expected Result: both affected suites pass, with no skipped regression group and no altered ci
+  acceptance oracle or excluded historical failure.
+- Observed Result: Python eight methods passed in 0.007 seconds, exit 0; Node ten groups passed,
+  zero failures/cancellations/skips/todo in 71.489167 ms, exit 0. The previously accepted 22 invalid
+  witness vectors now reject. Both pre-fix failure records above remain unchanged.
+- Status: PASS
+
+Scotty received the final eight-method test identity for the owner pin closure. These are synthetic
+offline verification results, not npm execution, recovered old stdout or full runtime qualification.
+Bashir owns the independent final readiness decision. No target/main, acquisition or container ran.

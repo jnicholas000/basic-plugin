@@ -2,7 +2,7 @@
 
 Feature slug: `candidate-catalog-parity`. Date: 2026-11-06.
 Basis: `dfcef02dc146628f938c80768a523a55c792b28e`.
-Status: **OFFLINE IMPLEMENTATION; INDEPENDENT REVIEW IN PROGRESS; NO RUNTIME AUTHORITY**.
+Status: **OFFLINE IMPLEMENTATION; NO RUNTIME AUTHORITY**.
 
 ## Outcome and boundary
 
@@ -61,12 +61,17 @@ validator. JS syntax, Python AST and literal owner source/test pin closure were 
 
 These are synthetic/isolated-catch and static source observations only. No whole main or spawn
 function was executed by this verification. Full normal CI and independent review remain required.
-Preflight review identified two pending sanitizer consistency edges: sparse direct-call prefix
-arrays and impossible non-object JSON kinds at later ci checkpoints. They cannot arise from the
-ordinary parsed host envelope as sparse arrays, but the pure API must still reject them. Odo owns
-focused regression evidence before the narrow correction; no oracle or runtime gate changes.
+Preflight review identified sanitizer consistency edges: sparse direct-call prefix arrays and
+impossible non-object JSON-kind/detail combinations. Odo froze a single additional group before
+repair at `7aeeb5dcf69fbf9d0aff33cf8baa9e9e37341a43`. Its actual pre-fix execution returned nine
+passing groups and one failing group, accepting 22 invalid witness records. Historical fixture
+and failure evidence are retained. Sparse arrays cannot arise through ordinary host JSON.parse;
+this still required correction to the pure API's ordered-prefix contract.
 
-## Current implementation identities before the review delta
+## Historical first implementation identities
+
+The first implementation was retained at `7007f75870f478fe74b09228f715605fb684cdd0` before
+the independently frozen consistency regression and correction below.
 
 | Source | SHA-256 |
 | --- | --- |
@@ -80,3 +85,41 @@ The original first ENOENT, availability proof, exit 126 and corrected ci stop st
 After reviewed offline convergence, the next runtime question remains the existing empty-graph
 npm oracle; no nonempty dependency, upstream build/browser, production parity or complete
 Missions 9–10 acceptance follows from this correction.
+
+## Final consistency correction and source closure
+
+The sanitizer now checks dense own prefix positions, admits non-object `ci-added` only as missing
+(null only as wrong-type), and requires object kind for later zero-counter predicates. The actual
+ci evaluator and `ci-accepted` semantics are unchanged. Probe/header/host field sets, source/run
+bindings, runtime limits, cleanup and target execution policy are unchanged.
+
+One final Scotty synthetic execution returned ten passed groups, zero skipped, in 82.784917ms;
+Odo independently verified the final probe and returned ten passed, zero skipped, in 71.489167ms.
+Odo then updated only the exact current-probe expectation in its derived eight-test suite; those
+eight Python methods passed in 0.007s. Its other four historical hash assertions remain unchanged.
+No unchanged runtime/availability/mode qualification suite was repeated for this sanitizer delta.
+Both modified JS files syntax-checked; all Python owner function ASTs equal the base functions,
+with only the authorized source/test PINS dictionary changed. Literal pins match actual bytes
+and are checked before transfer/host import. The ci evaluator text equals its pre-delta version.
+
+Final source identities:
+
+| Source | SHA-256 |
+| --- | --- |
+| `docs/spikes/fixtures/npm-preparation-probe.mjs` | `fd905605bd8d9b80c1f493d1726f9aad9e876eadb6ee57b41f8b93bbe1298cb3` |
+| `docs/spikes/fixtures/run-npm-same-job-control.mjs` | `97b3b84788fde67fbe5b5c03050e61c43b661891ed40683403d41daff492e418` |
+| `docs/spikes/fixtures/run_npm_same_job.py` | `005a3ccc2f984de41b1096efb12f10a7a3d200310a2ee9c45d3104f1615458f5` |
+| `docs/spikes/fixtures/test-npm-failure-witness.mjs` | `0eb22750fa7f09e0a1928981c177e3383575db2fcf1b107fa0b0dd2e468f3e4c` |
+| `docs/spikes/fixtures/test_npm_same_job.py` | `0c6839d21cf722eb4a15aa218630b0b058c2ec83bf1e4adc81e02529da780d6d` |
+
+The current derived eight-test hash remains an explicit future owner environment binding, as
+before; no runtime hook exists now. Bashir owns independent final review. This offline correction
+adds no execution authority, retrospective witness, successful npm result or Mission acceptance.
+
+## Independent readiness
+
+[Bashir final review](candidate-npm-failure-evidence-review.md) passed the bounded offline source,
+oracle parity, truthful witness bindings, privacy and preserved-history checks. Normal exact-head
+CI remains required before merge. The broader local Python check passed 21 methods but could
+not load the workflow test module because PyYAML is absent locally; no local installation or
+retry occurred. Existing CI provisions its pinned parser and must resolve that verification gap.

@@ -100,7 +100,7 @@ outcomes remain unchanged and no retry or runtime persistence is selected.
 The [offline npm failure witness](docs/spikes/candidate-npm-failure-evidence-implementation.md)
 now records finite predicate-specific ci diagnostics and safe earlier checkpoint evidence in the
 current probe, with a closed sanitizer shared by its failure emitter and derived host relay.
-Nine independent synthetic groups pass, including the actual catch bodies and parity with the
+Ten independent synthetic groups pass, including the actual catch bodies and parity with the
 literal original ci oracle. No previous output was reconstructed, acceptance loosened or actual
 runtime action performed. The current probe has new source bindings; the original PR25 host
 controller/validators/tests and all historical raw receipts remain unchanged. Actual control hooks
