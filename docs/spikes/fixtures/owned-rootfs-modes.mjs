@@ -1,5 +1,5 @@
 // DO_NOT_COPY: mode correction for the exclusively owned inert npm rootfs only.
-// Import is inert. No runtime, container, subprocess, umask or host permission change.
+// Import is inert. No runtime, container, subprocess, umask or permission change outside the owned rootfs.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
@@ -34,7 +34,18 @@ export function normalizeOwnedRootfsModes(root, expectedIdentity, expectedDirect
   };
   const checkEntry = (relative, before) => {
     checkRoot();
-    const current = fs.lstatSync(path.join(root, relative));
+    // O_NOFOLLOW protects only the leaf: every relative ancestor must still be the
+    // preflighted owned directory, with no canonical redirection through a link.
+    const parts = relative ? relative.split('/') : [];
+    for (let i = 1; i < parts.length; i++) {
+      const ancestor = parts.slice(0, i).join('/'), original = entries.get(ancestor);
+      const file = path.join(root, ancestor), current = fs.lstatSync(file);
+      requireFact(original?.isDirectory() && current.isDirectory() && !current.isSymbolicLink()
+        && current.uid === uid && sameIdentity(current, original) && fs.realpathSync(file) === file);
+    }
+    const file = path.join(root, relative);
+    requireFact(fs.realpathSync(file) === file);
+    const current = fs.lstatSync(file);
     requireFact(!current.isSymbolicLink() && sameIdentity(current, before) && current.uid === uid
       && current.isDirectory() === before.isDirectory() && current.isFile() === before.isFile());
     return current;
@@ -61,7 +72,7 @@ export function normalizeOwnedRootfsModes(root, expectedIdentity, expectedDirect
       requireFact(sameIdentity(held, before) && held.uid === uid && held.isDirectory() === before.isDirectory()
         && held.isFile() === before.isFile());
       if (before.isFile()) requireFact(held.nlink === 1 && held.size === 0);
-      checkEntry(relative, before); checkDeadline();
+      checkDeadline(); checkEntry(relative, before);
       fs.fchmodSync(fd, mode);
       requireFact((fs.fstatSync(fd).mode & 0o777) === mode);
       requireFact((checkEntry(relative, before).mode & 0o777) === mode);

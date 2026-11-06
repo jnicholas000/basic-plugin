@@ -23,8 +23,8 @@ const manifestDigest = 'f6478d5600180a23f73e4217610c7709a71cedb4ae13f6c3e15ecb45
 const probeDigest = '18800d03a5f86171c2eb96631a54e7a3b4e1aaa1f65f25d5d402067ec96ebb5c';
 const observerDigest = 'a3059404cb6f0cfcc861d00a53a471e8f7dc90632d5e8b9b02f68d88b7f9fcb9';
 const testDigest = '5e0ba660f7214ed5613b757f86df9eaf53c33cd7480988b2681718003d8ed972';
-const modeHelperDigest = '497324bc0eb012c4180705554546d948f2ce0691c97ca771ab041aa3a5354fad';
-const modeTestDigest = '50eb4d13e2be8dfbeb6059a7ad1728f484a53fd7d9e988c99dd9ed2484a9d25e';
+const modeHelperDigest = '47b544208400dcf72ab38a74f8b335061c7e51e3f17aa51b88dc5aaa9362dc4b';
+const modeTestDigest = '7fb1e1be8f5f67c2f7a3b1fa241593e4ab24678bc64c0c1dced67249ae7efe5d';
 const entrypoint = ['/runtime/node', '--max-old-space-size=32', '/npm-probe.mjs'];
 const childEnv = { HOME: '/nonexistent', PATH: '/usr/bin:/bin', FIXTURE_VISIBLE: 'synthetic', HOSTNAME: 'fixture' };
 const flags = ['--offline', '--ignore-scripts', '--audit=false', '--fund=false', '--update-notifier=false',
