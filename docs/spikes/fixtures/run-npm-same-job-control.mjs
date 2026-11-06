@@ -160,7 +160,7 @@ function main() {
       && process.env.GITHUB_JOB === 'local' && process.env.GITHUB_WORKFLOW === 'AQC quality gates'
       && /^refs\/pull\/[1-9][0-9]*\/merge$/.test(process.env.GITHUB_REF ?? '')
       && process.env.GITHUB_EVENT_NAME === 'pull_request' && process.env.NPM_SAME_JOB_EVENT_ACTION === 'opened'
-      && process.env.GITHUB_HEAD_REF === 'feat/owned-npm-corrected-observation-20261106' && process.versions.node.split('.')[0] === '22' && process.env.GITHUB_RUN_ATTEMPT === '1');
+      && process.env.GITHUB_HEAD_REF === 'feat/owned-npm-witness-observation-20261106' && process.versions.node.split('.')[0] === '22' && process.env.GITHUB_RUN_ATTEMPT === '1');
     for (const k of ['GITHUB_SHA', 'NPM_SAME_JOB_HEAD_SHA', 'NPM_SAME_JOB_BASE_SHA']) requireFact(/^[a-f0-9]{40}$/.test(process.env[k] ?? ''));
     requireFact(digestPattern.test(process.env.NPM_SAME_JOB_CONTROLLER_SHA256 ?? '') && safePath(process.env.RUNNER_TEMP));
     repo = fs.realpathSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..'));
@@ -174,7 +174,7 @@ function main() {
     const uid = process.getuid(), gid = process.getgid(); requireFact(uid > 0 && gid > 0);
     const runnerTemp = fs.realpathSync(process.env.RUNNER_TEMP); requireFact(safePath(runnerTemp));
     nonce = randomBytes(8).toString('hex');
-    parentIdentity = identity(runnerTemp); root = path.join(runnerTemp, `basic-npm-corrected-${nonce}`);
+    parentIdentity = identity(runnerTemp); root = path.join(runnerTemp, `basic-npm-witness-${nonce}`);
     pendingRoot = true;
     try { fs.mkdirSync(root, { mode: 0o700 }); }
     catch (e) { if (e.code === 'EEXIST') { pendingRoot = false; root = undefined; } else mutationOutcomeUncertain = true; throw e; }
@@ -282,8 +282,8 @@ function main() {
       same(fileHash(source, 8388608, checkDeadline), { bytes: e.bytes, sha256: e.sha256 }); requireFact(fs.lstatSync(source).nlink === 1);
       if (++copiedFiles % 128 === 0) diskCheckpoint();
     }
-    const inventoryPath = path.join(runnerTemp, 'basic-npm-corrected-inventory.json');
-    mutateFs(() => fs.writeFileSync(inventoryPath, inventoryText, { flag: 'wx', mode: 0o600 })); result.npmInventory.artifact = 'basic-npm-corrected-inventory.json';
+    const inventoryPath = path.join(runnerTemp, 'basic-npm-witness-inventory.json');
+    mutateFs(() => fs.writeFileSync(inventoryPath, inventoryText, { flag: 'wx', mode: 0o600 })); result.npmInventory.artifact = 'basic-npm-witness-inventory.json';
     stage = 'owned-fixture';
     const probeText = boundedBytes(path.join(repo, 'docs/spikes/fixtures/npm-preparation-probe.mjs'), 65536, checkDeadline).toString('utf8');
     result.inputHashes = { manifest: '2f7fd9cadad92c0af5e113c0ad0140023608312db9ea83050e8bef56ced745eb', lock: '465eac71e5d2ba4a43c47a546ee9280d7d518c320abae0d0d6a7c03e175e7dbe' };
