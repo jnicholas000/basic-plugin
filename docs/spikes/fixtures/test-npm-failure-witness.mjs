@@ -224,3 +224,30 @@ test('probe actual failure emission maps unknown native code to enum without lea
   assert.ok(Buffer.byteLength(JSON.stringify(actual)) <= 2048);
   assert.deepEqual(sanitize(actual), actual);
 });
+
+test('sanitizer rejects impossible JSON-kind witnesses and sparse direct prefixes', { skip: !sanitize }, () => {
+  const invalid = [];
+  for (const checkpoint of ['ci-changed', 'ci-audited', 'ci-funding']) {
+    for (const kind of ['array', 'string', 'number', 'boolean']) {
+      invalid.push({ name: `${checkpoint}/${kind}`, value: stagedEnvelope(checkpoint, 4,
+        diagnostic(checkpoint, kind, 'missing')) });
+    }
+  }
+  for (const kind of ['array', 'string', 'number', 'boolean']) {
+    for (const detail of ['wrong-type', 'nonzero']) {
+      invalid.push({ name: `ci-added/${kind}/${detail}`, value: stagedEnvelope('ci-added', 4,
+        diagnostic('ci-added', kind, detail)) });
+    }
+  }
+  const oneHole = envelope(); delete oneHole.witness.passed[1];
+  const allHoles = envelope(); allHoles.witness.passed = new Array(4);
+  invalid.push({ name: 'direct-prefix/one-hole', value: oneHole },
+    { name: 'direct-prefix/all-holes', value: allHoles });
+  // JSON host input cannot contain holes; these two cases cover the exported direct API only.
+  const actual = invalid.map(({ name, value }) => {
+    const before = structuredClone(value), rejected = sanitize(value) === null;
+    assert.deepEqual(value, before, `${name}: preserve invalid input`);
+    return { name, rejected };
+  });
+  assert.deepEqual(actual, invalid.map(({ name }) => ({ name, rejected: true })));
+});

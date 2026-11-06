@@ -106,3 +106,38 @@ These checks establish the bounded offline evidence behavior only. They do not r
 126-byte ci output, identify its prior failing predicate, qualify npm or authorize a new attempt.
 Scotty received the new derived-test hash for the owner pin closure; Bashir independently reviews
 the final complete source closure and readiness. No npm, runtime, acquisition or container ran.
+
+## Independent diagnostic-consistency regression before narrow repair
+
+Bashir identified a current-mission P2 in the first witness implementation: the sanitizer accepted
+non-object JSON kinds at `ci-changed`, `ci-audited` and `ci-funding`, although reaching them requires
+an object whose earlier added counter passed. At `ci-added`, parsed array/string/number/boolean
+values can only lack the property, so wrong-type/nonzero details are impossible. Scotty also
+identified that Array.every skips holes in a direct sparse passed-prefix array. Host JSON cannot
+encode array holes; that second case concerns the exported direct API, not a new host-input claim.
+
+Odo appended exactly one finite regression group to the frozen test before producer repair.
+The original nine groups remain unchanged. Updated test: 16,603 bytes, SHA-256
+`0eb22750fa7f09e0a1928981c177e3383575db2fcf1b107fa0b0dd2e468f3e4c`.
+The prior frozen nine-group identity and its actual outcomes remain historical above.
+
+- Requirement: a retained witness must be consistent with the exact existing predicate order
+  and a fully populated ordered prefix; do not change the ci oracle or its permitted ci-accepted
+  witness case.
+- Test Case: after the coordinator preserved implementation commit
+  `7007f75870f478fe74b09228f715605fb684cdd0`, one expanded synthetic suite invoked the actual
+  sanitizer on 22 invalid records: twelve later-checkpoint/non-object kinds, eight impossible
+  ci-added details and two sparse direct-prefix arrays. It evaluates every record before one
+  aggregate assertion and verifies input preservation. No implementation was edited by Odo.
+- Expected Result: all 22 return null; the existing nine groups retain their previous behavior.
+- Observed Result: one `node --test docs/spikes/fixtures/test-npm-failure-witness.mjs` exited 1,
+  ten groups in 94.957 ms, nine passed and one failed, zero skipped. The actual sanitizer returned
+  non-null for every one of the 22 invalid records. This is actual pure-function acceptance,
+  not source inspection or missing-export evidence. Probe under test remained
+  `9a412d237ec662a1fb5671ba121afcb14b3bfeec6f4dd4e7093aafece599dda5`.
+- Status: FAIL
+
+Scotty owns the narrow witness-kind/prefix repair. The original ci acceptance oracle and Data's
+explicitly permitted ci-accepted witness remain unchanged. Recheck only affected pure tests after
+the final repair and refresh the exact current-probe pin as separately authorized. No actual
+probe/main, npm, process spawn, target runtime, container, archive or network action occurred.
