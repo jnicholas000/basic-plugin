@@ -35,7 +35,7 @@ MAX_DISK = 1288490188
 MIB = 1048576
 RESERVE = 16*MIB
 CHUNK = MIB
-BRANCH = 'feat/owned-npm-same-job-20261106'
+BRANCH = 'feat/owned-npm-corrected-observation-20261106'
 
 
 def require(value):
@@ -242,7 +242,7 @@ def main():
         runner_temp = Path(e['RUNNER_TEMP'])
         require(runner_temp.is_absolute() and os.path.realpath(runner_temp) == str(runner_temp))
         owned.pin_anchor(runner_temp)
-        root = runner_temp / ('owned-npm-same-job-' + os.urandom(16).hex())
+        root = runner_temp / ('owned-npm-corrected-' + os.urandom(16).hex())
         owned.mkdir(root)
         archive = root / 'official.tar.gz'
         stage_root = root / 'stage'
@@ -372,7 +372,7 @@ def main():
         stage = 'inert-evidence'
         encoded_manifest = (json.dumps(manifest, separators=(',', ':'), ensure_ascii=True)+'\n').encode()
         require(len(encoded_manifest) <= 2*MIB)
-        target = runner_temp / 'basic-npm-same-job-archive-manifest.json'
+        target = runner_temp / 'basic-npm-corrected-archive-manifest.json'
         owned.verify(runner_temp)
         fd = owned.create_file(target)
         data_identity = owned.paths[target]
@@ -388,7 +388,7 @@ def main():
         manifest_observation = hash_file(target, 2*MIB, deadline, data_identity)
         require(manifest_observation == dict(size=len(encoded_manifest), sha256=hashlib.sha256(encoded_manifest).hexdigest()))
         require(stat.S_IMODE(os.lstat(target).st_mode) == 0o600)
-        receipt['retained_data_allowlist'] = ['basic-npm-same-job-archive-manifest.json']
+        receipt['retained_data_allowlist'] = ['basic-npm-corrected-archive-manifest.json']
         receipt['manifest'] = dict(name=target.name, **manifest_observation, device=data_identity[0], inode=data_identity[1],
                                    file_type='regular', mode=0o600, retained_data=True)
         # Record complete retained-data evidence before release; keep its measured blocks accounted.

@@ -22,7 +22,7 @@ HERE = Path(__file__).parent
 POLICY = {
     'archive_url': 'https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-x64.tar.gz',
     'archive_sha256': 'eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c',
-    'branch': 'feat/owned-npm-same-job-20261106',
+    'branch': 'feat/owned-npm-corrected-observation-20261106',
     'download_bytes': 96 * MIB,
     'network_seconds': 60,
     'preparation_seconds': 120,
