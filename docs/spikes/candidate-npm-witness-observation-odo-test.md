@@ -41,9 +41,9 @@ allocation, reservation, download, target runtime, container or external command
   Remaining drift vectors inside the errored method were not reached.
 - Status: FAIL
 
-## Remaining evidence boundaries
+## Pre-implementation evidence boundaries
 
-Capacity checks are currently **NOT EXECUTED**. After implementation, the ninth method must run
+Capacity checks were **NOT EXECUTED** at the initial freeze. After implementation, the ninth method must run
 without skip and the fresh branch must pass the unchanged policy. Its pure arithmetic does not
 establish actual CI disk headroom, future free capacity or Docker physical allocation. Bashir must
 review the owner's exact two selected-anchor statvfs calls, ordering before first owned creation
@@ -55,3 +55,49 @@ the ten-group witness fixture remains
 All historical raw receipts and statuses remain unchanged. Scotty receives this freeze before
 producer edits, then focused verification and independent Bashir review precede any coordinator
 admission. No npm, wrapper/main, target runtime, archive, container, network or CI action ran here.
+
+## Independent post-implementation verification
+
+Odo verified the exact frozen test remained 11,317 bytes at
+`a8b4f8e89c8c9c71a459754d650d53e00c63a891d5df47e63b9247ad91ad9008`
+and read the actual narrow producer delta. Current source identities:
+
+| Source | SHA-256 |
+| --- | --- |
+| Pure policy/capacity module | `e6718ac14be5b78a289bbe8ca9bd073ca43aa3718d1bcdda1000781eacec5bc5` |
+| Python owner | `20fe119386ba01ee388042d1f840753938e46298f86379ac73ec17608c4ff1f3` |
+| Derived JS controller | `59084d579d19478dab710c8469a78f8bed7c436a2c854c4a235d0fe6fbd30b77` |
+
+- Requirement: admit the new exact branch and verify every finite capacity predicate without a
+  skipped export or a change to the existing runtime oracle.
+- Test Case: one independent affected nine-method pure Python suite with bytecode writes disabled.
+- Expected Result: all nine methods pass; the capacity method executes and no method is skipped.
+- Observed Result: nine passed in 0.005 seconds, exit 0; zero errors/failures/skips. The initial
+  stale-branch failure and absent-capacity record above remain preserved.
+- Status: PASS
+
+- Requirement: the new resource admission must operate only on selected pinned anchors and
+  precede the first owned filesystem creation and transfer.
+- Test Case: direct static inspection of the actual owner diff and inherited anchor verifier;
+  no owner import or execution.
+- Expected Result: two labeled bounded snapshots, pure validation, identity checks before/after,
+  and fail-closed ordering before owned mkdir and GET; no new host paths or oracle changes.
+- Observed Result: the capacity loop follows existing runner_temp/toolcache anchor pinning and
+  invokes `owned.verify(anchor)`, one new capacity statvfs snapshot, the pure predicate and
+  `owned.verify(anchor)` again for each selected anchor. Only label/fragment/block/product fields
+  enter `ci_capacity`; labels are runner_temp/toolcache. The loop precedes root mkdir, archive
+  creation and GET. Existing fragment-only statvfs checks in anchor pinning remain separate.
+  The remaining producer delta is the exact fresh branch/scratch/evidence namespace. Probe and
+  oracle bytes are unchanged. This is source-ordering evidence, not an observed CI snapshot.
+- Status: PASS
+
+Direct byte comparison with base 743498a also confirmed eleven selected immutable source/raw
+receipt files unchanged, including the current probe, ten-group witness fixture, mode helper/test,
+original PR25 controller/validator/test and five historical raw receipts. The existing exact source
+assertions in the nine-method suite remain intact. No mode/witness suite was rerun because those
+bytes and acceptance behavior did not change.
+
+The required affected pure tests now have an executed result. Actual CI capacity, source/event
+admission, sole bounded target observation, complete cleanup and independent Bashir readiness
+remain separate coordinator/reviewer gates. No test here reserves disk or attests Docker's
+physical allocation, and no runtime/control/CI action occurred in this Odo verification.
