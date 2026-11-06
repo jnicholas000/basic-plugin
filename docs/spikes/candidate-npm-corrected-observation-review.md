@@ -4,9 +4,12 @@ Feature slug: `candidate-catalog-parity`. Date: 2026-11-06.
 Basis: `8cc32148b66c57d419110ff78e634b6f78594f95`.
 Fresh branch: `feat/owned-npm-corrected-observation-20261106`.
 
-Result: **PASS — ready for one separately authorized first-open observation after coordinator
-exact-source/resource admission and revision-matched explanation review**.
-Actual corrected runtime result: **NOT EXECUTED / NOT ESTABLISHED**.
+**Current result: PASS for truthful first-result closeout; complete npm qualification remains
+INDETERMINATE. The sole grant is consumed and grants no further runtime action.**
+
+Historical pre-execution result: **PASS — ready for one separately authorized first-open
+observation after coordinator exact-source/resource admission and explanation review**.
+The actual result was then unobserved; the separate post-result review below addresses it.
 
 ## Summary
 
@@ -123,3 +126,105 @@ covers only the reviewed single action after fresh coordinator admission, not fu
 Bashir changed only this review artifact. No producer, workflow, test, Git mutation, target runtime,
 archive acquisition, cache/container, credential/security probe or publication was performed.
 No denied or uncertain action occurred during review.
+
+## Independent post-result review — fresh first action INDETERMINATE
+
+Result: **PASS for accurate evidence closeout and normal final-head publication checks**.
+Complete startup/empty-ci qualification: **INDETERMINATE / NOT PASSED**.
+Further runtime action: **NOT AUTHORIZED by this consumed grant**.
+
+Summary: Bashir independently inspected the retained raw receipt, full npm inventory/archive
+manifest and bound probe control flow, then compared the result/PROJECT/preregistration update,
+unchanged source receipt and retired workflow. The corrected action progressed beyond the earlier
+native start failure: the owned probe executed and reported a failure during npm-ci acceptance.
+The exact output body and failed predicate are missing, so the control cannot pass. Historical
+pre-execution readiness remains evidence rather than continuing execution authority.
+
+### Actual bindings and data consistency
+
+Run `42152688374`, local job `127679411240`, attempt 1, records head
+`c6cce523a913a9555d3071a93b56d4a677c0587c`, base
+`8cc32148b66c57d419110ff78e634b6f78594f95`, and checkout/test-merge
+`ce6ec802b99b98bca8de6625dec04a1018d006a7`. Coordinator separately corroborated native checkout
+and the ordered GitHub Git-commit parents. Reported runner image is metadata, not attestation.
+
+The raw receipt is 17,841 bytes, SHA-256
+`b0d7603d59816ccd333576b83bcf82a74b1b53f31ef0773ebd524891d4f67229`.
+The proposed repository copy is byte-identical. Inventory is 321,518 bytes, SHA-256
+`200df0fcd7713a81a653aa7d160177ce2b0dda476c85df59b6d5dbb679191599`; archive manifest is
+1,113,992 bytes, SHA-256 `a51be53c3f8023e063e4cb34148a3392e9845f83e7cabb55679241f172161e62`.
+Coordinator verified the bounded three-member artifact ZIP before parsing. Bashir’s one actual-data
+consistency validator matched all 1,635 inventory path/size/hash records to the pinned archive
+manifest and reconstructed the planned rootfs directory table from runtime/npm/fixture inputs.
+It produced exactly 446 records and digest
+`f29d72c4f03df983ee233342ddea8d529822168e1585d95682bcf8c76f1fbe10`, matching the receipt.
+This validates retained-data consistency, not independent physical tar-mode measurement.
+Both nested child receipt copies are identical.
+
+### Reached and missing evidence
+
+- One exact official GET, zero retries, 58,290,700 bytes and approved archive digest matched.
+  The bound source completed three cache-file and nine runtime checks before child admission;
+  archive/staging release preceded it. Accepted npm closure remains 1,635 files, 439 source
+  directories and 9,525,769 file bytes. Host Node 22 orchestrated the action; target code ran
+  inside the selected child.
+- Mode evidence reports 446 normalized rootfs directories, eight fixed critical paths 0755 and
+  two exact empty configs 0444, with the matching digest above. Import and effective container
+  policy validation completed before start. This neither proves the cause of the old exit 126
+  nor reclassifies that historical result.
+- The owned probe returned a structured failure at `npm-ci`. On this exact bound probe, that
+  stage is reached only after fixed Node/platform/argv/input guards, observer exit 73/marker/reset
+  and the exact npm 11.19.1 version guard pass. Those preceding facts therefore have **partial
+  source-flow support**. Individual values/raw version output were not retained on failure;
+  no complete observation object is fabricated or supplied afterward.
+- The last npm-ci child exited 0, signal/code null, not timed out, stdout 126 bytes and stderr 0.
+  That precedes JSON parse and strict summary acceptance. Failure occurred before `owned-output`;
+  the exact parse/summary predicate and 126-byte body are unavailable. No JSON body, schema
+  difference, root cause or relaxed acceptance rule is inferred from output length.
+- Docker attach exited 1 because the probe failed. Container exit 1, not running and not OOM-killed
+  is distinct from the earlier native exit 126. `UNCLASSIFIED` is not affirmative native-exec
+  error evidence. It does not support declaring the mode correction unsuccessful or claiming
+  an identical old startup failure.
+- Final observer absence, stale-entry removal, output manifest/lock preservation, absent installed
+  payload, output acceptance and post-child source/runtime preservation were **NOT REACHED**.
+  The 160 unchanged tracked files are preparation-before-child evidence only. npm-ci exit0
+  alone does not pass the complete observable-outcome oracle.
+- Child cleanup reports complete, no failures and no uncertain mutation. Separate outer-path
+  and aggregate cleanup report completed true, uncertain false, no remaining owned paths.
+  The reviewed source checks removal of owned cache/marker/new version parent and nonce-bound
+  image/container/temp resources. No installed runtime persists.
+
+Preparation was 50,781.927475 ms; total action was 59,113.436306 ms including cleanup, not network
+latency. The source-enforced network deadline remains 60 seconds. Conservative pre-npm admission
+is 1,208,840,192 bytes and npm admitted peak 1,047,654,400 bytes under the retained ceiling.
+Preparation-owned measured filesystem peak 495,144,960 bytes, child-owned peak 293,212,160 bytes
+and live cache 218,984,448 bytes remain separate from reserved Docker storage. Backend physical
+peak remains unmeasured; logical image size is not physical-quota attestation.
+
+Coordinator-supplied initial CI evidence reports 26 existing Python checks, ten mode groups and
+eight fresh policy methods passing. Native capture exited 1 and first-outcome enforcement failed;
+`continue-on-error` API success does not convert the control into a pass. Later local build/output
+checks and private AQC were skipped. Normal final-head checks after hook retirement are separate
+publication evidence. The current workflow is byte-identical to the 8cc3214 baseline, retaining
+only its ordinary inert unit command; both runtime hook and depth override are retired.
+
+### Judgment and exact next boundary
+
+The result note, PROJECT and preregistration update accurately preserve the consumed grant,
+partial source-flow evidence, missing predicate/body, unobserved later checks and complete
+reported cleanup. They make no private disclosure, historical-cause inference or passing npm/
+dependency/build/site/Missions 9/10 claim. Required Fixes for evidence closeout: none. Accepted
+Risks: none. Optional Improvements: none requested.
+
+Before proposing any further actual observation, prepare an offline independently tested bounded
+failure witness: retain safe partial checkpoints, a predicate-specific stage and enough
+allowlisted parse/summary evidence to identify a failure without exposing arbitrary config or
+environment data. Preserve the exact existing oracle and original probe/result evidence; do not
+reconstruct missing stdout, silently adopt a schema assumption or weaken acceptance. This is the
+named next engineering gate, not an implemented repair or new execution authority. Any later
+archive acquisition/target/container action needs separate authorization and fresh admission.
+
+Bashir used read-only source/evidence inspection and one bounded actual-data consistency validator.
+Only this review artifact was changed. No behavioral suite, probe, wrapper/main, acquisition,
+installed runtime, container, credential/security experiment, Git mutation or publication was run.
+No denied or uncertain action occurred in this review.

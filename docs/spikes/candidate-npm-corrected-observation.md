@@ -1,7 +1,10 @@
 # Fresh corrected owned npm observation
 
 Feature slug: `candidate-catalog-parity`. Date: 2026-11-06.
-Status: **PREREGISTERED; EXECUTION NOT YET ADMITTED**.
+Current status: **FIRST FRESH ACTION INDETERMINATE; HOOK RETIRED; NO RETRY**.
+See the [retained result](candidate-npm-corrected-observation-result.md). The preregistration
+below remains the basis of the consumed grant; original freeze commit:
+`5ef8f57ddd1c3570e5c8d245d628be68e695e987`. It grants no further execution.
 Basis: main `8cc32148b66c57d419110ff78e634b6f78594f95`.
 Fresh branch: `feat/owned-npm-corrected-observation-20261106`.
 
