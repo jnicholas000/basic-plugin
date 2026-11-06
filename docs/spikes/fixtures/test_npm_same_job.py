@@ -7,12 +7,15 @@ from copy import deepcopy
 import hashlib
 from pathlib import Path
 import unittest
+import npm_same_job as same_job_contract
 
 from npm_same_job import (
     validate_same_job_policy,
     validate_phase_admission,
     validate_same_job_evidence,
 )
+
+validate_ci_capacity = getattr(same_job_contract, 'validate_ci_capacity', None)
 
 
 MIB = 1048576
@@ -22,7 +25,7 @@ HERE = Path(__file__).parent
 POLICY = {
     'archive_url': 'https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-x64.tar.gz',
     'archive_sha256': 'eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c',
-    'branch': 'feat/owned-npm-corrected-observation-20261106',
+    'branch': 'feat/owned-npm-witness-observation-20261106',
     'download_bytes': 96 * MIB,
     'network_seconds': 60,
     'preparation_seconds': 120,
@@ -93,6 +96,39 @@ class SameJobContract(unittest.TestCase):
                 with self.subTest(field=key, value=value):
                     self.rejected(validate_same_job_policy, POLICY, {key: value})
 
+    @unittest.skipIf(validate_ci_capacity is None, 'capacity helper absent at pre-producer freeze')
+    def test_ci_capacity_integer_boundary_supported_fragment_and_closed_record(self):
+        def accepted(fragment, blocks):
+            value = {'fragmentBytes': fragment, 'availableBlocks': blocks}
+            before = deepcopy(value)
+            actual = validate_ci_capacity(value)
+            self.assertIs(type(actual), int)
+            self.assertEqual(actual, fragment * blocks)
+            self.assertEqual(value, before)
+
+        accepted(1, CEILING)
+        accepted(1, CEILING + 1)
+        blocks = (CEILING + 4095) // 4096
+        accepted(4096, blocks)
+        accepted(4096, blocks + 1)
+        accepted(4096, 9223372036854775807)
+        good = {'fragmentBytes': 4096, 'availableBlocks': blocks}
+        for changes in ({'availableBlocks': blocks - 1}, {'availableBlocks': 0},
+                        {'fragmentBytes': 0}, {'fragmentBytes': -1}, {'fragmentBytes': 4097},
+                        {'availableBlocks': -1}, {'availableBlocks': 9223372036854775808}):
+            self.rejected(validate_ci_capacity, good, changes)
+        for key in good:
+            for value in (True, False, float(good[key]), str(good[key]), None):
+                with self.subTest(field=key, value=value):
+                    self.rejected(validate_ci_capacity, good, {key: value})
+            missing = deepcopy(good)
+            del missing[key]
+            with self.assertRaises(ValueError):
+                validate_ci_capacity(missing)
+        self.rejected(validate_ci_capacity, good, {'unknown': True})
+        for nonrecord in (None, [], True, 'record'):
+            with self.assertRaises(ValueError):
+                validate_ci_capacity(nonrecord)
     def test_release_and_verified_cache_are_required_before_phase_admission(self):
         good = phase()
         before = deepcopy(good)
