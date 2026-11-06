@@ -20,6 +20,8 @@ TEST_SHA = '17227f195521585826b485866773c4abb6568ad7efc2a6344b699b0762839af1'
 OWNERSHIP_TEST_SHA = 'b0ebcd247d79ef218e6b3a55ee516ea59fab6a3c0a2673ef6509c47f446aa6a9'
 CLEANUP_TEST_SHA = '1d754c29bb19fad671c953d8ead2c9f227bd0bd20b5d7575a3159cdc574a9399'
 PINS = {
+    'docs/spikes/fixtures/owned-rootfs-modes.mjs': '47b544208400dcf72ab38a74f8b335061c7e51e3f17aa51b88dc5aaa9362dc4b',
+    'docs/spikes/fixtures/test-rootfs-directory-modes.mjs': '7fb1e1be8f5f67c2f7a3b1fa241593e4ab24678bc64c0c1dced67249ae7efe5d',
     'docs/spikes/fixtures/run-npm-preparation-control.mjs': 'efeebb36b8768d1df8ec10cb786382f2b8301cd7d2eb519ff6afbbe322bc15c7',
     'docs/spikes/fixtures/npm-preparation-probe.mjs': '18800d03a5f86171c2eb96631a54e7a3b4e1aaa1f65f25d5d402067ec96ebb5c',
     'docs/spikes/fixtures/npm-lifecycle-observer.mjs': 'a3059404cb6f0cfcc861d00a53a471e8f7dc90632d5e8b9b02f68d88b7f9fcb9',
