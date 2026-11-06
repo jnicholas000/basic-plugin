@@ -18,6 +18,7 @@ import time
 MODULE_SHA = 'cd18361c2d6683b4ed7e3214938b5cd4e7c600d782b37b6fd1b429ce6f32aa02'
 TEST_SHA = '17227f195521585826b485866773c4abb6568ad7efc2a6344b699b0762839af1'
 OWNERSHIP_TEST_SHA = 'b0ebcd247d79ef218e6b3a55ee516ea59fab6a3c0a2673ef6509c47f446aa6a9'
+CLEANUP_TEST_SHA = '1d754c29bb19fad671c953d8ead2c9f227bd0bd20b5d7575a3159cdc574a9399'
 PINS = {
     'docs/spikes/fixtures/run-npm-preparation-control.mjs': 'efeebb36b8768d1df8ec10cb786382f2b8301cd7d2eb519ff6afbbe322bc15c7',
     'docs/spikes/fixtures/npm-preparation-probe.mjs': '18800d03a5f86171c2eb96631a54e7a3b4e1aaa1f65f25d5d402067ec96ebb5c',
@@ -185,6 +186,7 @@ def main():
         pure_path = here.with_name('npm_same_job.py')
         require(hash_file(pure_path, 65536, deadline)['sha256'] == hex_value('NPM_SAME_JOB_MODULE_SHA256', 64))
         require(hash_file(here.with_name('test_npm_same_job.py'), 65536, deadline)['sha256'] == hex_value('NPM_SAME_JOB_TEST_SHA256', 64))
+        require(hash_file(here.with_name('test_npm_same_job_cleanup.py'), 65536, deadline)['sha256'] == CLEANUP_TEST_SHA)
         controller = here.with_name('run-npm-same-job-control.mjs')
         controller_sha = hex_value('NPM_SAME_JOB_CONTROLLER_SHA256', 64)
         require(hash_file(controller, 65536, deadline)['sha256'] == controller_sha)
@@ -221,7 +223,7 @@ def main():
         image_os, image_version = e.get('ImageOS') or 'UNAVAILABLE', e.get('ImageVersion') or 'UNAVAILABLE'
         require(image_os in ('ubuntu22', 'ubuntu24', 'ubuntu26', 'UNAVAILABLE') and len(image_version) <= 40
                 and (image_version == 'UNAVAILABLE' or all(part.isascii() and part.isdigit() for part in image_version.split('.'))))
-        receipt['binding'] = dict(owner_sha256=expected_self, controller_sha256=controller_sha, pure_sha256=hex_value('NPM_SAME_JOB_MODULE_SHA256', 64), new_test_sha256=hex_value('NPM_SAME_JOB_TEST_SHA256', 64), module_sha256=MODULE_SHA, test_sha256=TEST_SHA, ownership_test_sha256=OWNERSHIP_TEST_SHA,
+        receipt['binding'] = dict(owner_sha256=expected_self, controller_sha256=controller_sha, pure_sha256=hex_value('NPM_SAME_JOB_MODULE_SHA256', 64), new_test_sha256=hex_value('NPM_SAME_JOB_TEST_SHA256', 64), cleanup_test_sha256=CLEANUP_TEST_SHA, module_sha256=MODULE_SHA, test_sha256=TEST_SHA, ownership_test_sha256=OWNERSHIP_TEST_SHA,
                                   original_evidence=PINS, head_commit=head, base_commit=base, source_commit=source_commit,
                                   run_id=run_id, run_attempt=1, runner_os='Linux', runner_arch='X64', image_os=image_os, image_version=image_version)
         stage = 'seven-system-prerequisites'
@@ -425,12 +427,19 @@ def main():
         receipt['npm_controller'] = child_result
         npm = child_result.get('receipt')
         if type(npm) is dict:
+            # A parsed receipt acknowledges daemon cleanup only with the complete exact success shape.
+            # Preserve any prior transport/launch uncertainty; malformed/failed cleanup stays unknown.
+            child_uncertain = child_uncertain or not (
+                type(npm.get('cleanup')) is dict
+                and npm['cleanup'].keys() == {'completed', 'mutationOutcomeUncertain', 'failures'}
+                and npm['cleanup'].get('completed') is True
+                and npm['cleanup'].get('mutationOutcomeUncertain') is False
+                and type(npm['cleanup'].get('failures')) is list and npm['cleanup']['failures'] == [])
             receipt['npm'] = npm
             receipt['target_execution'] = 'INVOCATION_ATTEMPTED_IN_CHILD' if npm.get('targetInvocationAttempted') is True else 'NOT_REACHED'
             require(npm.get('headCommit') == head and npm.get('baseCommit') == base and npm.get('sourceCommit') == source_commit
                 and npm.get('hostNodeVersion', '').startswith('v22.') and npm.get('upstreamExecuted') is False
                 and npm.get('realCredentialsProbed') is False and npm.get('downloadsOrInstalls') is False)
-            child_uncertain = child_uncertain or npm.get('cleanup', {}).get('mutationOutcomeUncertain') is not False
         require(child_result['exit'] == 0 and not child_uncertain and type(npm) is dict
             and npm.get('status') == 'NPM11_OWNED_PREPARATION_CONTROL_PASSED'
             and npm.get('cleanup', {}).get('completed') is True and npm.get('cleanup', {}).get('failures') == [])
@@ -447,6 +456,7 @@ def main():
     finally:
         if owned is None:
             cleanup = dict(completed=True, uncertain=False, remaining_owned_paths=[])
+            receipt['outer_path_cleanup'] = dict(cleanup)
             receipt['cleanup'] = cleanup
             signal.setitimer(signal.ITIMER_REAL, 0)
         else:
@@ -468,11 +478,13 @@ def main():
                 receipt['ownership'] = dict(uncertain=True)
             try:
                 cleanup = owned.cleanup()
+                receipt['outer_path_cleanup'] = dict(cleanup)
                 if child_uncertain:
                     cleanup = dict(completed=False, uncertain=True, remaining_owned_paths=cleanup['remaining_owned_paths'])
             except BaseException:
                 owned.uncertain = True
                 cleanup = dict(completed=False, uncertain=True, remaining_owned_paths=['OWNED_PATH'] * min(len(set(owned.paths) | owned.pending), 32))
+                receipt['outer_path_cleanup'] = dict(cleanup)
             finally:
                 signal.setitimer(signal.ITIMER_REAL, 0)
             receipt['cleanup'] = cleanup

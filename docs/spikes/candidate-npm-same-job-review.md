@@ -4,6 +4,10 @@ Mission slug: `candidate-catalog-parity`. Date: 2026-11-06.
 Review boundary: readiness for one separately authorized, source-bound owned empty-graph
 observation. No actual preparation, target execution or runtime result is established here.
 
+**Current disposition: PASS for one bounded first-open observation after coordinator admission.**
+The original FAIL and P1 below are retained as historical review evidence; the final delta
+review at the end records the correction and exact ready candidate.
+
 Result: **FAIL — one aggregate cleanup evidence defect blocks execution admission**.
 
 ## Summary
@@ -108,3 +112,54 @@ eleven original availability/ownership methods in0.087s, and nine original npm p
 aggregation defect. Bashir did not duplicate those runs or execute a wrapper, target, Docker,
 network request, archive acquisition or cache-path operation. Review tools read source/diffs and
 hashes; only this review artifact was written. No denied or uncertain operation occurred here.
+
+## Final delta review — P1 resolved, readiness PASS
+
+Result: **PASS — READY for one bounded first-open observation after exact coordinator admission**.
+Actual runtime qualification: **NOT EXECUTED**.
+
+Summary: the correction resolves the sole P1 without changing runtime, fixture, policy, time,
+disk or retry controls. Bashir independently inspected the actual repair diff and frozen Odo
+regression, checked the changed source/workflow hashes and retained the previously valid full
+review. No blocking current-mission issue remains. The source and workflow are ready only for
+the approved single observation; they do not establish its result or waive final CI/review gates.
+
+Issue1 resolution: the owner now checks the entire child cleanup record before any subsequent
+binding validation can throw. It requires exactly the three expected keys, strict successful
+boolean values and an empty actual list of failures, and ORs the result with prior transport
+uncertainty. Failed, missing, malformed or previously unknown cleanup cannot acknowledge daemon
+cleanup. The owner retains its actual filesystem result separately as `outer_path_cleanup`;
+aggregate cleanup remains incomplete/uncertain whenever child cleanup was not acknowledged.
+The original first failure and child receipt remain available rather than being rewritten.
+
+Independent Odo regression commit `5a22ef30e76e03f44a6475987b8da548fd82e5df` preceded the producer
+correction. Its four methods AST-extract only the real uncertainty assignment into an inert
+namespace. The original candidate reproduced twelve failing subcases, including known image/
+container failure and malformed records, while successful acknowledgement and prior uncertainty
+controls passed. This is direct in-memory behavior evidence for the repaired decision predicate,
+not a claim of Docker failure injection or end-to-end daemon cleanup. The final attributed
+Scotty run reports12/12 affected methods passing in0.007s (four regression plus eight pure methods).
+The old eleven availability/ownership and nine npm pure tests were not rerun because their
+source and dependencies remain unchanged. Bashir did not duplicate these runs.
+
+Final exact identities:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Python owner, corrected | `f066e2bea2569af601a04edf6458e32ff4f49e3d2ab21a711f0a03db1e0b9bef` |
+| Cleanup regression | `1d754c29bb19fad671c953d8ead2c9f227bd0bd20b5d7575a3159cdc574a9399` |
+| Temporary workflow, corrected owner pin and regression invocation | `b26b286ec6208d038d829e25e2b3fa0f7a60653c816115b3355c9c77754882a3` |
+| Pure module, unchanged | `4c23ee0b32cac019b4d0cf3cdbfdd23c2ef66ef1cc516ff75af1c938bda228f5` |
+| JS controller, unchanged | `2b2cd774e58217afe1e39f5be43a3d93b2c957315f5f7a843b432b5967de4525` |
+
+Required Fixes: none for this reviewed pre-execution boundary. The initial P1 is resolved,
+not accepted as residual risk. Accepted Risks: none. Optional Improvements: none requested.
+Risks: native execution, full actual inventories, npm observations, runtime/source preservation
+and both actual cleanup outcomes remain unobserved. Coordinator fresh resource/source admission,
+revision-matched Viewscreen/PR explanation review, one actual observation, independent result
+review and temporary-hook retirement remain planned follow-through. Any failed or missing first
+result stays failed/inconclusive and does not authorize a retry. The conservative Docker reserve
+limitation described above remains explicit; no physical backend peak is claimed measured.
+
+Bashir changed only this review artifact. No implementation, workflow, tests, Git state,
+controller, archive, cache, target runtime, Docker object or credential was mutated or executed.

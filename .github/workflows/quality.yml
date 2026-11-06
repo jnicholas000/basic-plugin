@@ -23,6 +23,7 @@ jobs:
         run: |
           python3 -B -m unittest discover -s docs/spikes/fixtures -p 'test_pinned_runtime_*.py'
           python3 -B -m unittest discover -s docs/spikes/fixtures -p test_npm_same_job.py
+          python3 -B -m unittest discover -s docs/spikes/fixtures -p test_npm_same_job_cleanup.py
           node --test docs/spikes/fixtures/test-npm-preparation-control.mjs
       - name: Capture owned npm with exact same-job runtime
         id: owned-npm-same-job
@@ -33,7 +34,7 @@ jobs:
           NPM_SAME_JOB_EVENT_ACTION: ${{ github.event.action }}
           NPM_SAME_JOB_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           NPM_SAME_JOB_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          NPM_SAME_JOB_SOURCE_SHA256: 'f07b511fdf66a00b03e591119525aed5e5cf99427a74d26f4a891f5cd02f663b'
+          NPM_SAME_JOB_SOURCE_SHA256: 'f066e2bea2569af601a04edf6458e32ff4f49e3d2ab21a711f0a03db1e0b9bef'
           NPM_SAME_JOB_MODULE_SHA256: '4c23ee0b32cac019b4d0cf3cdbfdd23c2ef66ef1cc516ff75af1c938bda228f5'
           NPM_SAME_JOB_TEST_SHA256: '9bdc9d9543039ab34a00f0a082710c871cb70cf90096d1b2e5c01db5ab51649d'
           NPM_SAME_JOB_CONTROLLER_SHA256: '2b2cd774e58217afe1e39f5be43a3d93b2c957315f5f7a843b432b5967de4525'
