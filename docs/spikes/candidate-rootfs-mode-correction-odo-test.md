@@ -75,3 +75,40 @@ Scotty owns the normalizer/classifier and call sites; Bashir independently revie
 preflight, stable ownership, placement before tar and sanitized result semantics. Run this frozen
 focused suite once on the final implementation and record actual observations. No download,
 archive, installation, container, security probe or denied-operation retry occurred here.
+
+## Independent ancestor-redirection regression before repair
+
+Bashir found a P1 in first helper SHA-256
+`497324bc0eb012c4180705554546d948f2ce0691c97ca771ab041aa3a5354fad`:
+holding/checking the root and final inode did not reject an intermediate directory replaced by
+a symlink after complete preflight. Final-component `O_NOFOLLOW` did not prevent following that
+ancestor, so a later chmod could affect the original directory after it moved outside rootfs.
+The final sweep rejected the changed ancestor only after the out-of-rootfs mutation.
+
+Odo appended one independently authored actual-filesystem regression to the same test file before
+Scotty's repair. New frozen test: 12,818 bytes, SHA-256
+`7fb1e1be8f5f67c2f7a3b1fa241593e4ab24678bc64c0c1dced67249ae7efe5d`.
+The original nine groups are unchanged. This updated identity supersedes the initial frozen
+identity for subsequent verification; the original failure and freeze remain recorded above.
+
+- Requirement: changing an ancestor after preflight must stop normalization before a later chmod
+  reaches a directory moved outside the authorized rootfs.
+- Test Case: use the same tiny exclusively owned fixture and actual helper. Temporarily wrap
+  `fs.fchmodSync` to observe completion on the original npm directory inode. On the second
+  subsequent deadline callback, rename that owned npm directory to a sibling within the owned
+  test parent and replace its former location with a symlink to the moved directory. Require
+  normalization to throw and the moved npm/bin directory to retain its original 0700 mode.
+  Restore the filesystem function in finally; the fixture separately restores umask and removes
+  only its own temporary tree. No host/user file, target code, external command or container runs.
+- Expected Result: the controlled redirection actually occurs, helper rejects it, and the sibling
+  bin mode remains 0700 without an out-of-rootfs chmod.
+- Observed Result: one `node --test --test-name-pattern='ancestor redirection after preflight'
+  docs/spikes/fixtures/test-rootfs-directory-modes.mjs` on helper 497324bc exited1. One test ran,
+  one failed, zero skipped; total 82.052625 ms. The redirection occurred and helper threw, but the
+  moved bin mode was 0755 (493) rather than 0700 (448). This is an actual local filesystem behavior
+  failure, not source inspection or a missing-export/loader result.
+- Status: FAIL
+
+This deterministic interleaving proves the specific reported gap. It is not universal race
+freedom or a new hostile-host qualification program. Scotty owns the correction; Bashir must
+review the complete ancestor chain and descriptor ordering. No live action is authorized here.

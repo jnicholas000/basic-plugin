@@ -192,3 +192,34 @@ test('native startup classification emits only bounded explicit error enums', { 
     assert.equal(classify(text), 'UNCLASSIFIED');
   }
 });
+
+test('ancestor redirection after preflight cannot chmod a moved directory outside rootfs', { skip: !normalize }, () => fixture(f => {
+  const npm = path.join(f.dirs.rootfs, 'npm');
+  const originalNpm = fs.lstatSync(npm);
+  const moved = path.join(f.parent, 'moved-owned-npm');
+  const originalFchmod = fs.fchmodSync;
+  let npmChmodCompleted = false, checksAfterNpm = 0, swapped = false;
+  fs.fchmodSync = (fd, nextMode) => {
+    const held = fs.fstatSync(fd);
+    originalFchmod(fd, nextMode);
+    if (held.dev === originalNpm.dev && held.ino === originalNpm.ino) npmChmodCompleted = true;
+  };
+  const checkDeadline = () => {
+    if (!npmChmodCompleted || swapped) return;
+    checksAfterNpm++;
+    // The first callback checks npm after its chmod; the next begins a later entry check.
+    if (checksAfterNpm === 2) {
+      fs.renameSync(npm, moved);
+      fs.symlinkSync(moved, npm);
+      swapped = true;
+    }
+  };
+  try {
+    assert.throws(() => normalize(f.dirs.rootfs, f.identity, f.expectedDirectories, checkDeadline));
+    assert.equal(swapped, true, 'the controlled ancestor replacement must actually occur');
+    assert.equal(mode(path.join(moved, 'bin')), 0o700,
+      'a final-component NOFOLLOW must not permit chmod through a redirected ancestor');
+  } finally {
+    fs.fchmodSync = originalFchmod;
+  }
+}));
