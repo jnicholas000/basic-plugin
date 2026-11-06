@@ -1,7 +1,11 @@
 # Fresh owned npm witness observation
 
 Feature slug: `candidate-catalog-parity`; date: 2026-11-06.
-Status: **PREREGISTERED; EXECUTION NOT YET ADMITTED**.
+Status: **SOLE PREREGISTERED OBSERVATION CONSUMED; INDETERMINATE; HOOK RETIRED**.
+
+The [actual result](candidate-npm-witness-observation-result.md) records the sole outcome. The
+original frozen contract remains below; its pre-execution bytes are retained in commit
+`c0cb2d1f5696d3ad156320dac260d864a878619e`. No repeat is authorized.
 Base: `743498a292278350294155cd9a3fd42d0a434914` (PR #31).
 Fresh branch: `feat/owned-npm-witness-observation-20261106`.
 

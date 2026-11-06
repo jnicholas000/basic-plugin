@@ -4,9 +4,14 @@ Feature slug: `candidate-catalog-parity`. Date: 2026-11-06.
 Basis: `743498a292278350294155cd9a3fd42d0a434914`.
 Fresh branch: `feat/owned-npm-witness-observation-20261106`.
 
-Result: **PASS for one separately authorized first-open observation after coordinator committed
-source/base/head verification, normal push checks, explanation review and fresh admission**.
-Actual CI capacity and target result: **NOT YET OBSERVED**.
+Current result: **PASS for truthful evidence closeout only; full npm gate INDETERMINATE**.
+The sole observation is consumed and the capture hook is retired. No retry is authorized by
+this review. The original pre-execution judgment below remains historical readiness evidence.
+
+Historical pre-execution result: **PASS for one separately authorized first-open observation
+after coordinator committed source/base/head verification, normal push checks, explanation
+review and fresh admission**. At that checkpoint, actual CI capacity and target result were
+**NOT YET OBSERVED**.
 
 ## Summary
 
@@ -121,3 +126,82 @@ Bashir changed only this review artifact. No test suite, wrapper/main, target ru
 cache/container, CI, credential/security probe, Git mutation or publication was executed here.
 No denied or uncertain action occurred. Coordinator still owns fresh shared-budget admission,
 exact committed-source verification, sole launch, truthful first-result review and hook retirement.
+
+
+## Independent post-result closeout review
+
+Result: **PASS for accurate source/evidence publication; npm qualification remains INDETERMINATE**.
+
+Bashir independently read the retained receipt, exact artifact members, bound probe/host/owner
+flow, Odo's actual-data validation, result document, PROJECT delta and retired workflow. The
+bounded witness now identifies the rejected predicate without altering acceptance. This is an
+honest failed-gate closeout, not readiness to execute dependencies, upstream code or another trial.
+
+### Verified evidence and interpretation
+
+[Run 42162713031](https://github.com/jnicholas000/basic-plugin/actions/runs/42162713031),
+job `127711928082`, attempt 1 executed reviewed head
+`fffe0d647403784add8d979b24ad41fca669dcc9` against base
+`743498a292278350294155cd9a3fd42d0a434914`; native test-merge
+`02ea215b365478f3b4dedd55fba0789b7c29c1b0` has those ordered parents, independently
+corroborated by Odo through GitHub APIs. The original-outcome enforcement failed; capture's
+continue-on-error step success and ordinary push checks do not supersede that outcome.
+
+Bashir directly verified the unchanged first receipt is 18,751 bytes with SHA-256
+`61979e9c975bbe9b6e598b61e6d34ab795b44e432a4cb98f86f1a018a55fde74`.
+The 226,613-byte artifact ZIP matches
+`fbd4adc82f29f5c8a0f473670eac3ee06b8fb5d28c14eca64cca854ea7c13cec`, contains exactly
+three uniquely named bounded JSON members, and its receipt is byte-identical. Odo independently
+matched artifact `13477447687` metadata, inventory/archive hashes, all runtime identities and
+mode-summary consistency. His final note is SHA-256
+`cba1e929992f4fb715155bd756f3b9a2a3c4a9ad287f190f8fe4c5949a2f0e83`.
+
+The retained contained failure is exactly `ci-keys / object / unexpected-keys`. Its four ordered
+passed checkpoints are admission, observer-positive, observer-reset and npm-version. The ci
+subprocess exited 0, signal/code null, no timeout, 126 stdout bytes and zero stderr. The bound
+ordered evaluator therefore passed parsing, the four exact-zero counter predicates and safe
+nonnegative removed predicate before rejecting the closed key set. The numeric removed value,
+unexpected key names/count and complete returned body were not retained and are not inferred.
+The witness is partial evidence, not a complete observation. Odo validated the real closed
+360-byte envelope through the unchanged sanitizer; Bashir inspected the actual emission and
+host-retention paths without rerunning the probe or controller.
+
+Optional add/change-array checks, owned-output checks, post-ci marker/stale-entry observations,
+output manifest/lock preservation, no installed payload, host output acceptance and final
+source/runtime preservation were not reached. The 170-file unchanged-source count is pre-child
+only. Neither this witness nor the successful ci process exit upgrades the full gate or supplies
+the missing predicate from PR #30. All five historical raw receipts remain byte-identical.
+
+### Resource and cleanup review
+
+The receipt reports one 58,290,700-byte checksum-pinned GET and zero retries, preparation
+69,021.854565 ms and whole action 76,037.457924 ms within the unchanged deadlines. Each selected
+capacity snapshot reports 92,115,656,704 bytes; these are observations of capacity, not additive
+pools or reservations. The corrected result document separately records the child-controller
+admitted peak 1,047,658,496 and prospective owner handoff bound 1,208,844,288 bytes, both below
+1,288,490,188. Owner measured filesystem peak 495,149,056, child filesystem peak 293,224,448,
+Docker reserve 436,207,616 and image logical size 142,780,557 retain their distinct meanings.
+Docker physical peak is explicitly unmeasured. The accounting wording correction was made
+without changing any receipt or producer.
+
+Source-bound child cleanup completed with no failures or mutation uncertainty. Independent
+outer-path and composite cleanup both report complete, no uncertainty and no remaining owned
+paths. No runtime persists; inert evidence is intentionally retained. Bashir directly verified
+current workflow bytes equal the normal base workflow, SHA-256
+`28b0216ae8bfbe757c2021d194909e4a9e591841b952612fa6d558bfe37cb847`.
+The executed producer/test/probe hashes above are unchanged; no actual capture hook remains.
+
+### Judgment and next boundary
+
+Required fixes: **None for this truthful closeout**. Accepted risks: **None**. Optional
+improvements: **None selected**. The failed full gate remains a qualification blocker, not an
+accepted risk. Normal final-head checks, independent explanation freshness and coordinator merge
+follow-through remain publication requirements; this review does not claim them already passed.
+
+The recorded next step is a read-only comparison of the pinned npm 11.19.1 JSON producer with
+the original closed-key contract. That may inform an explicit prospective owner decision, but
+no schema change, unknown key, retroactive pass or new trial follows from this receipt. Candidate
+dependencies/builds, browser parity and full Missions 9/10 remain unqualified.
+
+Bashir changed only this review artifact. No target runtime, npm, container, acquisition, CI,
+new test, security/configuration change or Git mutation was performed during result review.

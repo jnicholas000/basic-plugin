@@ -106,6 +106,16 @@ runtime action performed. The current probe has new source bindings; the origina
 controller/validators/tests and all historical raw receipts remain unchanged. Actual control hooks
 stay retired; this diagnostic correction alone does not qualify npm or authorize another run.
 
+The [fresh owned npm witness observation](docs/spikes/candidate-npm-witness-observation-result.md)
+completed once and remains INDETERMINATE at `ci-keys` / `unexpected-keys`. The actual bounded
+witness records passed admission, observer-positive, observer-reset and npm-version checkpoints.
+The ci child exited 0 with 126 stdout bytes, no stderr and no timeout; parsed object keys failed
+the unchanged closed allowlist. Extra key names and the body were intentionally not retained.
+Both cleanup phases completed without uncertainty, and no runtime persists. The one-use hook is
+retired. Output acceptance and post-child source/runtime preservation were not reached; the
+170-file unchanged-source observation is pre-child only. This result does not reclassify any
+previous INDETERMINATE outcome or qualify candidate dependencies/upstream builds.
+
 The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
 
 The broader [catalog-parity design](docs/candidate-catalog-parity-plan.md) still requires asserted local source/install/nav overlays and actual build/browser parity. The separate execution boundary remains SPIKE_REQUIRED before upstream package/config/build code runs. Production configuration, accepted pins/output and the throwing guard are unchanged. The temporary availability hook is retired and the existing workflow restored.
@@ -265,10 +275,13 @@ reproduces and corrects the owned directory/config modes with independent regres
 ci but stopped INDETERMINATE because its strict parse/summary acceptance failed without preserving
 the returned body or exact predicate. The [offline failure witness](docs/spikes/candidate-npm-failure-evidence-implementation.md)
 now supplies bounded partial checkpoints and predicate-specific stages without changing that oracle.
-Complete independent source/pin-closure review and normal exact-head checks for this correction.
-Do not reconstruct the missing output, relax acceptance or rerun the consumed attempt. Any later
-archive acquisition or actual target execution needs separate authority and fresh admission;
-no actual runtime hook or automatic retry is selected. Actual tar modes and native start stderr were not retained
+The separately approved [witness observation](docs/spikes/candidate-npm-witness-observation-result.md)
+now identifies `ci-keys` / `unexpected-keys` while preserving the full INDETERMINATE gate.
+Next, read-only reconcile pinned npm 11.19.1's JSON producer with the original closed-key
+contract; do not infer the unretained key names or silently broaden acceptance. Any criterion
+change requires its own reviewed owner decision, and any later archive acquisition or actual
+target execution needs separate authority and fresh admission. No actual runtime hook or
+automatic retry is selected. Actual tar modes and native start stderr were not retained
 for the old attempt, so its cause remains unproven. Preserve both original first outcomes, the
 availability proof and the retired guards. No runtime persists and no dependency or upstream
 execution is selected. Keep the separate reviewed npm gate before

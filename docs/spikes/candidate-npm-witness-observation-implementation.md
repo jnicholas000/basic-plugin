@@ -2,7 +2,11 @@
 
 Feature slug: `candidate-catalog-parity`. Date: 2026-11-06.
 Source basis: `743498a292278350294155cd9a3fd42d0a434914`.
-Status: **SOURCE PREPARED; ACTUAL EXECUTION NOT ADMITTED BY THIS RECORD**.
+Status: **SOLE OBSERVATION CONSUMED; RESULT INDETERMINATE; HOOK RETIRED**.
+
+The [actual result and unchanged receipt](candidate-npm-witness-observation-result.md) now record
+`ci-keys` / `unexpected-keys` and complete reported cleanup. The source-preparation evidence
+below predates the action; it is not a runtime pass or permission for a repeat.
 
 Scotty reread the installed Starfleet Crew 0.2.0 implementation role and the
 [Data contract](candidate-npm-witness-observation.md). Independent Data/Odo freeze commit
