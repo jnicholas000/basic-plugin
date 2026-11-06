@@ -5,7 +5,7 @@ project_name: Basic Plugin
 repository: jnicholas000/basic-plugin
 status: active
 current_phase: Adaptive marketplace clone and customization incubation
-last_reviewed: 2026-11-05
+last_reviewed: 2026-11-06
 project_ops_file: projects/basic-plugin.md
 ---
 
@@ -69,6 +69,14 @@ was 495,149,056 bytes and total time 69.04 seconds. Source-bound cleanup complet
 uncertainty, removing the archive, stage, installed cache, marker and created empty version parent;
 only bounded inert evidence remains. Independent result review passed. No target Node 24/npm
 ran, no cache persists to another job, and the original npm attempt remains INDETERMINATE.
+
+The separately authorized [same-job owned npm control](docs/spikes/candidate-npm-same-job-result.md)
+completed once and remains INDETERMINATE. Exact runtime preparation, the 1,635-file npm inventory,
+owned image import and policy inspection completed; the container start returned exit 126 with no
+probe output. No observer, target version or empty offline ci result was observed. Both child
+and temporary-cache cleanup completed without uncertainty; no runtime persists. The temporary hook
+is retired. This new record does not replace the original prerequisite stop or availability proof,
+and it does not qualify candidate dependencies or upstream package/configuration/build code.
 
 The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
 
@@ -221,10 +229,13 @@ stopped at fixed-runtime admission with ENOENT; it does not qualify npm. The
 [metadata diagnostic](docs/spikes/candidate-npm-prerequisite-metadata.md) now identifies the exact
 24.22.1 cache and its selected child inputs as absent on the observed runner. The
 [availability action](docs/spikes/candidate-pinned-runtime-availability.md) then supplied and
-verified those exact bytes temporarily, with complete cleanup and no target invocation. Prepare
-the separately reviewed owned-fixture npm startup/empty-offline-ci gate using fresh approved
-preparation in that same job; obtain separate authority before target Node 24/npm execution.
-The completed availability action grants no persistent cache or further acquisition. Preserve
+verified those exact bytes temporarily, with complete cleanup and no target invocation. The subsequent [same-job action](docs/spikes/candidate-npm-same-job-result.md) reached an owned
+container start but stopped INDETERMINATE at exit 126 without probe output. Review the concrete
+rootfs directory-mode/umask incompatibility using owned inert evidence and correct only new owned
+paths before proposing another bounded observation. Actual rootfs modes and native start stderr
+were not retained, so the recorded exit cause is not established. Preserve both first outcomes;
+no automatic retry, further acquisition or runtime substitution is selected. No runtime persists and
+no actual dependency or upstream execution is selected. Preserve
 the original first result; no automatic retry or runtime substitution is selected. No target npm or
 downloaded dependency code ran in the earlier controls. Keep the separate reviewed npm gate before
 dependency preparation or upstream code. Production preparation, allowed outputs and both
