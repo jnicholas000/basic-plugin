@@ -7,6 +7,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
+import { normalizeOwnedRootfsModes, classifyOwnedStartupError } from './owned-rootfs-modes.mjs';
 
 const requireFact = value => { if (!value) throw new Error('owned-npm-requirement'); };
 const same = (a, b) => requireFact(isDeepStrictEqual(a, b));
@@ -22,6 +23,8 @@ const manifestDigest = 'f6478d5600180a23f73e4217610c7709a71cedb4ae13f6c3e15ecb45
 const probeDigest = '18800d03a5f86171c2eb96631a54e7a3b4e1aaa1f65f25d5d402067ec96ebb5c';
 const observerDigest = 'a3059404cb6f0cfcc861d00a53a471e8f7dc90632d5e8b9b02f68d88b7f9fcb9';
 const testDigest = '5e0ba660f7214ed5613b757f86df9eaf53c33cd7480988b2681718003d8ed972';
+const modeHelperDigest = '497324bc0eb012c4180705554546d948f2ce0691c97ca771ab041aa3a5354fad';
+const modeTestDigest = '50eb4d13e2be8dfbeb6059a7ad1728f484a53fd7d9e988c99dd9ed2484a9d25e';
 const entrypoint = ['/runtime/node', '--max-old-space-size=32', '/npm-probe.mjs'];
 const childEnv = { HOME: '/nonexistent', PATH: '/usr/bin:/bin', FIXTURE_VISIBLE: 'synthetic', HOSTNAME: 'fixture' };
 const flags = ['--offline', '--ignore-scripts', '--audit=false', '--fund=false', '--update-notifier=false',
@@ -180,6 +183,8 @@ function main() {
       && process.env.NPM_SAME_JOB_STAGE_RELEASED === 'true');
     const dirs = Object.fromEntries(['input', 'output', 'rootfs', 'home', 'docker-config'].map(k => [k, path.join(root, k)]));
     for (const p of Object.values(dirs)) mutateFs(() => fs.mkdirSync(p, { mode: 0o700 }));
+    const rootfsStat = fs.lstatSync(dirs.rootfs);
+    const rootfsIdentity = { dev: rootfsStat.dev, ino: rootfsStat.ino };
     env = { HOME: dirs.home, DOCKER_CONFIG: dirs['docker-config'], DOCKER_HOST: 'unix:///var/run/docker.sock', PATH: '/usr/bin:/bin', LC_ALL: 'C', OPENSSL_CONF: '/dev/null' };
     stage = 'source-bindings';
     result.sourceCommit = run('/usr/bin/git', ['--no-lazy-fetch', '-C', repo, 'rev-parse', 'HEAD']); same(result.sourceCommit, process.env.GITHUB_SHA);
@@ -193,7 +198,8 @@ function main() {
     result.sourceHashes = {};
     for (const [name, expected] of [['run-npm-same-job-control.mjs', process.env.NPM_SAME_JOB_CONTROLLER_SHA256],
       ['run-npm-preparation-control.mjs', 'efeebb36b8768d1df8ec10cb786382f2b8301cd7d2eb519ff6afbbe322bc15c7'],
-      ['npm-preparation-probe.mjs', probeDigest], ['npm-lifecycle-observer.mjs', observerDigest], ['test-npm-preparation-control.mjs', testDigest]]) {
+      ['npm-preparation-probe.mjs', probeDigest], ['npm-lifecycle-observer.mjs', observerDigest], ['test-npm-preparation-control.mjs', testDigest],
+      ['owned-rootfs-modes.mjs', modeHelperDigest], ['test-rootfs-directory-modes.mjs', modeTestDigest]]) {
       const relative = `docs/spikes/fixtures/${name}`, p = path.join(repo, relative), actual = fileHash(p, 1048576, checkDeadline).sha256;
       same(actual, expected); requireFact(before[relative]);
       same(run('/usr/bin/git', ['--no-lazy-fetch', '-C', repo, 'rev-parse', `${result.headCommit}:${relative}`]),
@@ -288,6 +294,10 @@ function main() {
     }
     mutateFs(() => fs.mkdirSync(path.join(dirs.rootfs, 'config'), { mode: 0o755 }));
     for (const name of ['user.npmrc', 'global.npmrc']) mutateFs(() => fs.writeFileSync(path.join(dirs.rootfs, 'config', name), '', { flag: 'wx', mode: 0o444 }));
+    stage = 'owned-rootfs-modes';
+    checkRoot();
+    result.rootfsModes = normalizeOwnedRootfsModes(dirs.rootfs, rootfsIdentity, [...plannedDirs], checkDeadline);
+    checkRoot();
     stage = 'import-owned-rootfs';
     diskCheckpoint();
     const archive = path.join(root, 'owned-rootfs.tar'); run('/usr/bin/tar', ['--owner=0', '--group=0', '--numeric-owner', '-C', dirs.rootfs, '-cf', archive, '.']);
@@ -316,7 +326,8 @@ function main() {
     let stdout, startError, firstCommandFailure;
     result.targetInvocationAttempted = true;
     try { stdout = docker(['start', '--attach', containerId], 10000); }
-    catch (error) { startError = error; firstCommandFailure = commandFailure; }
+    catch (error) { startError = error; firstCommandFailure = commandFailure;
+      result.startupErrorClassification = classifyOwnedStartupError(error.stderr); }
     try {
       result.containerState = JSON.parse(docker(['inspect', '--format', '{"exit":{{json .State.ExitCode}},"oomKilled":{{json .State.OOMKilled}},"running":{{json .State.Running}}}', containerId]));
     } catch (error) { if (!startError) throw error; }
