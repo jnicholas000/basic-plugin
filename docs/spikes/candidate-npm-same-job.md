@@ -1,7 +1,10 @@
 # Owned npm test with same-job pinned preparation
 
 Mission slug: `candidate-catalog-parity`. Date: 2026-11-06.
-Status: **PROSPECTIVE / TEST CONTRACT READY; NO ACTION ADMITTED YET**.
+Current state: **FIRST ACTION INDETERMINATE; HOOK RETIRED; NO RETRY**.
+See the [observed result](candidate-npm-same-job-result.md). The prospective contract below
+is retained as the basis of the sole action; its original freeze is commit
+`ae87b4ba2b00a20edb1cd1812f7c140c471ae8f1`. It does not authorize another execution.
 Source basis: `c85869d2fd2742ad2360665f06023fb99e02a4da`.
 Branch: `feat/owned-npm-same-job-20261106`.
 
