@@ -56,3 +56,37 @@ Run the focused suites after Scotty implements the new producer, then record exa
 hashes and observations before Bashir readiness review. Any mismatch returns to the owning role;
 Odo does not repair production code or broaden this empty-graph gate. The target test, any actual
 Docker image/container creation, runtime acquisition and cleanup remain **NOT EXECUTED** here.
+
+## Independent operational regression — child cleanup propagation
+
+Bashir found a blocking P1 in the first derived owner, SHA-256
+`f07b511fdf66a00b03e591119525aed5e5cf99427a74d26f4a891f5cd02f663b`.
+A child receipt with failed image/container cleanup and a false mutation-uncertainty flag did
+not set the outer owner's `child_uncertain` signal. Later rejection of the result therefore
+could leave aggregate cleanup reporting success despite an outstanding child resource.
+
+Odo independently froze [fixtures/test_npm_same_job_cleanup.py](fixtures/test_npm_same_job_cleanup.py)
+before correction. Test SHA-256:
+`1d754c29bb19fad671c953d8ead2c9f227bd0bd20b5d7575a3159cdc574a9399`;
+3,848 bytes. The original eight-method test remains unchanged.
+
+- Requirement: incomplete, malformed or uncertain child cleanup must propagate to the owner;
+  acknowledged successful cleanup must not create uncertainty, and prior uncertainty must survive.
+- Test Case: parse the actual owner source, select its single `child_uncertain` assignment whose
+  expression references `npm.get`, compile only that statement and execute it with in-memory
+  receipt dictionaries. The wrapper, imports and main are never evaluated. Malformed-expression
+  errors model the existing outer-handler behavior of retaining the prior signal. No filesystem
+  mutation, network, subprocess, Docker, archive, target-runtime or cache operation occurs.
+- Expected Result: exact successful cleanup preserves false, prior uncertainty preserves true,
+  and every failed/incomplete/malformed cleanup sets the uncertainty signal true.
+- Observed Result: one existing-host invocation of `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest
+  discover -s docs/spikes/fixtures -p test_npm_same_job_cleanup.py` exited1. Four methods ran in
+  0.001 seconds: the exact-success and prior-uncertainty controls passed; twelve subcases failed,
+  including well-formed image/container failures, incomplete completion and malformed receipts.
+  The explicit mutation-uncertainty=true case passed. These are actual inert statement-behavior
+  failures rather than loader failures or a reimplementation of the desired predicate.
+- Status: FAIL
+
+This seam establishes the local propagation defect only. It does not execute the owner's full
+exception/finally path, prove actual daemon cleanup or replace Bashir's review of the corrected
+ordering and aggregate result. Scotty owns the repair; coordinator admission remains blocked.
