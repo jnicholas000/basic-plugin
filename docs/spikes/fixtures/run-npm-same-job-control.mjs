@@ -8,7 +8,8 @@ import { isDeepStrictEqual } from 'node:util';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { normalizeOwnedRootfsModes, classifyOwnedStartupError } from './owned-rootfs-modes.mjs';
-import { sanitizeOwnedNpmFailure } from './npm-preparation-probe.mjs';
+import { sanitizeOwnedNpmFailure, npmContractVersion } from './npm-preparation-probe-v2.mjs';
+import { verifyNpmObservationV2 } from './npm-observation-v2.mjs';
 
 const requireFact = value => { if (!value) throw new Error('owned-npm-requirement'); };
 const same = (a, b) => requireFact(isDeepStrictEqual(a, b));
@@ -21,7 +22,9 @@ const inside = (parent, child) => child === parent || child.startsWith(`${parent
 const cache = '/opt/hostedtoolcache/node/24.22.1/x64';
 const npmRoot = `${cache}/lib/node_modules/npm`;
 const manifestDigest = 'f6478d5600180a23f73e4217610c7709a71cedb4ae13f6c3e15ecb457f5d4fd6';
-const probeDigest = 'fd905605bd8d9b80c1f493d1726f9aad9e876eadb6ee57b41f8b93bbe1298cb3';
+const probeDigest = '2fe35ef9ae647b0cc506e615596a07dddc8b403a7900c4ba8c219aea4e8c0c68';
+const observationV2Digest = 'f85c038d6d188a6fc3d03bc3f34beab99ad679bbf093e2793d24223b9c20d385';
+const contractV2TestDigest = 'be6b8f15560cd5716866573b4dd395e4448c9646d973fd98c470bb57c7155398';
 const witnessTestDigest = '0eb22750fa7f09e0a1928981c177e3383575db2fcf1b107fa0b0dd2e468f3e4c';
 const observerDigest = 'a3059404cb6f0cfcc861d00a53a471e8f7dc90632d5e8b9b02f68d88b7f9fcb9';
 const testDigest = '5e0ba660f7214ed5613b757f86df9eaf53c33cd7480988b2681718003d8ed972';
@@ -47,7 +50,7 @@ const runtime = [
 ].map(([destination, bytes, sha256]) => ({ source: destination === '/runtime/node' ? `${cache}/bin/node`
   : `/usr/lib/x86_64-linux-gnu/${destination.endsWith('/libstdc++.so.6') ? 'libstdc++.so.6.0.33' : destination.split('/').at(-1)}`, destination, bytes, sha256 }));
 
-import { validateRuntimeInventory, validateNpmInventory, buildNpmContainerArgs, verifyNpmPolicy, verifyNpmObservation } from './run-npm-preparation-control.mjs';
+import { validateRuntimeInventory, validateNpmInventory, buildNpmContainerArgs, verifyNpmPolicy } from './run-npm-preparation-control.mjs';
 function npmPath(p) {
   return typeof p === 'string' && p.length > 0 && !/[\x00-\x1f\x7f\\]/.test(p)
     && p.split('/').length <= 32 && p.split('/').every(c => c && c !== '.' && c !== '..' && c !== '.bin' && c !== '.npmrc' && !c.endsWith('.node'))
@@ -110,7 +113,7 @@ const policyTemplate = `{"imageId":{{json .Image}},"label":{{json (index .Config
 function main() {
   const clockStart = performance.now(), deadline = clockStart + 90000;
   const result = { schemaVersion: 1, status: 'INDETERMINATE', startedAt: new Date().toISOString(),
-    upstreamExecuted: false, realCredentialsProbed: false, downloadsOrInstalls: false, targetInvocationAttempted: false, hostNodeVersion: process.version };
+    upstreamExecuted: false, realCredentialsProbed: false, downloadsOrInstalls: false, targetInvocationAttempted: false, hostNodeVersion: process.version, npmContractVersion };
   let root, rootIdentity, parentIdentity, pendingRoot = false, env, nonce, objectOpsAttempted = false, mutationOutcomeUncertain = false, cleanupDeadline = Infinity;
   let stage = 'admission', commandFailure = null, candidateObservation, before, repo;
   const checkDeadline = () => requireFact(performance.now() < deadline);
@@ -200,7 +203,9 @@ function main() {
     result.sourceHashes = {};
     for (const [name, expected] of [['run-npm-same-job-control.mjs', process.env.NPM_SAME_JOB_CONTROLLER_SHA256],
       ['run-npm-preparation-control.mjs', 'efeebb36b8768d1df8ec10cb786382f2b8301cd7d2eb519ff6afbbe322bc15c7'],
-      ['npm-preparation-probe.mjs', probeDigest], ['npm-lifecycle-observer.mjs', observerDigest], ['test-npm-preparation-control.mjs', testDigest],
+      ['npm-preparation-probe.mjs', 'fd905605bd8d9b80c1f493d1726f9aad9e876eadb6ee57b41f8b93bbe1298cb3'],
+      ['npm-preparation-probe-v2.mjs', probeDigest], ['npm-observation-v2.mjs', observationV2Digest],
+      ['test-npm-empty-remove-v2.mjs', contractV2TestDigest], ['npm-lifecycle-observer.mjs', observerDigest], ['test-npm-preparation-control.mjs', testDigest],
       ['owned-rootfs-modes.mjs', modeHelperDigest], ['test-rootfs-directory-modes.mjs', modeTestDigest],
       ['test-npm-failure-witness.mjs', witnessTestDigest]]) {
       const relative = `docs/spikes/fixtures/${name}`, p = path.join(repo, relative), actual = fileHash(p, 1048576, checkDeadline).sha256;
@@ -285,13 +290,13 @@ function main() {
     const inventoryPath = path.join(runnerTemp, 'basic-npm-witness-inventory.json');
     mutateFs(() => fs.writeFileSync(inventoryPath, inventoryText, { flag: 'wx', mode: 0o600 })); result.npmInventory.artifact = 'basic-npm-witness-inventory.json';
     stage = 'owned-fixture';
-    const probeText = boundedBytes(path.join(repo, 'docs/spikes/fixtures/npm-preparation-probe.mjs'), 65536, checkDeadline).toString('utf8');
+    const probeText = boundedBytes(path.join(repo, 'docs/spikes/fixtures/npm-preparation-probe-v2.mjs'), 65536, checkDeadline).toString('utf8');
     result.inputHashes = { manifest: '2f7fd9cadad92c0af5e113c0ad0140023608312db9ea83050e8bef56ced745eb', lock: '465eac71e5d2ba4a43c47a546ee9280d7d518c320abae0d0d6a7c03e175e7dbe' };
     const manifestText = probeText.match(/export const manifestText = `([^`]+)`;/)?.[1], lockText = probeText.match(/export const lockText = `([^`]+)`;/)?.[1];
     requireFact(manifestText && lockText && hash(manifestText) === '2f7fd9cadad92c0af5e113c0ad0140023608312db9ea83050e8bef56ced745eb'
       && hash(lockText) === '465eac71e5d2ba4a43c47a546ee9280d7d518c320abae0d0d6a7c03e175e7dbe');
     for (const [name, text] of [['package.json', manifestText], ['package-lock.json', lockText]]) mutateFs(() => fs.writeFileSync(path.join(dirs.input, name), text, { flag: 'wx', mode: 0o600 }));
-    for (const [name, destination, mode] of [['npm-preparation-probe.mjs', 'npm-probe.mjs', 0o444], ['npm-lifecycle-observer.mjs', 'lifecycle-observer.mjs', 0o555]]) {
+    for (const [name, destination, mode] of [['npm-preparation-probe-v2.mjs', 'npm-probe.mjs', 0o444], ['npm-lifecycle-observer.mjs', 'lifecycle-observer.mjs', 0o555]]) {
       const source = path.join(repo, 'docs/spikes/fixtures', name), dest = path.join(dirs.rootfs, destination);
       mutateFs(() => fs.copyFileSync(source, dest, fs.constants.COPYFILE_EXCL)); fs.chmodSync(dest, mode); same(fileHash(dest, 65536, checkDeadline).sha256, result.sourceHashes[name]);
     }
@@ -380,7 +385,7 @@ function main() {
     if (!result.failure && candidateObservation) {
       try {
         const final = { ...candidateObservation, cleanupComplete: result.cleanup.completed, mutationOutcomeUncertain, sourcePreserved: true };
-        verifyNpmObservation(final); result.observation = final; result.status = 'NPM11_OWNED_PREPARATION_CONTROL_PASSED';
+        verifyNpmObservationV2(final); result.observation = final; result.status = 'NPM11_OWNED_PREPARATION_CONTROL_PASSED';
       } catch { result.failure = { stage: 'finalization', reason: 'owned-npm-requirement' }; }
     }
     result.completedAt = new Date().toISOString(); result.elapsedMs = performance.now() - clockStart;
