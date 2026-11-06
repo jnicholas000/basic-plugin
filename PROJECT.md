@@ -88,6 +88,15 @@ acquisition, npm qualification or container action occurred; the prior exit-126 
 unproven. Normal CI runs only the new owned-filesystem unit test in its existing local check step;
 actual runtime-control hooks remain retired.
 
+The [fresh corrected owned npm observation](docs/spikes/candidate-npm-corrected-observation-result.md)
+completed once and remains INDETERMINATE. The bound probe executed and reached `npm-ci`; source
+flow supports the earlier Node/input/observer/reset/exact-version checks, but their partial values
+were not retained on failure. The ci child exited 0 with 126 stdout bytes and no stderr, then
+JSON parse/summary acceptance failed at an unrecorded predicate. No owned-output or post-child
+preservation result exists. Both cleanups completed without uncertainty, and reported corrected
+modes cover 446 rootfs directories plus both empty configs. The hook is retired; all prior
+outcomes remain unchanged and no retry or runtime persistence is selected.
+
 The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
 
 The broader [catalog-parity design](docs/candidate-catalog-parity-plan.md) still requires asserted local source/install/nav overlays and actual build/browser parity. The separate execution boundary remains SPIKE_REQUIRED before upstream package/config/build code runs. Production configuration, accepted pins/output and the throwing guard are unchanged. The temporary availability hook is retired and the existing workflow restored.
@@ -242,11 +251,14 @@ stopped at fixed-runtime admission with ENOENT; it does not qualify npm. The
 verified those exact bytes temporarily, with complete cleanup and no target invocation. The subsequent [same-job action](docs/spikes/candidate-npm-same-job-result.md) reached an owned
 container start but stopped INDETERMINATE at exit 126 without probe output. The
 [offline mode correction](docs/spikes/candidate-rootfs-mode-correction-implementation.md) now
-reproduces and corrects the owned directory/config modes with independent regressions. Prepare a
-separately reviewed fresh same-job observation using the corrected source and bounded mode/native
-error evidence. Before any new archive acquisition or target execution, obtain separate authority
-and freeze fresh source/event/resource admission under the retained limits. No actual runtime
-hook or automatic retry is selected. Actual tar modes and native start stderr were not retained
+reproduces and corrects the owned directory/config modes with independent regressions. The separately authorized
+[fresh corrected observation](docs/spikes/candidate-npm-corrected-observation-result.md) then reached
+ci but stopped INDETERMINATE because its strict parse/summary acceptance failed without preserving
+the returned body or exact predicate. Prepare an offline, independently tested bounded failure
+witness with safe partial checkpoints and predicate-specific stages while preserving the oracle.
+Do not reconstruct the missing output, relax acceptance or rerun the consumed attempt. Any later
+archive acquisition or actual target execution needs separate authority and fresh admission;
+no actual runtime hook or automatic retry is selected. Actual tar modes and native start stderr were not retained
 for the old attempt, so its cause remains unproven. Preserve both original first outcomes, the
 availability proof and the retired guards. No runtime persists and no dependency or upstream
 execution is selected. Keep the separate reviewed npm gate before
