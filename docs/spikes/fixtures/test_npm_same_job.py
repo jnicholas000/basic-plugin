@@ -173,10 +173,10 @@ class SameJobContract(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         function(nonrecord)
 
-    def test_original_npm_control_and_fixture_sources_remain_frozen(self):
+    def test_original_controls_and_current_probe_match_exact_source_versions(self):
         expected = {
             'run-npm-preparation-control.mjs': 'efeebb36b8768d1df8ec10cb786382f2b8301cd7d2eb519ff6afbbe322bc15c7',
-            'npm-preparation-probe.mjs': '18800d03a5f86171c2eb96631a54e7a3b4e1aaa1f65f25d5d402067ec96ebb5c',
+            'npm-preparation-probe.mjs': '9a412d237ec662a1fb5671ba121afcb14b3bfeec6f4dd4e7093aafece599dda5',
             'npm-lifecycle-observer.mjs': 'a3059404cb6f0cfcc861d00a53a471e8f7dc90632d5e8b9b02f68d88b7f9fcb9',
             'test-npm-preparation-control.mjs': '5e0ba660f7214ed5613b757f86df9eaf53c33cd7480988b2681718003d8ed972',
             'run_pinned_runtime_availability.py': '9aecd6d7e40c969cc5fa61a53b9bd2c9af02f450fe8bd1d2ad625bc56da20cc0',

@@ -65,3 +65,44 @@ a deliberate source-version update, not removal of its pin assertion or retroact
 
 This offline evidence repair grants no new controlled execution. Prior observations remain
 INDETERMINATE, and the previous ci predicate and output remain unknown.
+
+## Post-implementation focused verification and controlled source pin
+
+The current probe now has SHA-256
+`9a412d237ec662a1fb5671ba121afcb14b3bfeec6f4dd4e7093aafece599dda5`;
+the actual derived host catch source is
+`6485d3a8e267e10ccb193cd07c61131236d9865b361fe417a4d002f19ffb9e24`.
+Odo independently checked the probe's exact bytes and confirmed the new nine-group test remained
+unchanged at frozen SHA-256 `a97ad364d6e2560f8fd20dce8218c9f15c9b11b909971afe5c7d78af27cbcc18`.
+
+Under the explicit planned source-version update, Odo changed only the current probe's expected
+hash and the preservation-method label in `fixtures/test_npm_same_job.py`. Its other four exact
+historical source assertions remain unchanged, and the probe assertion remains exact. The label
+now distinguishes original controls from the current evolving prospective probe. New derived
+eight-method test SHA-256:
+`835524606bddecc08cd8798a3decccfdc52fd5b33de5c86d457254eb445876e3`.
+The original PR25 controller/validators/test, historical source versions and all raw outcomes are
+untouched. This versioned pin update is not an exception to the assertion or a retroactive pass.
+
+- Requirement: retain exact current and historical source bindings after the allowed evidence-only
+  probe evolution.
+- Test Case: one affected eight-method Python suite on the current probe version, with bytecode
+  writing disabled.
+- Expected Result: all pure policy/admission/evidence/source checks pass with exact assertions.
+- Observed Result: eight methods, eight passed, zero errors/failures in 0.005 seconds, exit 0.
+- Status: PASS
+
+- Requirement: actual failure emission/host retention and all authored finite diagnostic/oracle,
+  privacy/schema/prefix/boundary controls must pass without target execution.
+- Test Case: one frozen nine-group Node suite after the controlled pin update, on the source
+  identities above. Only pure definitions and actual isolated catch bodies receive synthetic data.
+- Expected Result: all nine groups run, including previously skipped helper cases; no skips.
+- Observed Result: nine passed, zero failed/cancelled/skipped/todo, 59.906791 ms, exit 0. Both genuine
+  pre-fix witness-loss regressions now pass; original acceptance parity and retained stderr
+  65536/65537-byte controls also pass.
+- Status: PASS
+
+These checks establish the bounded offline evidence behavior only. They do not recover the old
+126-byte ci output, identify its prior failing predicate, qualify npm or authorize a new attempt.
+Scotty received the new derived-test hash for the owner pin closure; Bashir independently reviews
+the final complete source closure and readiness. No npm, runtime, acquisition or container ran.

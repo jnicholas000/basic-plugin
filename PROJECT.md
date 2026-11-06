@@ -97,6 +97,15 @@ preservation result exists. Both cleanups completed without uncertainty, and rep
 modes cover 446 rootfs directories plus both empty configs. The hook is retired; all prior
 outcomes remain unchanged and no retry or runtime persistence is selected.
 
+The [offline npm failure witness](docs/spikes/candidate-npm-failure-evidence-implementation.md)
+now records finite predicate-specific ci diagnostics and safe earlier checkpoint evidence in the
+current probe, with a closed sanitizer shared by its failure emitter and derived host relay.
+Nine independent synthetic groups pass, including the actual catch bodies and parity with the
+literal original ci oracle. No previous output was reconstructed, acceptance loosened or actual
+runtime action performed. The current probe has new source bindings; the original PR25 host
+controller/validators/tests and all historical raw receipts remain unchanged. Actual control hooks
+stay retired; this diagnostic correction alone does not qualify npm or authorize another run.
+
 The [committed-HEAD local catalog projection](docs/candidate-catalog-projection-implementation.md) now derives candidate plugin, agent, skill and search payloads from the same local Git inventory, with source hashes, dates and capability agreement. It requires complete local Git history, rejects shallow checkouts and disables implicit object fetching. It reads artifact metadata/assets as data, writes no output and preserves unknown contributors and unverified install actions. The consumed-field contract is implemented for this inert boundary; `LOCAL_CATALOG_PROJECTED_UNVALIDATED_SITE` does not activate a website.
 
 The broader [catalog-parity design](docs/candidate-catalog-parity-plan.md) still requires asserted local source/install/nav overlays and actual build/browser parity. The separate execution boundary remains SPIKE_REQUIRED before upstream package/config/build code runs. Production configuration, accepted pins/output and the throwing guard are unchanged. The temporary availability hook is retired and the existing workflow restored.
@@ -254,8 +263,9 @@ container start but stopped INDETERMINATE at exit 126 without probe output. The
 reproduces and corrects the owned directory/config modes with independent regressions. The separately authorized
 [fresh corrected observation](docs/spikes/candidate-npm-corrected-observation-result.md) then reached
 ci but stopped INDETERMINATE because its strict parse/summary acceptance failed without preserving
-the returned body or exact predicate. Prepare an offline, independently tested bounded failure
-witness with safe partial checkpoints and predicate-specific stages while preserving the oracle.
+the returned body or exact predicate. The [offline failure witness](docs/spikes/candidate-npm-failure-evidence-implementation.md)
+now supplies bounded partial checkpoints and predicate-specific stages without changing that oracle.
+Complete independent source/pin-closure review and normal exact-head checks for this correction.
 Do not reconstruct the missing output, relax acceptance or rerun the consumed attempt. Any later
 archive acquisition or actual target execution needs separate authority and fresh admission;
 no actual runtime hook or automatic retry is selected. Actual tar modes and native start stderr were not retained

@@ -46,6 +46,93 @@ const requireFact = value => { if (!value) throw new Error('owned-npm-requiremen
 const marker = '/output/lifecycle-observed.txt';
 const project = '/output/project';
 
+// Pure closed diagnostics preserve the original ci oracle; failed output is never retained.
+const ciCheckpoints = ['ci-exit', 'ci-stderr', 'ci-json', 'ci-added', 'ci-changed', 'ci-audited',
+  'ci-funding', 'ci-removed', 'ci-keys', 'ci-add', 'ci-change', 'ci-accepted'];
+const jsonKinds = ['not-parsed', 'null', 'object', 'array', 'string', 'number', 'boolean'];
+const details = ['none', 'nonzero-exit', 'nonempty-stderr', 'parse-error', 'missing', 'wrong-type',
+  'nonzero', 'not-safe-nonnegative-integer', 'unexpected-keys', 'not-array', 'nonempty-array'];
+const passedCheckpoints = ['admission', 'observer-positive', 'observer-reset', 'npm-version'];
+const failureCodes = ['ETIMEDOUT', 'ENOENT', 'EACCES', 'ENOBUFS', 'OTHER'];
+const failureSignals = ['SIGTERM', 'SIGKILL', 'SIGABRT', 'SIGSEGV', 'SIGBUS', 'SIGILL',
+  'SIGFPE', 'SIGPIPE', 'SIGINT', 'SIGHUP', 'OTHER'];
+const closed = (value, keys) => value !== null && typeof value === 'object' && !Array.isArray(value)
+  && Reflect.ownKeys(value).length === keys.length && Reflect.ownKeys(value).every(key => keys.includes(key));
+
+export function evaluateOwnedCiResult(ci) {
+  let jsonKind = 'not-parsed', summary;
+  const result = (checkpoint, detail, accepted = false) => ({ accepted,
+    summary: accepted ? summary : null, diagnostic: { checkpoint, jsonKind, detail } });
+  if (ci?.status !== 0) return result('ci-exit', 'nonzero-exit');
+  if (ci.stderr !== '') return result('ci-stderr', 'nonempty-stderr');
+  try { summary = JSON.parse(ci.stdout); } catch { return result('ci-json', 'parse-error'); }
+  jsonKind = summary === null ? 'null' : Array.isArray(summary) ? 'array' : typeof summary;
+  for (const key of ['added', 'changed', 'audited', 'funding']) {
+    if (summary === null) return result(`ci-${key}`, 'wrong-type');
+    const value = summary[key];
+    if (value !== 0) return result(`ci-${key}`, value === undefined ? 'missing' : typeof value === 'number' ? 'nonzero' : 'wrong-type');
+  }
+  if (!Number.isSafeInteger(summary.removed) || summary.removed < 0) return result('ci-removed', 'not-safe-nonnegative-integer');
+  if (!Object.keys(summary).every(key => ['added', 'removed', 'changed', 'audited', 'funding', 'add', 'change'].includes(key)))
+    return result('ci-keys', 'unexpected-keys');
+  for (const key of ['add', 'change']) if (key in summary) {
+    if (!Array.isArray(summary[key])) return result(`ci-${key}`, 'not-array');
+    if (summary[key].length !== 0) return result(`ci-${key}`, 'nonempty-array');
+  }
+  return result('ci-accepted', 'none', true);
+}
+
+export function sanitizeOwnedNpmFailure(value) {
+  try {
+    if (!closed(value, ['status', 'stage', 'reason', 'code', 'child', 'witness'])
+      || value.status !== 'INDETERMINATE' || value.reason !== 'owned-npm-requirement'
+      || !(value.code === null || failureCodes.includes(value.code))
+      || Buffer.byteLength(JSON.stringify(value)) > 2048) return null;
+    const w = value.witness;
+    if (!closed(w, ['version', 'passed', 'ci']) || w.version !== 1 || !Array.isArray(w.passed)
+      || w.passed.length > 4 || !w.passed.every((item, index) => item === passedCheckpoints[index])) return null;
+    let ci = null;
+    if (w.ci !== null) {
+      if (!closed(w.ci, ['checkpoint', 'jsonKind', 'detail']) || !ciCheckpoints.includes(w.ci.checkpoint)
+        || !jsonKinds.includes(w.ci.jsonKind) || !details.includes(w.ci.detail)) return null;
+      const d = w.ci;
+      const allowed = d.checkpoint === 'ci-exit' ? d.jsonKind === 'not-parsed' && d.detail === 'nonzero-exit'
+        : d.checkpoint === 'ci-stderr' ? d.jsonKind === 'not-parsed' && d.detail === 'nonempty-stderr'
+        : d.checkpoint === 'ci-json' ? d.jsonKind === 'not-parsed' && d.detail === 'parse-error'
+        : d.checkpoint === 'ci-added' && d.jsonKind === 'null' ? d.detail === 'wrong-type'
+        : ['ci-added', 'ci-changed', 'ci-audited', 'ci-funding'].includes(d.checkpoint)
+          ? ['object', 'array', 'string', 'number', 'boolean'].includes(d.jsonKind) && ['missing', 'wrong-type', 'nonzero'].includes(d.detail)
+        : d.checkpoint === 'ci-removed' ? d.jsonKind === 'object' && d.detail === 'not-safe-nonnegative-integer'
+        : d.checkpoint === 'ci-keys' ? d.jsonKind === 'object' && d.detail === 'unexpected-keys'
+        : ['ci-add', 'ci-change'].includes(d.checkpoint) ? d.jsonKind === 'object' && ['not-array', 'nonempty-array'].includes(d.detail)
+        : d.checkpoint === 'ci-accepted' && d.jsonKind === 'object' && d.detail === 'none';
+      if (!allowed) return null;
+      ci = { checkpoint: d.checkpoint, jsonKind: d.jsonKind, detail: d.detail };
+    }
+    const length = w.passed.length;
+    const consistent = value.stage === 'admission' ? length === 0 && ci === null
+      : value.stage === 'observer-positive' ? (length === 1 || length === 2) && ci === null
+      : value.stage === 'npm-version' ? length === 3 && ci === null
+      : value.stage === 'npm-ci' ? length === 4 && ci === null
+      : value.stage === 'owned-output' ? length === 4 && ci?.checkpoint === 'ci-accepted'
+      : ciCheckpoints.includes(value.stage) && length === 4 && ci?.checkpoint === value.stage;
+    if (!consistent) return null;
+    let child = null;
+    if (value.child !== null) {
+      const c = value.child;
+      if (!closed(c, ['exit', 'signal', 'code', 'timedOut', 'stdoutBytes', 'stderrBytes'])
+        || !(c.exit === null || Number.isInteger(c.exit) && c.exit >= 0 && c.exit <= 255)
+        || !(c.signal === null || failureSignals.includes(c.signal)) || !(c.code === null || failureCodes.includes(c.code))
+        || typeof c.timedOut !== 'boolean' || ![c.stdoutBytes, c.stderrBytes].every(n => Number.isSafeInteger(n) && n >= 0 && n <= 65536)) return null;
+      child = { exit: c.exit, signal: c.signal, code: c.code, timedOut: c.timedOut,
+        stdoutBytes: c.stdoutBytes, stderrBytes: c.stderrBytes };
+    }
+    const copy = { status: 'INDETERMINATE', stage: value.stage, reason: 'owned-npm-requirement', code: value.code,
+      child, witness: { version: 1, passed: [...w.passed], ci } };
+    return Buffer.byteLength(JSON.stringify(copy)) <= 2048 ? copy : null;
+  } catch { return null; }
+}
+
 function hiddenLockAccepted(bytes) {
   requireFact(bytes.length <= 16384);
   const lock = JSON.parse(bytes);
@@ -78,6 +165,7 @@ function inspectOwnedOutput() {
 }
 function main() {
   let stage = 'admission', childFailure = null;
+  const witness = { version: 1, passed: [], ci: null };
   const started = performance.now(), deadline = started + 85000;
   const observed = { node: process.version };
   const run = (args, limit) => {
@@ -85,7 +173,9 @@ function main() {
     requireFact(timeout > 0);
     const child = spawnSync('/runtime/node', args, { cwd: project, env: { ...childEnv }, timeout,
       maxBuffer: 65536, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-    childFailure = { exit: child.status, signal: child.signal, code: typeof child.error?.code === 'string' ? child.error.code : null,
+    childFailure = { exit: child.status,
+      signal: child.signal === null ? null : failureSignals.includes(child.signal) ? child.signal : 'OTHER',
+      code: typeof child.error?.code === 'string' ? (failureCodes.includes(child.error.code) ? child.error.code : 'OTHER') : null,
       timedOut: child.error?.code === 'ETIMEDOUT', stdoutBytes: Buffer.byteLength(child.stdout ?? ''), stderrBytes: Buffer.byteLength(child.stderr ?? '') };
     requireFact(!child.error && child.signal === null && child.stdout !== null && child.stderr !== null
       && childFailure.stdoutBytes <= 65536 && childFailure.stderrBytes <= 65536);
@@ -105,29 +195,32 @@ function main() {
     fs.writeFileSync(`${project}/package.json`, manifestText, { flag: 'wx', mode: 0o600 });
     fs.writeFileSync(`${project}/package-lock.json`, lockText, { flag: 'wx', mode: 0o600 });
     fs.writeFileSync(`${project}/node_modules/owned-stale.txt`, 'owned-stale\n', { flag: 'wx', mode: 0o600 });
+    witness.passed.push('admission');
     stage = 'observer-positive';
     const positive = run(['--max-old-space-size=32', '/lifecycle-observer.mjs', '-c', '/lifecycle-observer.mjs'], 5000);
     observed.observerPositiveExit = positive.status;
     observed.observerPositiveMarker = fs.existsSync(marker) && fs.lstatSync(marker).isFile()
       && fs.readFileSync(marker, 'utf8') === 'owned-lifecycle-observer\n';
     requireFact(observed.observerPositiveExit === 73 && observed.observerPositiveMarker);
+    witness.passed.push('observer-positive');
     fs.unlinkSync(marker); observed.observerReset = !fs.existsSync(marker); requireFact(observed.observerReset);
+    witness.passed.push('observer-reset');
     stage = 'npm-version';
     const version = run(['--max-old-space-size=32', '/npm/bin/npm-cli.js', ...commonFlags, '--version'], 10000);
     Object.assign(observed, { versionExit: version.status, versionSignal: version.signal,
       versionTimedOut: false, versionStdoutBytes: Buffer.byteLength(version.stdout) });
     requireFact(version.status === 0 && /^11\.19\.1\r?\n$/.test(version.stdout) && version.stderr === '');
     observed.npmVersion = '11.19.1';
+    witness.passed.push('npm-version');
     stage = 'npm-ci';
     const ci = run(['--max-old-space-size=32', '/npm/bin/npm-cli.js', ...commonFlags, 'ci', '--json'], 10000);
     Object.assign(observed, { ciExit: ci.status, ciSignal: ci.signal, ciTimedOut: false,
       ciStdoutBytes: Buffer.byteLength(ci.stdout) });
-    requireFact(ci.status === 0 && ci.stderr === '');
-    observed.ciSummary = JSON.parse(ci.stdout);
-    for (const k of ['added', 'changed', 'audited', 'funding']) requireFact(observed.ciSummary[k] === 0);
-    requireFact(Number.isSafeInteger(observed.ciSummary.removed) && observed.ciSummary.removed >= 0);
-    requireFact(Object.keys(observed.ciSummary).every(k => ['added', 'removed', 'changed', 'audited', 'funding', 'add', 'change'].includes(k)));
-    for (const k of ['add', 'change']) if (k in observed.ciSummary) requireFact(Array.isArray(observed.ciSummary[k]) && observed.ciSummary[k].length === 0);
+    const evaluation = evaluateOwnedCiResult(ci);
+    witness.ci = evaluation.diagnostic;
+    stage = evaluation.diagnostic.checkpoint;
+    requireFact(evaluation.accepted);
+    observed.ciSummary = evaluation.summary;
     stage = 'owned-output';
     Object.assign(observed, { observerAfterCi: fs.existsSync(marker), staleAfterCi: fs.existsSync(`${project}/node_modules/owned-stale.txt`),
       manifestUnchanged: fs.readFileSync(`${project}/package.json`, 'utf8') === manifestText,
@@ -141,8 +234,11 @@ function main() {
     // stdout only: host independently rechecks the mounted output and supplies cleanup/source facts.
     process.stdout.write(text);
   } catch (error) {
-    process.stderr.write(`${JSON.stringify({ status: 'INDETERMINATE', stage, reason: 'owned-npm-requirement',
-      code: typeof error.code === 'string' ? error.code.slice(0, 32) : null, child: childFailure })}\n`);
+    const failure = sanitizeOwnedNpmFailure({ status: 'INDETERMINATE', stage, reason: 'owned-npm-requirement',
+      code: typeof error.code === 'string' ? (['ETIMEDOUT', 'ENOENT', 'EACCES', 'ENOBUFS', 'OTHER'].includes(error.code) ? error.code : 'OTHER') : null,
+      child: childFailure, witness });
+    // Invalid evidence stays a fixed generic failure; no raw text or unvalidated witness is emitted.
+    process.stderr.write(`${JSON.stringify(failure ?? { status: 'INDETERMINATE', reason: 'owned-npm-requirement' })}\n`);
     process.exitCode = 1;
   }
 }

@@ -8,6 +8,7 @@ import { isDeepStrictEqual } from 'node:util';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { normalizeOwnedRootfsModes, classifyOwnedStartupError } from './owned-rootfs-modes.mjs';
+import { sanitizeOwnedNpmFailure } from './npm-preparation-probe.mjs';
 
 const requireFact = value => { if (!value) throw new Error('owned-npm-requirement'); };
 const same = (a, b) => requireFact(isDeepStrictEqual(a, b));
@@ -20,7 +21,8 @@ const inside = (parent, child) => child === parent || child.startsWith(`${parent
 const cache = '/opt/hostedtoolcache/node/24.22.1/x64';
 const npmRoot = `${cache}/lib/node_modules/npm`;
 const manifestDigest = 'f6478d5600180a23f73e4217610c7709a71cedb4ae13f6c3e15ecb457f5d4fd6';
-const probeDigest = '18800d03a5f86171c2eb96631a54e7a3b4e1aaa1f65f25d5d402067ec96ebb5c';
+const probeDigest = '9a412d237ec662a1fb5671ba121afcb14b3bfeec6f4dd4e7093aafece599dda5';
+const witnessTestDigest = 'a97ad364d6e2560f8fd20dce8218c9f15c9b11b909971afe5c7d78af27cbcc18';
 const observerDigest = 'a3059404cb6f0cfcc861d00a53a471e8f7dc90632d5e8b9b02f68d88b7f9fcb9';
 const testDigest = '5e0ba660f7214ed5613b757f86df9eaf53c33cd7480988b2681718003d8ed972';
 const modeHelperDigest = '47b544208400dcf72ab38a74f8b335061c7e51e3f17aa51b88dc5aaa9362dc4b';
@@ -199,7 +201,8 @@ function main() {
     for (const [name, expected] of [['run-npm-same-job-control.mjs', process.env.NPM_SAME_JOB_CONTROLLER_SHA256],
       ['run-npm-preparation-control.mjs', 'efeebb36b8768d1df8ec10cb786382f2b8301cd7d2eb519ff6afbbe322bc15c7'],
       ['npm-preparation-probe.mjs', probeDigest], ['npm-lifecycle-observer.mjs', observerDigest], ['test-npm-preparation-control.mjs', testDigest],
-      ['owned-rootfs-modes.mjs', modeHelperDigest], ['test-rootfs-directory-modes.mjs', modeTestDigest]]) {
+      ['owned-rootfs-modes.mjs', modeHelperDigest], ['test-rootfs-directory-modes.mjs', modeTestDigest],
+      ['test-npm-failure-witness.mjs', witnessTestDigest]]) {
       const relative = `docs/spikes/fixtures/${name}`, p = path.join(repo, relative), actual = fileHash(p, 1048576, checkDeadline).sha256;
       same(actual, expected); requireFact(before[relative]);
       same(run('/usr/bin/git', ['--no-lazy-fetch', '-C', repo, 'rev-parse', `${result.headCommit}:${relative}`]),
@@ -354,8 +357,8 @@ function main() {
     // Retain only a bounded, owned structured probe failure; never raw stderr/config/environment.
     if (stage === 'owned-npm-control' && error.stderr && Buffer.byteLength(error.stderr) <= 65536) {
       try { const f = JSON.parse(String(error.stderr));
-        if (f.status === 'INDETERMINATE' && typeof f.stage === 'string' && f.stage.length <= 40 && f.reason === 'owned-npm-requirement')
-          result.failure.contained = { status: f.status, stage: f.stage, reason: f.reason, child: f.child ?? null };
+        const contained = sanitizeOwnedNpmFailure(f);
+        if (contained !== null) result.failure.contained = contained;
       } catch { /* A non-JSON failure remains the first bounded command failure. */ }
     }
   } finally {
